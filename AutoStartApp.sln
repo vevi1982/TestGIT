@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoStartApp", "AutoStartApp\AutoStartApp.csproj", "{293CF8DD-1569-418C-8955-DD3D5E1580AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaiduMusicClient", "BaiduMusicClient\BaiduMusicClient.csproj", "{90EF4899-85DE-432F-AB4D-2F62DB6D3A0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vevisoft", "Vevisoft\Vevisoft.csproj", "{CE924025-DFB4-4716-AC6A-3BFC8111AD33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{293CF8DD-1569-418C-8955-DD3D5E1580AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{293CF8DD-1569-418C-8955-DD3D5E1580AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{293CF8DD-1569-418C-8955-DD3D5E1580AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{293CF8DD-1569-418C-8955-DD3D5E1580AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90EF4899-85DE-432F-AB4D-2F62DB6D3A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90EF4899-85DE-432F-AB4D-2F62DB6D3A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90EF4899-85DE-432F-AB4D-2F62DB6D3A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90EF4899-85DE-432F-AB4D-2F62DB6D3A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE924025-DFB4-4716-AC6A-3BFC8111AD33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE924025-DFB4-4716-AC6A-3BFC8111AD33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE924025-DFB4-4716-AC6A-3BFC8111AD33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE924025-DFB4-4716-AC6A-3BFC8111AD33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
