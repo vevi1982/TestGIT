@@ -5,17 +5,45 @@ using System.Windows.Forms;
 
 namespace BaiduMusicClient
 {
-    static class Program
+     static class Program
     {
-        /// <summary>
-        /// 应用程序的主入口点。
-        /// </summary>
+        // Methods
         [STAThread]
-        static void Main()
+        private static void Main(string[] Args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            AppConfig.GetData();
+            try
+            {
+                Application.Run(StartFormCreator(ParseArgsForFormlabel(Args)));
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("App Is Exit " + exception.Message);
+            }
+        }
+
+        private static string ParseArgsForFormlabel(string[] args)
+        {
+            string str = string.Empty;
+            if (args.Length > 0)
+            {
+                str = args[0];
+            }
+            return str;
+        }
+
+        private static Form StartFormCreator(string Label)
+        {
+            if (Label.ToLower() == "-auto")
+            {
+                return new Form1(true);
+            }
+            return new Form1();
         }
     }
+
+ 
+
 }
