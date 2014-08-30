@@ -1,0 +1,11 @@
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\bin\Debug\VevisoftDLLTest.exe
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\bin\Debug\VevisoftDLLTest.pdb
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\bin\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\bin\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.ADSL.FrmDialup.resources
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.Form1.resources
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.Properties.Resources.resources
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.csproj.GenerateResource.Cache
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.exe
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.pdb

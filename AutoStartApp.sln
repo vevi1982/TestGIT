@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaiduMusicClient", "BaiduMu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vevisoft", "Vevisoft\Vevisoft.csproj", "{CE924025-DFB4-4716-AC6A-3BFC8111AD33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VevisoftDLLTest", "VevisoftDLLTest\VevisoftDLLTest.csproj", "{6329E626-EDBE-40DB-B2C2-36DF8FA542C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{CE924025-DFB4-4716-AC6A-3BFC8111AD33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE924025-DFB4-4716-AC6A-3BFC8111AD33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE924025-DFB4-4716-AC6A-3BFC8111AD33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6329E626-EDBE-40DB-B2C2-36DF8FA542C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6329E626-EDBE-40DB-B2C2-36DF8FA542C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6329E626-EDBE-40DB-B2C2-36DF8FA542C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6329E626-EDBE-40DB-B2C2-36DF8FA542C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
