@@ -52,8 +52,12 @@
     <Compile Include="WebOperate\ADSLHelper.cs" />
     <Compile Include="WebOperate\HttpWebResponseUtility.cs" />
     <Compile Include="WindowsAPI\ComputerShutDown.cs" />
+    <Compile Include="WindowsAPI\Shell32Utility.cs" />
+    <Compile Include="WindowsAPI\SystemWindowsAPI.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="WindowsAPI\Shell\Interfaces\" />
+  </ItemGroup>
   <ItemGroup>
     <COMReference Include="Shell32">
       <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>

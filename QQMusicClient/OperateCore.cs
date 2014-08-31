@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Vevisoft.WebOperate;
+using Vevisoft.WindowsAPI;
 
 namespace QQMusicClient
 {
@@ -49,10 +50,33 @@ namespace QQMusicClient
             //
             System.Diagnostics.Process.Start(AppConfig.AppPath);
             //
+            //QQ音乐 TXGuiFoundation
+            FindExeWindowsForm("QQ音乐", "TXGuiFoundation");
+        }
+
+        public string Msg { get; set; }
+        public void FindExeWindowsForm(string caption, string className)
+        {
+            IntPtr handle = SystemWindowsAPI.GetForegroundWindow();//
+            IntPtr handle2 = SystemWindowsAPI.FindMainWindowHandle(caption, 500, 20);
+            var handle3 = SystemWindowsAPI.GetTopWindow(handle2);
+
+            var h4 = SystemWindowsAPI.GetTopMostWindow(handle2);
+            var formRec = new SystemWindowsAPI.RECT();
+            if (SystemWindowsAPI.GetWindowRect(handle2, ref formRec))
+                Msg = string.Format("{0},{1},{2},{3}", formRec.Top, formRec.Left, formRec.Right, formRec.Bottom);
+            else Msg = "";
 
         }
 
-
+        public void SHowFormRectByHandle(long handleStr)
+        {
+            IntPtr handle = new IntPtr(handleStr);
+            var formRec = new SystemWindowsAPI.RECT();
+            if (SystemWindowsAPI.GetWindowRect(handle, ref formRec))
+                Msg = string.Format("{0},{1},{2},{3}", formRec.Top, formRec.Left, formRec.Right, formRec.Bottom);
+            else Msg = "";
+        }
     
     }
 }

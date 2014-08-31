@@ -20,5 +20,20 @@ namespace QQMusicClient
         {
             new FrmSetting().ShowDialog();
         }
+        OperateCore core=new OperateCore();
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+            core.DoOnce();
+            label1.Text = core.Msg;
+            this.Visible = true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            long handleValue = Convert.ToInt64(textBox1.Text.Trim());
+            core.SHowFormRectByHandle(handleValue);
+            label1.Text = core.Msg;
+        }
     }
 }
