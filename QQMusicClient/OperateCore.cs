@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -115,57 +116,24 @@ namespace QQMusicClient
         {
             //获取QQ号
             var qqlist = GetQQNoAndPass();
-            //登录按钮 125 27
-            //移动鼠标 到 程序 标题栏
-            var mainRect = GetFormRect(mainHandle);
-            MouseKeyBoradUtility.SetCursorPos(300 + mainRect.Left, 25 + mainRect.Top);
-            //右键点击
-            MouseKeyBoradUtility.mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-            //
-            //等待右键菜单弹出
-            Thread.Sleep(1000);
-            //
-            //【登录】 快捷键 L 并且 等待1S
-            MouseKeyBoradUtility.KeyInputStringAndNumber("l", 1000);
+            //点击 标题栏 图标
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.MainCaptionLoginButtonPt);            
+            //点击后移动鼠标位置 以防止出现【用户信息框】
+            MouseSetPositonAndLeftClick(mainHandle,new Point(0,0));
+            //            
             //判断是否有 【登录对话框】
-            IntPtr msgHandle = SystemWindowsAPI.GetForegroundWindow();
-            var count = 0;
-            while (msgHandle == mainHandle && count < maxTime)
-            {
-                Thread.Sleep(1000);
-                msgHandle = SystemWindowsAPI.GetForegroundWindow();
-                count++;
-            }
-            if (count >= maxTime)
+            IntPtr msgHandle = GetLoginForm();
+            //查找5S后无果，跑出异常
+            if (msgHandle==IntPtr.Zero)
                 throw new Exception("等待超时，登录,等待登录框。");
             //QQ号 550,290  密码 550 320  登录 450，400
-            //
-            MouseKeyBoradUtility.SetCursorPos(550 + mainRect.Left, 290 + mainRect.Top);
-            MouseKeyBoradUtility.mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            //Ctrl A 全选
-            MouseKeyBoradUtility.KeySendCtrlA();
-            Thread.Sleep(500);
-            //输入QQ号
-            MouseKeyBoradUtility.KeyInputStringAndNumber(qqlist[0],50);
-            //
-            MouseKeyBoradUtility.SetCursorPos(550 + mainRect.Left, 320 + mainRect.Top);
-            MouseKeyBoradUtility.mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            //如果有原来的密码，需要删除。所以先按一堆的backspace
-            for (int i = 0; i < 18; i++)
-            {
-                MouseKeyBoradUtility.SendBackSpace();
-                Thread.Sleep(50);
-            }
-            MouseKeyBoradUtility.KeyInputStringAndNumber(qqlist[1], 50);
-            //单击登录按钮
-            MouseKeyBoradUtility.SetCursorPos(450 + mainRect.Left, 400 + mainRect.Top);
-            MouseKeyBoradUtility.mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            InputPass(mainHandle, qqlist[0], qqlist[1]);
             //此时 可能出现多种情况。
             //1.正常情况 登录框 关闭 登陆完成
             //2.密码错误 
             //3.需要输入验证码
             //超时判断
-            count = 0;
+            var count = 0;
             msgHandle = SystemWindowsAPI.GetForegroundWindow();
             while (msgHandle != mainHandle && count < maxTime)
             {
@@ -200,25 +168,35 @@ namespace QQMusicClient
 
             
         }
+        /// <summary>
+        /// 发送需要验证码的QQ给服务器
+        /// </summary>
+        private void SendNeedVeryCodeQQToServer()
+        {
+            //TODO...
+        }
 
+        /// <summary>
+        /// 输入 验证码
+        /// </summary>
+        /// <param name="safeHandle"></param>
+        private void InputVeryCode(IntPtr safeHandle)
+        {
+            //TODO....
+        }
+        /// <summary>
+        /// 发送密码错误的QQ给服务器
+        /// </summary>
         private void SendPassErrorQQToServer()
         {
-            //throw new NotImplementedException();
+            //TODO...
         }
 
         private void QQLogOut(IntPtr mainHandle)
         {
             //移动鼠标 到 程序 标题栏
-            var mainRect = GetFormRect(mainHandle);
-            MouseKeyBoradUtility.SetCursorPos(300 + mainRect.Left, 25 + mainRect.Top);
-            //右键点击
-            MouseKeyBoradUtility.mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-            //
-            //等待右键菜单弹出
-            Thread.Sleep(1000);
-            //
-            //【更改用户】 快捷键 U 并且 等待1S（eg:如果没有登录，则没有此快捷键）
-            MouseKeyBoradUtility.KeyInputStringAndNumber("u", 1000);
+            ClickChangeUser(mainHandle);
+            
             //判断是否有 【更改用户提示框】
             IntPtr msgHandle = SystemWindowsAPI.GetForegroundWindow();
             if (msgHandle == mainHandle)
@@ -228,9 +206,9 @@ namespace QQMusicClient
             }
             //有【更改用户提示框】,那么 鼠标移动 左键单击 【关闭】
             var msgRect = GetFormRect(msgHandle);
-            MouseKeyBoradUtility.SetCursorPos(460 + mainRect.Left, 355 + mainRect.Top);
-            MouseKeyBoradUtility.mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-           //
+            // 关闭【更改用户提示框】
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.ChangeUserAlertClosePt);
+            //
             msgHandle = SystemWindowsAPI.GetForegroundWindow();//如果当前窗体是主窗体，登录窗体还没有出来
             //超时判断
             var count = 0;
@@ -248,9 +226,8 @@ namespace QQMusicClient
             var loginHandle = GetLoginForm();
             if (loginHandle == msgHandle)
             {
-                //关闭它
-                MouseKeyBoradUtility.SetCursorPos(598 + mainRect.Left, 204 + mainRect.Top);
-                MouseKeyBoradUtility.mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                //关闭登录窗体
+                MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormClosePt);
             }
             //
             //判断是否关闭
@@ -265,13 +242,20 @@ namespace QQMusicClient
             if (count >= maxTime)
                 throw new Exception("等待超时，退出登录,等待登陆框关闭。");
         }
-
+        /// <summary>
+        /// 是否已经登录了
+        /// </summary>
+        /// <returns></returns>
         private bool QQAlreadyLogin()
         {
-            throw new NotImplementedException();
+            //TODO....
+
+            return true;
         }
 
 
+
+        #region 获取相关窗体
         /// <summary>
         /// 获取主窗体句柄
         /// </summary>
@@ -289,7 +273,7 @@ namespace QQMusicClient
         public IntPtr GetLoginForm()
         {
             const string caption = "QQ音乐登录";//TXGuiFoundation
-            IntPtr handle = SystemWindowsAPI.FindMainWindowHandle(caption, 500, 10);
+            IntPtr handle = SystemWindowsAPI.FindMainWindowHandle(caption, 500, maxTime);
             return handle;
         }
         /// <summary>
@@ -323,6 +307,49 @@ namespace QQMusicClient
             IntPtr hwnd1 = SystemWindowsAPI.FindWindowEx(safeCenterHandle, IntPtr.Zero, "Static", "为了您的帐号安全，本次登录需输验证码。");
             return hwnd1 != IntPtr.Zero;              
         }
+        #endregion
+
+        #region 用户相关操作
+
+        /// <summary>
+        /// 右键 更改用户
+        /// </summary>
+        /// <param name="mainHandle"></param>
+        private void ClickChangeUser(IntPtr mainHandle)
+        {
+            //移动鼠标 到 程序 标题栏
+            SetMousePosition(mainHandle, PositionInfoQQMusic.MainCaptionPt);
+            //右键点击
+            MouseKeyBoradUtility.MouseRightClick();
+            //
+            //等待右键菜单弹出
+            Thread.Sleep(1000);
+            //【更改用户】 快捷键 U 并且 等待1S（eg:如果没有登录，则没有此快捷键）
+            MouseKeyBoradUtility.KeyInputStringAndNumber("u", 1000);
+        }
+
+        private void InputPass(IntPtr mainHandle, string qqno, string pass)
+        {
+            //
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormText1Pt);
+            //Ctrl A 全选
+            MouseKeyBoradUtility.KeySendCtrlA();
+            Thread.Sleep(500);
+            //输入QQ号
+            MouseKeyBoradUtility.KeyInputStringAndNumber(qqno, 50);
+            //
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormPassPt);
+            //如果有原来的密码，需要删除。所以先按一堆的backspace
+            for (int i = 0; i < 18; i++)
+            {
+                MouseKeyBoradUtility.SendBackSpace();
+                Thread.Sleep(50);
+            }
+            MouseKeyBoradUtility.KeyInputStringAndNumber(pass, 50);
+            //单击登录按钮
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormOKButtonPt);
+        }
+        #endregion
         /// <summary>
         /// 获取窗体界面位置及大小
         /// </summary>
@@ -333,6 +360,27 @@ namespace QQMusicClient
             var formRec = new SystemWindowsAPI.RECT();
             SystemWindowsAPI.GetWindowRect(handle, ref formRec);
             return formRec;
+        }
+        /// <summary>
+        /// 移动鼠标到相应的位置
+        /// </summary>
+        /// <param name="mainHandle"></param>
+        /// <param name="relativePt"></param>
+        public void SetMousePosition(IntPtr mainHandle, Point relativePt)
+        {
+            //移动鼠标 到 程序 标题栏
+            var mainRect = GetFormRect(mainHandle);
+            MouseKeyBoradUtility.SetCursorPos(relativePt.X + mainRect.Left, relativePt.Y + mainRect.Top);               
+        }
+        /// <summary>
+        /// 移动鼠标 并单击
+        /// </summary>
+        /// <param name="mainHandle"></param>
+        /// <param name="relativePt"></param>
+        public void MouseSetPositonAndLeftClick(IntPtr mainHandle, Point relativePt)
+        {
+            SetMousePosition(mainHandle,relativePt);
+            MouseKeyBoradUtility.MouseLeftClick();
         }
         /// <summary>
         /// 获取QQ号
@@ -349,6 +397,15 @@ namespace QQMusicClient
         }
 
 
-    
+        #region 关于验证码
+
+        #region 下载频繁 输入后继续下载 
+        //ps 269 270   verycode rect 319,230  431,280
+        //【确认】 按钮380 605
+
+
+        #endregion
+        #endregion
+
     }
 }
