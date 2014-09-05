@@ -9,6 +9,9 @@ namespace Vevisoft.WindowsAPI
 {
     public class SystemWindowsAPI
     {
+        [DllImport("user32.dll", EntryPoint = "WindowFromPoint")]//调用system目录下的user32.dll动态链接库，并声明应用的过程名称
+        public static extern IntPtr WindowFromPoint( int xPoint,int yPoint);
+
         //需调用API函数
         //需在开头引入命名空间
         //using System.Runtime.InteropServices;

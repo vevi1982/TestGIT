@@ -84,12 +84,12 @@ namespace QQMusicClient
         /// <summary>
         /// 【下载验证码输入框】图片右下
         /// </summary>
-        public static Point VeryCodeDownLoadImgRightBottomPt = new Point(431, 280);
+        public static Size IDCodeImgSize = new Size(110, 60);
         /// <summary>
         /// 【下载验证码输入框】确定按钮
         /// </summary>
         //TODO... 确认
-        public static Point VeryCodeDownLoadOKPt=new Point(380,605);
+        public static Point VeryCodeDownLoadOKPt=new Point(380,300);
         #endregion
         
     }

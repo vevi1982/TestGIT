@@ -25,13 +25,14 @@ namespace VevisoftDLLTest.HOOK
         }
         void mhook_OnMouseActivity(object sender, MouseEventArgs e)
         {
-            textBox2.Text = e.Button.ToString() + "  " + e.X + "," + e.Y;
+            IntPtr hwnd = Vevisoft.WindowsAPI.SystemWindowsAPI.WindowFromPoint(e.Location.X, e.Location.Y);
+            textBox2.Text = e.Button.ToString() + "  " + e.X + "," + e.Y+":"+hwnd.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             var rect = GetFormRect(GetMainForm());
-            var msg = string.Format("{0},{1},{1},{3}", rect.Left, rect.Top, rect.Right - rect.Left,
+            var msg = string.Format("{0},{1},{2},{3}", rect.Left, rect.Top, rect.Right - rect.Left,
                                     rect.Bottom - rect.Top);
             textBox1.Text = msg;
         }

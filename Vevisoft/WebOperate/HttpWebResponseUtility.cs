@@ -830,9 +830,9 @@ namespace Vevisoft.WebOperate
                 {
                     if (stream != null)
                     {
-                        using (GZipStream stream2 = new GZipStream(stream, CompressionMode.Decompress))
+                        using (var stream2 = new GZipStream(stream, CompressionMode.Decompress))
                         {
-                            using (StreamReader reader = new StreamReader(stream2, Encoding.UTF8))
+                            using (var reader = new StreamReader(stream2, Encoding.UTF8))
                             {
                                 return reader.ReadToEnd();
                             }

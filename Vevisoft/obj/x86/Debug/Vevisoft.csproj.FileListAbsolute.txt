@@ -1,0 +1,6 @@
+E:\Procedure\GitProject\BaiduMusic\Vevisoft\bin\x86\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft\bin\x86\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\x86\Debug\Interop.Shell32.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\x86\Debug\Vevisoft.csproj.ResolveComReference.cache
+E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\x86\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\x86\Debug\Vevisoft.pdb

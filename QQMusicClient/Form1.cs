@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -23,14 +24,24 @@ namespace QQMusicClient
             new FrmSetting().ShowDialog();
         }
         OperateCore core=new OperateCore();
+
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            const string caption = "QQ音乐"; //TXGuiFoundation
+            IntPtr handle = SystemWindowsAPI.FindMainWindowHandle(caption, 1000, 10);
+            var rect =new SystemWindowsAPI.RECT();
+            SystemWindowsAPI.GetWindowRect(handle, ref rect);
+            textBox1.Text =//485,359
+                SystemWindowsAPI.WindowFromPoint(rect.Left+PositionInfoQQMusic.VeryCodeDownLoadOKPt.X,
+                                                 rect.Top+ PositionInfoQQMusic.VeryCodeDownLoadOKPt.Y) + "";
+
+            var h2 = SystemWindowsAPI.WindowFromPoint(485, 389);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             Thread.Sleep(5000);
+            var ipt=new IntPtr(Convert.ToInt32(textBox1.Text));
             var handle = core.GetMainForm();
             //SystemWindowsAPI.ShowWindow(handle, 1);
             var handle1 = SystemWindowsAPI.GetTopMostWindow(IntPtr.Zero);
@@ -39,7 +50,7 @@ namespace QQMusicClient
             var handle3 = SystemWindowsAPI.GetTopMostWindow(IntPtr.Zero);
             var handle4 = SystemWindowsAPI.GetForegroundWindow();
             //
-            var rect = core.GetFormRect(handle);
+            var rect = core.GetFormRect(ipt);
             var rect1 = core.GetFormRect(handle1);
             var rect2 = core.GetFormRect(handle2);
             var rect3 = core.GetFormRect(handle3);
@@ -60,7 +71,7 @@ namespace QQMusicClient
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            core.DoOnce();
+            core.StartDownLoadTimer();
         }
     }
 }
