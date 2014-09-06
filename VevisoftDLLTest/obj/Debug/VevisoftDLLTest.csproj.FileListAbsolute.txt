@@ -11,3 +11,4 @@ E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.exe
 E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.pdb
 E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.HOOK.FrmMouseHook.resources
 E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.IdentifyingCode.FrmCode.resources
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.WindowsForm.FrmAPIWindowsTest.resources

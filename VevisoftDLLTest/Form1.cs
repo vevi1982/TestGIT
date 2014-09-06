@@ -38,5 +38,20 @@ namespace VevisoftDLLTest
                 Process.Start(textBox1.Text.Trim());
             }
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            new HOOK.FrmMouseHook().Show();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            new IdentifyingCode.FrmCode().Show();
+        }
     }
 }

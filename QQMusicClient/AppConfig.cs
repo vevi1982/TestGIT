@@ -34,7 +34,7 @@ namespace QQMusicClient
         public static int TimeKeyInterval = 500;
 
         public static int SongListCount = 800;
-        public static int TimeIdCodeLoad = 1;
+        public static int TimeIdCodeLoad = 5;
         //
        public static Point MainTryListenButtonPt=new Point(50,310);
         public static Point MainTryListenPanelFirstSongPt=new Point(170,240);

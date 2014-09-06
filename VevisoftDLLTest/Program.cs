@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using VevisoftDLLTest.HOOK;
 using VevisoftDLLTest.IdentifyingCode;
+using VevisoftDLLTest.WindowsForm;
 
 namespace VevisoftDLLTest
 {
@@ -17,7 +18,7 @@ namespace VevisoftDLLTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMouseHook());
+            Application.Run(new Form1());
         }
     }
 }

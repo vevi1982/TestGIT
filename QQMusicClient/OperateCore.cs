@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Vevisoft.WebOperate;
 using Vevisoft.WindowsAPI;
+using mshtml;
 
 namespace QQMusicClient
 {
@@ -17,6 +18,7 @@ namespace QQMusicClient
     public class OperateCore
     {
         private System.Windows.Forms.Timer identifyingTimer;
+        private const string didcInfo = "您下载歌曲的次数过于频繁，请输入验证码后继续下载！";
         /// <summary>
         /// 最大延时
         /// </summary>
@@ -334,7 +336,7 @@ namespace QQMusicClient
         {
             try
             {
-                if (!ForgroundIsMain(mainHandler))
+                if (GetDownLoadIdCodeDiagExist())
                 {
                     //当前窗体不是主窗体，那么 默认 就是输入验证码窗体 弹出
                     InputDownLoadIdentifyingCode();
@@ -373,27 +375,54 @@ namespace QQMusicClient
             var rect = GetFormRect(mainHandler);
             Thread.Sleep(AppConfig.TimeIdCodeLoad*1000);
             //获取验证码
-            CutScreen(new Rectangle(
-                rect.Left + PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.X,
-                  rect.Top+ PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.Y,
-                    PositionInfoQQMusic.IDCodeImgSize.Width,
-                     PositionInfoQQMusic.IDCodeImgSize.Height)).Save("aa.bmp");
-            var idcode =
-                Vevisoft.ImageRecgnize.IdentifyingCodeRecg.GetCodeByUUCode(
-                     rect.Left + PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.X,
-                    rect.Right + PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.Y,
-                    PositionInfoQQMusic.IDCodeImgSize.Width,
-                     PositionInfoQQMusic.IDCodeImgSize.Height);
+            //CutScreen(new Rectangle(
+            //    rect.Left + PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.X,
+            //      rect.Top+ PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.Y,
+            //        PositionInfoQQMusic.IDCodeImgSize.Width,
+            //         PositionInfoQQMusic.IDCodeImgSize.Height)).Save("aa.bmp");
+            //var idcode =
+            //    Vevisoft.ImageRecgnize.IdentifyingCodeRecg.GetCodeByUUCode(
+            //         rect.Left + PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.X,
+            //        rect.Top + PositionInfoQQMusic.VeryCodeDownLoadImgLeftTopPt.Y,
+            //        PositionInfoQQMusic.IDCodeImgSize.Width,
+            //         PositionInfoQQMusic.IDCodeImgSize.Height);
+            //
+            for (int i = 0; i < 4; i++)
+                MouseKeyBoradUtility.KeySendBackSpace();
+            var idcode = GetIDCodeDownLoad(didcIEHandler);
+            //
+            Console.WriteLine(idcode);
+                //
             if (idcode == "1009" || idcode.Length != 4)
                 throw new Exception(" 验证码返回失败");
             //输入验证码
-            MouseKeyBoradUtility.KeyInputStringAndNumber(idcode,1000);
+            MouseKeyBoradUtility.KeyInputStringAndNumber(idcode,50);
             //点击确定按钮
             MouseSetPositonAndLeftClick(mainHandler,PositionInfoQQMusic.VeryCodeDownLoadOKPt);
             //判断是否成功。。。。
             //
             if (!ForgroundIsMain(mainHandler, maxTime))
                 throw new Exception("验证码输入错误");
+        }
+        private string GetIDCodeDownLoad(IntPtr didcIeHandle)
+        {
+            mshtml.IHTMLDocument2 id = GetHtmlDocument(didcIeHandle);
+            if (id == null)
+                return "";
+            IHTMLControlElement img =
+                id.images.Cast<IHTMLElement>().Where(item => item.id == "imgVerify").Cast<IHTMLControlElement>().FirstOrDefault();
+            if (img != null)
+            {
+                IHTMLControlRange range = (IHTMLControlRange)((HTMLBody)id.body).createControlRange();
+                range.add(img);
+                range.execCommand("Copy", false, null);
+                if (Clipboard.ContainsImage())
+                {
+                    Clipboard.GetImage().Save(@"c:\bb.bmp");
+                    return Vevisoft.ImageRecgnize.IdentifyingCodeRecg.GetCodeByUUCodeWeb(@"c:\bb.bmp", 1014);
+                }
+            }
+            return "";
         }
         /// <summary>
         /// 获取下载数量
@@ -565,6 +594,69 @@ namespace QQMusicClient
                 return false;
             return true;
         }
+        //
+        private int count = 0;
+        private bool isexistDownLoadIDCodeDiag = false;
+        private bool GetDownLoadIdCodeDiagExist()
+        {
+            count = 0;
+            isexistDownLoadIDCodeDiag = false;
+            didcIEHandler = IntPtr.Zero;
+            SystemWindowsAPI.FindWindowCallBack callback = EnumWindowCallBack;
+            SystemWindowsAPI.EnumWindows(callback, 0);
+            //
+            return isexistDownLoadIDCodeDiag;
+        }
+
+        private IntPtr didcIEHandler = IntPtr.Zero;
+
+        private bool EnumWindowCallBack(IntPtr hwnd, int lParam)
+        {
+            var strclsName = new StringBuilder(256);
+            Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(hwnd, strclsName, 257);
+            var strTitle = new StringBuilder(256);
+            Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(hwnd, strTitle, 257);
+            if (strclsName.ToString().Trim().ToLower() != "TXGFLayerMask".ToLower())
+                return true;
+
+            count++;
+            //richTextBox1.AppendText(string.Format("{3}---Title:{0};  ClassName:{1};  Hwnd:{2}\r\n", strTitle, strclsName, hwnd.ToString(), count));
+            //
+            IntPtr chHandle = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(hwnd, IntPtr.Zero, null,
+                                                                                null);
+            if (chHandle != IntPtr.Zero)
+            {
+                strclsName = new StringBuilder(256);
+                Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(chHandle, strclsName, 257);
+                strTitle = new StringBuilder(256);
+                Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(chHandle, strTitle, 257);
+
+                //SystemWindowsAPI.ShowWindow(hwnd,0);
+                //richTextBox1.AppendText(string.Format("   {3}---Title:{0};  ClassName:{1};  Hwnd:{2}\r\n", strTitle,
+                //                                       strclsName, hwnd.ToString(), count + ".1"));
+                IntPtr chHandle2 = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(chHandle, IntPtr.Zero, null, null);
+                IntPtr chHandle3 = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(chHandle2, IntPtr.Zero, null, null);
+                didcIEHandler = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(chHandle3, IntPtr.Zero, null, null);
+                mshtml.IHTMLDocument2 id = GetHtmlDocument(didcIEHandler);
+                var str = id.body.innerHTML;
+                isexistDownLoadIDCodeDiag = str.Contains(didcInfo);
+
+            }
+            return true;
+            
+        }
+        public mshtml.IHTMLDocument2 GetHtmlDocument(IntPtr hwnd)
+        {
+            var domObject = new System.Object();
+            int tempInt = 0;
+            var guidIEDocument2 = new Guid();
+            int WM_Html_GETOBJECT = SystemWindowsAPI.RegisterWindowMessage("WM_Html_GETOBJECT");//定义一个新的窗口消息
+            int W = SystemWindowsAPI.SendMessage(hwnd, WM_Html_GETOBJECT, 0, ref tempInt);//注:第二个参数是RegisterWindowMessage函数的返回值
+            int lreturn = SystemWindowsAPI.ObjectFromLresult(W, ref guidIEDocument2, 0, ref domObject);
+            mshtml.IHTMLDocument2 doc = (mshtml.IHTMLDocument2)domObject;
+            return doc;
+        }
+
         #endregion
 
         #region 公用方法

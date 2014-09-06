@@ -71,8 +71,14 @@ namespace Vevisoft.WindowsAPI
         [DllImport("user32.dll")]
         public static extern long EnumChildWindows(IntPtr hWndParent, EnumChildWindowsProc lpEnumFunc, long lParam);
 
+        #region 获取窗体信息
         [DllImport("user32.dll")]
         public static extern long GetClassName(IntPtr hwnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("User32.dll", EntryPoint = "GetWindowText")]
+        public static extern int GetWindowText(IntPtr hwnd,StringBuilder lpString,int nMaxCount);
+        #endregion
+        
 
         public static IntPtr FindMainWindowHandle(string caption, int delay, int maxTries)
         {
@@ -135,10 +141,7 @@ namespace Vevisoft.WindowsAPI
 
         }
 
-
-       
-        [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+     
 
         public string GetActiveWindowTitle()
         {
@@ -185,5 +188,27 @@ namespace Vevisoft.WindowsAPI
 
             return hwnd;
         }
+
+        #region 枚举所有窗体
+        public delegate bool FindWindowCallBack(IntPtr hwnd, int lParam);
+        [DllImport("user32")]
+
+        public static extern int EnumWindows(FindWindowCallBack x, int y);
+        #endregion
+
+        [DllImport("user32", EntryPoint = "SendMessage")]
+        public static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, ref int lParam);
+
+        [DllImport("user32", EntryPoint = "RegisterWindowMessage")]
+        public static extern int RegisterWindowMessage(string lpString);
+
+        [DllImport("OLEACC.DLL", EntryPoint = "ObjectFromLresult")]
+        public static extern int ObjectFromLresult(
+            int lResult,
+            ref System.Guid riid,
+            int wParam,
+            [MarshalAs(UnmanagedType.Interface), System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out]ref System.Object ppvObject
+            //注意这个函数ObjectFromLresult的声明
+        );
     }
 }
