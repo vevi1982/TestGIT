@@ -86,5 +86,12 @@ namespace VevisoftDLLTest.ADSL
             }
             adslhelper.StartDailer(adslname, username, pass);
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+           if(adslhelper.IsConnectToInternetByPing("www.baidu.com"))
+               richTextBox1.AppendText("Connect!");
+            else richTextBox1.AppendText("Not Conn");
+        }
     }
 }

@@ -30,11 +30,11 @@ namespace QQMusicClient
         public static int TimeMainFormStart = 2;
         public static int TimeContextMenu = 1;
         public static int TimeAlertCHangeUser = 1;
-
         public static int TimeKeyInterval = 500;
-
-        public static int SongListCount = 800;
+        public static int TimeDownLoadListLoad = 30;
+        public static int TimeDownLoadListDel = 10;
         public static int TimeIdCodeLoad = 5;
+        public static int SongListCount = 800;
         //
        public static Point MainTryListenButtonPt=new Point(50,310);
         public static Point MainTryListenPanelFirstSongPt=new Point(170,240);
@@ -51,6 +51,34 @@ namespace QQMusicClient
             ADSLName = ConfigurationManager.AppSettings["ADSLName"];
             ADSLUserName = ConfigurationManager.AppSettings["ADSLUserName"];
             ADSLPass = ConfigurationManager.AppSettings["ADSLPass"];
+            //时间
+            var intValue = GetIntValue("TimeMainFormStart");
+            if (intValue != -1)
+                TimeMainFormStart = intValue;
+            intValue = GetIntValue("TimeContextMenu");
+            if (intValue != -1)
+                TimeContextMenu = intValue;
+            intValue = GetIntValue("TimeAlertCHangeUser");
+            if (intValue != -1)
+                TimeAlertCHangeUser = intValue;
+            intValue = GetIntValue("TimeKeyInterval");
+            if (intValue != -1)
+                TimeKeyInterval = intValue;
+            intValue = GetIntValue("TimeDownLoadListLoad");
+            if (intValue != -1)
+                TimeDownLoadListLoad = intValue;
+            intValue = GetIntValue("TimeDownLoadListDel");
+            if (intValue != -1)
+                TimeDownLoadListDel = intValue;
+            //intValue = GetIntValue("TimeMainFormStart");
+            //if (intValue != -1)
+            //    TimeMainFormStart = intValue;
+            intValue = GetIntValue("TimeIdCodeLoad");
+            if (intValue != -1)
+                TimeIdCodeLoad = intValue;
+            intValue = GetIntValue("SongListCount");
+            if (intValue != -1)
+                SongListCount = intValue;
             //按钮位置
             var position = ConfigurationManager.AppSettings["MainTryListenButtonPt"];
             var pt = GetPointFromString(position);
@@ -65,7 +93,6 @@ namespace QQMusicClient
             if (pt.X != 0 || pt.Y != 0)
                 PositionInfoQQMusic.MainTryListenPanelDownLoadButtonPt = MainTryListenPanelDownLoadButtonPt = pt;
             //
-            var value = 0;
 
         }
 
@@ -83,6 +110,18 @@ namespace QQMusicClient
             catch (Exception)
             {
                 return new Point();
+            }
+        }
+        private static int GetIntValue(string configName)
+        {
+            var value = ConfigurationManager.AppSettings[configName];
+            try
+            {
+                return Convert.ToInt32(value);
+            }
+            catch (Exception)
+            {
+                return -1;
             }
         }
         public static void SaveValue()

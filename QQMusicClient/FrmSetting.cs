@@ -63,10 +63,10 @@ namespace QQMusicClient
 
         private void button4_Click(object sender, EventArgs e)
         {
-            var opdiag = new OpenFileDialog();
+            var opdiag = new FolderBrowserDialog();
             if (opdiag.ShowDialog() == DialogResult.OK)
             {
-                txtDownLoadPath.Text = opdiag.FileName;
+                txtDownLoadPath.Text = opdiag.SelectedPath;
             }
         }
     }

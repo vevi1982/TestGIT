@@ -180,5 +180,13 @@ namespace Vevisoft.WindowsAPI
             keybd_event(18, 0, 2, 0);
             keybd_event(115, 0, 2, 0);
         }
+        /// <summary>
+        /// del按键
+        /// </summary>
+        public static void KeySendDelete()
+        {
+            keybd_event(46, 0, 0, 0);
+            keybd_event(46, 0, 2, 0);
+        }
     }
 }

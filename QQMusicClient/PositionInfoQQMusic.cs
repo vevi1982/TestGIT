@@ -84,13 +84,38 @@ namespace QQMusicClient
         /// <summary>
         /// 【下载验证码输入框】图片右下
         /// </summary>
-        public static Size IDCodeImgSize = new Size(110, 60);
+        public static Size IDCodeDownLoadImgSize = new Size(110, 60);
         /// <summary>
         /// 【下载验证码输入框】确定按钮
-        /// </summary>
-        //TODO... 确认
+        /// </summary>        
         public static Point VeryCodeDownLoadOKPt=new Point(380,300);
         #endregion
-        
+        #region QQ安全中心验证码
+        /// <summary>
+        /// QQ安全中心 验证码左上（以安全中心为左上）
+        /// </summary>
+        public static Point IDCodeSafeImgLeftTopPt = new Point(56, 105);
+        /// <summary>
+        /// QQ安全中心 图片大小
+        /// </summary>
+        public static Size IDCodeSafeImgSize = new Size(130, 55);
+        /// <summary>
+        /// QQ安全中心 验证码输入框 输入框点击位置（以安全中心为左上）
+        /// </summary>
+        public static Point IDCodeSafeTextPt=new Point(260,89);
+        /// <summary>
+        /// QQ安全中心 确定按钮（以安全中心为左上）
+        /// </summary>
+        public static Point IDCodeSafeOKPt=new Point(255,267);
+        /// <summary>
+        /// QQ安全中心 取消按钮（以安全中心为左上）
+        /// </summary>
+        public static Point IDCodeSafeCancelPt=new Point(332,267);
+        #endregion
+
+        /// <summary>
+        /// 主界面【下载的歌曲】
+        /// </summary>
+        public static Point MainDownLoadBtnPt = new Point(50, 227);
     }
 }

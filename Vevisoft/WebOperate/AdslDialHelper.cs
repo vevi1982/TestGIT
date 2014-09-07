@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Vevisoft.WebOperate
 {
@@ -33,11 +35,27 @@ namespace Vevisoft.WebOperate
             InternetGetConnectedState(out Desc, 0);
             return Desc == 81;
         }
+
+        public bool IsConnectToInternetByPing(string pingadd)
+        {
+            try
+            {
+                var p = new Ping();
+                PingReply reply = p.Send(pingadd);
+                return reply.Status == IPStatus.Success;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            
+        }
         public void StopDailer(string adslName)
         {
             //Process.Start("close.bat");
-            while (Desc == 81)
-            {
+            //while (Desc == 81)
+            //{
                 lock (dailer)
                 {
                     if (!IsAlive("rasdial"))
@@ -56,7 +74,7 @@ namespace Vevisoft.WebOperate
                     //Dailer.Close();
                 }
                 IsConnectedToInternet();
-            }
+            //}
             dailer.Close();
         }
 

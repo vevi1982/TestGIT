@@ -4,13 +4,15 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
+using mshtml;
 
 namespace Vevisoft.WindowsAPI
 {
     public class SystemWindowsAPI
     {
-        [DllImport("user32.dll", EntryPoint = "WindowFromPoint")]//调用system目录下的user32.dll动态链接库，并声明应用的过程名称
-        public static extern IntPtr WindowFromPoint( int xPoint,int yPoint);
+        [DllImport("user32.dll", EntryPoint = "WindowFromPoint")] //调用system目录下的user32.dll动态链接库，并声明应用的过程名称
+        public static extern IntPtr WindowFromPoint(int xPoint, int yPoint);
 
         //需调用API函数
         //需在开头引入命名空间
@@ -59,8 +61,10 @@ namespace Vevisoft.WindowsAPI
         [DllImport("user32.dll", EntryPoint = "FindWindowEx", CharSet = CharSet.Auto)]
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass,
                                                  string lpszWindow);
+
         [DllImport("user32.dll")]
         public static extern IntPtr GetActiveWindow();
+
         //
         [DllImport("user32", EntryPoint = "GetTopWindow")]
         public static extern IntPtr GetTopWindow(IntPtr hwnd);
@@ -72,13 +76,15 @@ namespace Vevisoft.WindowsAPI
         public static extern long EnumChildWindows(IntPtr hWndParent, EnumChildWindowsProc lpEnumFunc, long lParam);
 
         #region 获取窗体信息
+
         [DllImport("user32.dll")]
         public static extern long GetClassName(IntPtr hwnd, StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("User32.dll", EntryPoint = "GetWindowText")]
-        public static extern int GetWindowText(IntPtr hwnd,StringBuilder lpString,int nMaxCount);
+        public static extern int GetWindowText(IntPtr hwnd, StringBuilder lpString, int nMaxCount);
+
         #endregion
-        
+
 
         public static IntPtr FindMainWindowHandle(string caption, int delay, int maxTries)
         {
@@ -141,7 +147,7 @@ namespace Vevisoft.WindowsAPI
 
         }
 
-     
+
 
         public string GetActiveWindowTitle()
         {
@@ -155,8 +161,11 @@ namespace Vevisoft.WindowsAPI
             }
             return null;
         }
+
         public const int GW_HWNDNEXT = 2; // The next window is below the specified window
         public const int GW_HWNDPREV = 3; // The previous window is ab
+        public const int WM_SETTEXT = 0x000C;
+
         /// <summary>
         /// Searches for the topmost visible form of your app in all the forms opened in the current Windows session.
         /// </summary>
@@ -166,10 +175,10 @@ namespace Vevisoft.WindowsAPI
         {
             //Form frm = null;
 
-            IntPtr hwnd = GetTopWindow((IntPtr)null);
+            IntPtr hwnd = GetTopWindow((IntPtr) null);
             if (hwnd != IntPtr.Zero)
             {
-                while ((!IsWindowVisible(hwnd) ) && hwnd != hWnd_mainFrm)
+                while ((!IsWindowVisible(hwnd)) && hwnd != hWnd_mainFrm)
                 {
                     // Get next window under the current handler
                     hwnd = GetNextWindow(hwnd, GW_HWNDNEXT);
@@ -190,25 +199,135 @@ namespace Vevisoft.WindowsAPI
         }
 
         #region 枚举所有窗体
+
         public delegate bool FindWindowCallBack(IntPtr hwnd, int lParam);
+
         [DllImport("user32")]
 
         public static extern int EnumWindows(FindWindowCallBack x, int y);
+
         #endregion
 
         [DllImport("user32", EntryPoint = "SendMessage")]
-        public static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, ref int lParam);
+        public static extern int SendMessage(IntPtr hwnd, uint wMsg, int wParam, ref int lParam);
+
+        [DllImport("user32.dll", EntryPoint = "SendMessageA")]
+        public static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, string lParam);
 
         [DllImport("user32", EntryPoint = "RegisterWindowMessage")]
-        public static extern int RegisterWindowMessage(string lpString);
+        public static extern uint RegisterWindowMessage(string lpString);
 
         [DllImport("OLEACC.DLL", EntryPoint = "ObjectFromLresult")]
         public static extern int ObjectFromLresult(
             int lResult,
             ref System.Guid riid,
             int wParam,
-            [MarshalAs(UnmanagedType.Interface), System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out]ref System.Object ppvObject
+            [MarshalAs(UnmanagedType.Interface), System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out] ref System.Object ppvObject
             //注意这个函数ObjectFromLresult的声明
-        );
+            );
+
+        #region 当前窗体
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", EntryPoint = "SetForegroundWindow")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        #endregion
+
+        #region 设置控件的值
+
+        /// <summary>
+        /// 设置控件的值，例如textbox
+        /// </summary>
+        /// <param name="controlHandle"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static int SetControlValue(IntPtr controlHandle, string text)
+        {
+            return SendMessage(controlHandle, WM_SETTEXT, IntPtr.Zero, text);
+        }
+
+        #endregion
+
+        #region 获取IE控件内的Html
+
+        public static mshtml.IHTMLDocument2 GetHtmlDocument(IntPtr hwnd)
+        {
+            var domObject = new System.Object();
+            int tempInt = 0;
+            var guidIEDocument2 = new Guid();
+            var WM_Html_GETOBJECT = SystemWindowsAPI.RegisterWindowMessage("WM_Html_GETOBJECT"); //定义一个新的窗口消息
+            int W = SystemWindowsAPI.SendMessage(hwnd, WM_Html_GETOBJECT, 0, ref tempInt);
+                //注:第二个参数是RegisterWindowMessage函数的返回值
+            int lreturn = SystemWindowsAPI.ObjectFromLresult(W, ref guidIEDocument2, 0, ref domObject);
+            mshtml.IHTMLDocument2 doc = (mshtml.IHTMLDocument2) domObject;
+            return doc;
+        }
+
+        #endregion
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetParent(IntPtr hWnd);
+
+        #region 程序是否响应
+        [Flags]
+        public enum SendMessageTimeoutFlags : uint
+        {
+            SMTO_NORMAL = 0x0,
+            SMTO_BLOCK = 0x1,
+            WM_NULL = 0,
+            SMTO_ABORTIFHUNG = 0x2,
+            SMTO_NOTIMEOUTIFNOTHUNG = 0x8
+        }
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessageTimeout(
+            IntPtr hWnd,
+            uint Msg,
+            UIntPtr wParam,
+            IntPtr lParam,
+            SendMessageTimeoutFlags fuFlags,
+            uint uTimeout,
+            out UIntPtr lpdwResult);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessageTimeout(
+            IntPtr windowHandle,
+            uint Msg,
+            IntPtr wParam,
+            IntPtr lParam,
+            SendMessageTimeoutFlags flags,
+            uint timeout,
+            out uint result);
+
+        /* Version specifically setup for use with WM_GETTEXT message */
+
+        [DllImport("user32.dll", EntryPoint = "SendMessageTimeout", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern uint SendMessageTimeoutText(
+            IntPtr hWnd,
+            int Msg, // Use WM_GETTEXT
+            int countOfChars,
+            StringBuilder text,
+            SendMessageTimeoutFlags flags,
+            uint uTImeoutj,
+            out IntPtr result);
+        //
+        public static bool IsExeNotResponse(IntPtr hwnd)
+        {
+            var lRes = uint.MinValue;
+            //Register the message
+            var lMsg = RegisterWindowMessage("WM_HTML_GETOBJECT");
+            //Get the object
+            SendMessageTimeout(hwnd, lMsg, IntPtr.Zero, IntPtr.Zero, SendMessageTimeoutFlags.WM_NULL, 1000, out lRes);
+            return lRes == 0;
+            //if (lRes != IntPtr.Zero)
+            //{
+            //    //Get the object from lRes
+            //    //htmlDoc = (mshtml.IHTMLDocument)Win32.ObjectFromLresult(lRes, IID_IHTMLDocument, IntPtr.Zero);
+            //    //return htmlDoc;
+            //}
+        }
+        #endregion
     }
 }

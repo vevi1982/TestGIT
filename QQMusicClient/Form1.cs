@@ -71,7 +71,18 @@ namespace QQMusicClient
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            core.StartDownLoadTimer();
+            try
+            {
+                core.DoOnce();
+                //core.StartDownLoadTimer();
+            }
+            catch (Exception e1)
+            {
+                if(e1.Message==OperateCore.QQDownLoadOverLimit||e1.Message==OperateCore.QQPassErrorMsg)
+                    btnStart_Click(null,null);
+                
+            }
+            
         }
     }
 }
