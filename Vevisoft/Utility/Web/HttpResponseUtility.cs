@@ -86,6 +86,14 @@ namespace Vevisoft.Utility.Web
             HttpParam hparam = new HttpParam(url, cookies);
             return GetHtmlStringFromUrlByGet(hparam);
         }
+        
+        public static string GetJsonStringFromUrlByGet(string url, string cookies)
+        {
+            var hparam = new HttpParam(url,cookies);
+
+            hparam.OtherParams.Add("ContentType", "application/x-www-form-urlencoded");
+            return GetHtmlStringFromUrlByGet(hparam);
+        }
 
         public static string GetIPFromBaidu()
         {
@@ -161,6 +169,31 @@ namespace Vevisoft.Utility.Web
                 request.Headers.Set("Cookie", hparam.Cookies);
             }
             return request;
+        }
+
+        /// <summary>
+        /// 从Json结果中获取数据.
+        /// eg:{"dayCounter":0,"monthCounter":0,"weekCounter":0,"isUsing":1,"qqNo":"1519580187","qqPassword":"nuosjiao","isEnable":1}
+        /// </summary>
+        /// <param name="jsonStr"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetValueFromJson(string jsonStr, string name)
+        {
+            int idx = jsonStr.IndexOf(name, System.StringComparison.Ordinal);
+            if (idx < 0)
+                return null;
+            int idx2 = jsonStr.IndexOf(":", idx, System.StringComparison.Ordinal);
+            if (idx2 < 0)
+                return null;
+            int idx3 = jsonStr.IndexOf(",", idx2, System.StringComparison.Ordinal);
+            if (idx3 < 0)
+                return null;
+            string value = jsonStr.Substring(idx2, idx3 - idx2);
+            value = value.Replace("\"", "");
+            value = value.Replace(":", "");
+            value = value.Replace(",", "");
+            return value.Trim();
         }
     }
     public class HttpDefaultParam

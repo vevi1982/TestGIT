@@ -1,1 +1,12 @@
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\x86\Debug\QQMusicClient.exe.config
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\x86\Debug\QQMusicClient.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\x86\Debug\QQMusicClient.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\x86\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\x86\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\x86\Debug\QQMusicClient.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\x86\Debug\QQMusicClient.Form1.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\x86\Debug\QQMusicClient.FrmSetting.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\x86\Debug\QQMusicClient.Properties.Resources.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\x86\Debug\QQMusicClient.csproj.GenerateResource.Cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\x86\Debug\QQMusicClient.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\x86\Debug\QQMusicClient.pdb

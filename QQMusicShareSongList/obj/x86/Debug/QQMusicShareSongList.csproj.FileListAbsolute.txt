@@ -1,0 +1,13 @@
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\x86\Debug\QQMusicShareSongList.exe.config
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\x86\Debug\QQMusicShareSongList.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\x86\Debug\QQMusicShareSongList.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\x86\Debug\SQLite.NET.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\x86\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\x86\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\x86\Debug\QQMusicShareSongList.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\x86\Debug\QQMusicShareSongList.Form1.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\x86\Debug\QQMusicShareSongList.FrmImportQQFromExcel.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\x86\Debug\QQMusicShareSongList.Properties.Resources.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\x86\Debug\QQMusicShareSongList.csproj.GenerateResource.Cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\x86\Debug\QQMusicShareSongList.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\x86\Debug\QQMusicShareSongList.pdb

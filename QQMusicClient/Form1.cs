@@ -8,67 +8,33 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using QQMusicClient.Dlls;
 using Vevisoft.WindowsAPI;
 
 namespace QQMusicClient
 {
     public partial class Form1 : Form
     {
+        OperateCore core = new OperateCore();
         public Form1()
         {
             InitializeComponent();
+            core.server=new ServerToInternet();
+            core.ShowInStatusBarEvent += core_ShowInStatusBarEvent;
+        }
+
+        void core_ShowInStatusBarEvent(string text)
+        {
+            toolStripStatusLabel1.Text = text;
+            statusStrip1.Refresh();
         }
 
         private void btnSetting_Click(object sender, EventArgs e)
         {
             new FrmSetting().ShowDialog();
         }
-        OperateCore core=new OperateCore();
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            const string caption = "QQ音乐"; //TXGuiFoundation
-            IntPtr handle = SystemWindowsAPI.FindMainWindowHandle(caption, 1000, 10);
-            var rect =new SystemWindowsAPI.RECT();
-            SystemWindowsAPI.GetWindowRect(handle, ref rect);
-            textBox1.Text =//485,359
-                SystemWindowsAPI.WindowFromPoint(rect.Left+PositionInfoQQMusic.VeryCodeDownLoadOKPt.X,
-                                                 rect.Top+ PositionInfoQQMusic.VeryCodeDownLoadOKPt.Y) + "";
-
-            var h2 = SystemWindowsAPI.WindowFromPoint(485, 389);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Thread.Sleep(5000);
-            var ipt=new IntPtr(Convert.ToInt32(textBox1.Text));
-            var handle = core.GetMainForm();
-            //SystemWindowsAPI.ShowWindow(handle, 1);
-            var handle1 = SystemWindowsAPI.GetTopMostWindow(IntPtr.Zero);
-            
-            var handle2 = SystemWindowsAPI.GetActiveWindow();
-            var handle3 = SystemWindowsAPI.GetTopMostWindow(IntPtr.Zero);
-            var handle4 = SystemWindowsAPI.GetForegroundWindow();
-            //
-            var rect = core.GetFormRect(ipt);
-            var rect1 = core.GetFormRect(handle1);
-            var rect2 = core.GetFormRect(handle2);
-            var rect3 = core.GetFormRect(handle3);
-            var rect4 = core.GetFormRect(handle4);
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            var mhook=new MouseHookUtility();
-            mhook.OnMouseActivity += mhook_OnMouseActivity;
-            mhook.Start();
-        }
-
-        void mhook_OnMouseActivity(object sender, MouseEventArgs e)
-        {
-            textBox2.Text = e.Button.ToString() + "  " + e.X + "," + e.Y;
-        }
-
+       
         private void btnStart_Click(object sender, EventArgs e)
         {
             try
@@ -80,9 +46,77 @@ namespace QQMusicClient
             {
                 if(e1.Message==OperateCore.QQDownLoadOverLimit||e1.Message==OperateCore.QQPassErrorMsg)
                     btnStart_Click(null,null);
-                
             }
-            
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                core.StartDownLoadTimer();
+            }
+            catch (Exception e1)
+            {
+                if (e1.Message == OperateCore.QQDownLoadOverLimit || e1.Message == OperateCore.QQPassErrorMsg)
+                    btnStart_Click(null, null);
+            }
+        }
+
+        private IntPtr mainHandle = IntPtr.Zero;
+        /// <summary>
+        /// 启动
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            mainHandle = core.StartApp();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SetMainHandle();
+            core.DeleteDownLoadList(mainHandle);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+           SetMainHandle();
+            core.GetSongListHtml(mainHandle);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+           SetMainHandle();
+            var songlistname = "1-xin";
+            core.isContainsSOngListAndClick(songlistname);
+        }
+
+
+        private void SetMainHandle()
+        {
+            if (mainHandle == IntPtr.Zero)
+                mainHandle = new IntPtr(int.Parse(textBox1.Text));
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            SetMainHandle();
+            core.DeleteTrySongList(mainHandle);
+            core.DeleteDownLoadList(mainHandle);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            SetMainHandle();
+            core.DownLoadSongsBySongListName(mainHandle,"1-xin");
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            SetMainHandle();
+            core.LoginQQ(mainHandle);
+        }
+
     }
 }

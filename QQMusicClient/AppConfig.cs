@@ -16,6 +16,7 @@ namespace QQMusicClient
         //
         public static string AppPath = "";
         public static string DownLoadPath = "";
+        public static string AppCachePath = "";
         //
         public static bool ChangeIP = false;
         //
@@ -46,6 +47,7 @@ namespace QQMusicClient
             PCName = ConfigurationManager.AppSettings["PCName"];
             AppPath = ConfigurationManager.AppSettings["AppPath"];
             DownLoadPath = ConfigurationManager.AppSettings["DownLoadPath"];
+            AppCachePath = ConfigurationManager.AppSettings["AppCachePath"];
             ChangeIP = ConfigurationManager.AppSettings["ChangeIP"] != "0";
 
             ADSLName = ConfigurationManager.AppSettings["ADSLName"];

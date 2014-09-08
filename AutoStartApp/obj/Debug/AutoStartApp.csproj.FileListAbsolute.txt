@@ -1,10 +1,10 @@
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\AutoStartApp.exe.config
-E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.csprojResolveAssemblyReference.cache
-E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.Properties.Resources.resources
-E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\AutoStartApp.exe
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\AutoStartApp.pdb
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\Vevisoft.dll
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.Properties.Resources.resources
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.exe
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.pdb

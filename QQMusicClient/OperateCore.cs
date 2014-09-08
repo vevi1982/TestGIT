@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,19 +13,35 @@ using mshtml;
 
 namespace QQMusicClient
 {
+
+    public delegate void ShowInStatusBar(string text);
     /// <summary>
     /// QQ音乐自动下载操作
     /// </summary>
     public class OperateCore
     {
+        public event ShowInStatusBar ShowInStatusBarEvent;
+
+        protected virtual void OnShowInStatusBarEvent(string text)
+        {
+            ShowInStatusBar handler = ShowInStatusBarEvent;
+            if (handler != null) handler(text);
+        }
+
         private System.Windows.Forms.Timer identifyingTimer;
-        private const string didcInfo = "您下载歌曲的次数过于频繁，请输入验证码后继续下载！";
+        private const string didcInfo = "您下载歌曲的次数过于频繁";
 
         /// <summary>
         /// 最大延时
         /// </summary>
         public int maxTime = 30;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public Models.QQInfo qqModel { get; set; }
+
+        public Dlls.IServer server { get; set; }
         /// <summary>
         /// 是否下载完成
         /// </summary>
@@ -60,47 +77,19 @@ namespace QQMusicClient
 
             #endregion
 
-            //2.打开软件 判断软件是否显示打开并显示？？
-            if (string.IsNullOrEmpty(AppConfig.AppPath))
-                throw new Exception("没有设置QQ音乐s软件路径");
-            if (!File.Exists(AppConfig.AppPath))
-                throw new Exception("软件路径错误，找不到软件！");
+            OnShowInStatusBarEvent("开始启动QQ音乐!");
             //
-            System.Diagnostics.Process.Start(AppConfig.AppPath);
+            IntPtr mainHanle = StartApp();
+            OnShowInStatusBarEvent("启动完成！");
+            Thread.Sleep(1000);
             //
-            IntPtr mainHanle = GetMainForm();
-            //
-          
-            //
-            if (mainHanle == IntPtr.Zero)
-                throw new Exception("没有获取到主窗体句柄");
-            mainHandler = mainHanle;
-            //
-            while (!SystemWindowsAPI.IsExeNotResponse(mainHanle))
-            {
-                Thread.Sleep(1000);
-            }
-            //
-            //主窗体加载完成
-            Thread.Sleep(AppConfig.TimeMainFormStart*1000);
-           
-            //是否已登录,登录则退出
-            QQLogOut(mainHanle);
-            //登录QQ,只有QQ密码错误的时候才重新登录。否则直接重启流程
-            var successOK = false;
-            do
-            {
-                #region 获取QQ
-                //获取QQ号
-                var qqlist = GetQQNoAndPass();
-                #endregion
-                //
-                successOK = QQLoginSuccess(mainHanle, qqlist[0], qqlist[1]);
-            } while (!successOK);
+            OnShowInStatusBarEvent("启动登陆！");
+            LoginQQ(mainHanle);
             //
             Thread.Sleep(1000);
+            OnShowInStatusBarEvent("开始下载歌曲！");
             //下载歌曲 并启动判断程序
-            DownLoadSongs(mainHanle);
+            DownLoadSongsBySongListName(mainHanle,qqModel.SongListName);
             //下载完毕，删除歌曲
             while (!IsDownLoadOver)
             {
@@ -108,9 +97,313 @@ namespace QQMusicClient
                 Application.DoEvents();
             }
             //
-            ClearSongFolderAndCloseMain();
+            ClearALlInfos(mainHanle);
 
         }
+
+        #region 启动程序
+        /// <summary>
+        /// 启动QQ音乐程序
+        /// </summary>
+        /// <returns></returns>
+        public IntPtr StartApp()
+        {
+            //2.打开软件 判断软件是否显示打开并显示？？
+            if (string.IsNullOrEmpty(AppConfig.AppPath))
+            {
+                OnShowInStatusBarEvent("没有设置QQ音乐s软件路径！");
+                throw new Exception("没有设置QQ音乐s软件路径");
+            }
+            if (!File.Exists(AppConfig.AppPath))
+            {
+                OnShowInStatusBarEvent("软件路径错误，找不到软件！");
+                throw new Exception("软件路径错误，找不到软件！");
+            }
+            //
+            System.Diagnostics.Process.Start(AppConfig.AppPath);
+            //
+            OnShowInStatusBarEvent("等待线程启动完全！");
+            //
+            WaitMainStartOver();
+            //
+            OnShowInStatusBarEvent("获取主窗体句柄！");
+            IntPtr mainHanle = GetMainForm();
+            
+            //
+            if (mainHanle == IntPtr.Zero)
+            {
+                OnShowInStatusBarEvent("没有获取到主窗体句柄！");
+                throw new Exception("没有获取到主窗体句柄");
+            }
+            mainHandler = mainHanle;
+            //
+            while (!SystemWindowsAPI.IsExeNotResponse(mainHanle) || !GetMainResponseByProcess())
+            {
+                Application.DoEvents();
+                Thread.Sleep(1000);
+            }
+            //
+            OnShowInStatusBarEvent("主窗体加载完成！");
+            //主窗体加载完成
+            Thread.Sleep(AppConfig.TimeMainFormStart * 1000);
+            return mainHanle;
+        }
+
+        #region 是否启动完全,判断线程
+        /// <summary>
+        /// 等待QQ音乐启动完毕
+        /// </summary>
+        public void WaitMainStartOver()
+        {
+            //
+            while (GetProcessCount("QQMusicExternal") != 2)
+            {
+                Application.DoEvents();
+                Thread.Sleep(1000);
+            }
+        }
+
+        private int GetProcessCount(string processName)
+        {
+            var Count = 0;
+            foreach (Process process in System.Diagnostics.Process.GetProcesses())
+            {
+                if (process.ProcessName == processName)
+                    count++;
+            }
+            return count;
+        }
+        #endregion
+
+
+        #endregion
+
+        #region 登录QQ，如果密码错误 ，提交。重新获取QQ登录
+
+        public void LoginQQ(IntPtr mainHanle)
+        {
+            OnShowInStatusBarEvent("查看是否已登录!");
+            QQLogOut(mainHanle);
+           
+            //登录QQ,只有QQ密码错误的时候才重新登录。否则直接重启流程
+            var successOK = false;
+            do
+            {
+                OnShowInStatusBarEvent("开始获取QQ！");
+
+                #region 获取QQ
+                //获取QQ号
+                qqModel = server.GetQQFromServer();
+                OnShowInStatusBarEvent("获取QQ：" + qqModel.QQNo);
+                #endregion
+
+                //
+                successOK = QQLoginSuccess(mainHanle, qqModel.QQNo, qqModel.QQPass);
+                if (!successOK)
+                    OnShowInStatusBarEvent(qqModel.QQNo + "密码错误，重新获取QQ！");
+            } while (!successOK);
+        }
+
+        #region 退出登录
+        /// <summary>
+        /// 退出登录，如果没有登录，那么返回操作
+        /// </summary>
+        /// <param name="mainHandle"></param>
+        private void QQLogOut(IntPtr mainHandle)
+        {
+            SystemWindowsAPI.SetForegroundWindow(mainHandle);
+            //移动鼠标 到 程序 标题栏
+            ClickChangeUser(mainHandle);
+            //
+            //判断是否有 【更改用户提示框】
+            Thread.Sleep(AppConfig.TimeAlertCHangeUser * 1000);
+            IntPtr msgHandle = SystemWindowsAPI.GetForegroundWindow();
+            if (msgHandle == mainHandle)
+            {
+                //说明 弹出框 说明没有登录，直接返回
+                OnShowInStatusBarEvent("没有发现【弹出框】 说明没有登录，直接返回!");
+                return;
+            }
+            OnShowInStatusBarEvent("有【更改用户提示框】,那么 鼠标移动 左键单击 【关闭】!");
+            //有【更改用户提示框】,那么 鼠标移动 左键单击 【关闭】
+            // 关闭【更改用户提示框】
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.ChangeUserAlertClosePt);
+            //
+            //【QQ登录窗体】是否出现
+            OnShowInStatusBarEvent("判断【登陆窗体】是否出现!");
+            var loginHandle = GetLoginForm();
+            if (loginHandle != IntPtr.Zero)
+            {
+                OnShowInStatusBarEvent("关闭【登陆窗体】!");
+                //关闭登录窗体
+                MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormClosePt);
+            }
+            else
+            {
+                OnShowInStatusBarEvent("【登陆窗体】等待超时!");
+                throw new Exception("等待超时，【更改用户提示框】没有出现。");
+            }
+            //
+            //判断是否关闭,即当前窗体是否主窗体
+            OnShowInStatusBarEvent("判断是否关闭,即当前窗体是否主窗体！");
+            if (!ForgroundIsMain(mainHandle, maxTime))
+            {
+                OnShowInStatusBarEvent("等待超时，【QQ登陆框】没有关闭。!");
+                throw new Exception("等待超时，【QQ登陆框】没有关闭。");
+            }
+
+        }
+        #endregion
+        #region 登录QQ
+
+        /// <summary>
+        /// 登录，密码错误返回false
+        /// </summary>
+        /// <param name="mainHanle"></param>
+        /// <returns></returns>
+        private bool QQLoginSuccess(IntPtr mainHanle, string qqno, string qqpass)
+        {
+            try
+            {
+                QQLogin(mainHanle, qqno, qqpass);
+            }
+            catch (Exception e)
+            {
+                //密码错误，重新开始
+                if (e.Message == QQPassErrorMsg)
+                    return false;
+                //验证码输入错误
+
+                else throw e;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 登录操作
+        /// </summary>
+        /// <param name="mainHandle"></param>
+        private void QQLogin(IntPtr mainHandle, string qqno, string qqpass)
+        {
+            SystemWindowsAPI.SetForegroundWindow(mainHandle);
+            //点击 标题栏 图标
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.MainCaptionLoginButtonPt);
+            //点击后移动鼠标位置 以防止出现【用户信息框】
+            MouseSetPositonAndLeftClick(mainHandle, new Point(1, 1));
+            //            
+            //判断是否有 【登录对话框】
+            IntPtr msgHandle = GetLoginForm();
+            //查找5S后无果，跑出异常
+            if (msgHandle == IntPtr.Zero)
+            {
+                OnShowInStatusBarEvent("等待超时，登录,【QQ登录框】没有出现！");
+                throw new Exception("等待超时，登录,【QQ登录框】没有出现。");
+            }
+            //
+            Thread.Sleep(AppConfig.TimeAlertCHangeUser * 1000);
+            InputPass(mainHandle, qqno, qqpass);
+            //此时 可能出现多种情况。
+            //1.正常情况 登录框 关闭 登陆完成
+            //2.密码错误 
+            //3.需要输入验证码
+            //超时判断
+            Thread.Sleep(AppConfig.TimeAlertCHangeUser * 1000);
+            var count = 0;
+            var safeHandle = GetQQSafeCenterForm(10);
+            while (safeHandle != IntPtr.Zero && count < 3)
+            {
+                //安全中心出现，判断10S
+                //处理一次
+                DealWithQQSafeForm(safeHandle, qqno);
+                OnShowInStatusBarEvent("QQ安全中心" + count);
+                Console.WriteLine("QQ安全中心" + count);
+                count++;
+                safeHandle = GetQQSafeCenterForm(10);
+            }
+            if (count >= 3)
+            {
+                OnShowInStatusBarEvent("处理错误，退出登录,处理QQ安全中心失败。");
+                throw new Exception("处理错误，退出登录,处理QQ安全中心失败。");
+            }
+            //是否有登录失败，请输入用户名和密码登陆
+            if (!ForgroundIsMain(mainHandle))
+            {
+                msgHandle = SystemWindowsAPI.GetForegroundWindow();
+                var strtitle = new StringBuilder(256);
+                SystemWindowsAPI.GetWindowText(msgHandle, strtitle, 257);
+                if (strtitle.ToString().ToLower() == "error")
+                {
+                    OnShowInStatusBarEvent("密码错误");
+                    Console.WriteLine("密码错误");
+                    //关闭安全中心窗体，提交错误QQ并重新获取QQ号密码
+                    SystemWindowsAPI.SetActiveWindow(safeHandle);
+                    MouseKeyBoradUtility.KeySendESC();
+                    SendPassErrorQQToServer(qqno);
+                    //
+                    throw new Exception(QQPassErrorMsg);
+                    //MouseKeyBoradUtility.KeySendEnter();
+                    ////
+                    //Thread.Sleep(1000);
+                    ////
+                    ////关闭登录窗体
+                    //MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormClosePt);
+                }
+            }
+            //登陆成功！！
+
+        }
+
+        /// <summary>
+        ///安全中心 窗体是否还存在，存在则说明验证码输入错误。
+        ///如果正确，密码错误那么还是出现安全中心.只不过是提示密码错误
+        ///当前窗体是否主窗体？    
+        /// </summary>
+        /// <param name="safeHandle"></param>
+        /// <param name="CurrentQQNo"></param>
+        private void DealWithQQSafeForm(IntPtr safeHandle, string CurrentQQNo)
+        {
+            OnShowInStatusBarEvent("安全中心出现");
+            Console.WriteLine("QQ安全中心出现");
+            //判断类型
+            if (IsPassWrong(safeHandle)) //密码错误
+            {
+                Console.WriteLine("密码错误");
+                //关闭安全中心窗体，提交错误QQ并重新获取QQ号密码
+                SystemWindowsAPI.SetActiveWindow(safeHandle);
+                MouseKeyBoradUtility.KeySendESC();
+                SendPassErrorQQToServer(CurrentQQNo);
+                //
+                throw new Exception(QQPassErrorMsg);
+            }
+            else if (IsNeedVeryCode(safeHandle)) //需要输入验证码
+            {
+                OnShowInStatusBarEvent("登录需要验证码");
+                Console.WriteLine("登录需要验证码");
+                SendNeedVeryCodeQQToServer(CurrentQQNo);
+                //输入验证码
+                SystemWindowsAPI.SetActiveWindow(safeHandle);
+                InputVeryCodeOnLogin(safeHandle);
+            }
+        }
+        /// <summary>
+        /// 主程序是否无响应,线程方法
+        /// </summary>
+        /// <returns></returns>
+        private bool GetMainResponseByProcess()
+        {
+            foreach (var p in System.Diagnostics.Process.GetProcesses())
+            {
+                if (p.ProcessName.Contains("QQMusic") && p.MainModule.FileName.ToLower() == AppConfig.AppPath.ToLower())
+                {
+                    Console.WriteLine(p.StartInfo.FileName);
+                    return p.Responding;
+                }
+            }
+            return false;
+        }
+
+        #endregion
+        #endregion
 
         #region 更改IP
 
@@ -119,7 +412,6 @@ namespace QQMusicClient
         /// </summary>
         private void ChangeIP()
         {
-
             if (AppConfig.ChangeIP)
             {
                 var adsl = new AdslDialHelper();
@@ -151,95 +443,16 @@ namespace QQMusicClient
 
         #endregion
 
-        #region 登录QQ
-
+        #region 清理信息及删除下载列表
         /// <summary>
-        /// 登录，密码错误返回false
-        /// </summary>
-        /// <param name="mainHanle"></param>
-        /// <returns></returns>
-        private bool QQLoginSuccess(IntPtr mainHanle, string qqno, string qqpass)
-        {
-            try
-            {
-                QQLogin(mainHanle, qqno, qqpass);
-            }
-            catch (Exception e)
-            {
-                //密码错误，重新开始
-                if (e.Message == QQPassErrorMsg)
-                    return false;
-                    //验证码输入错误
-
-                else throw e;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// 登录操作
+        /// 清理所有信息
         /// </summary>
         /// <param name="mainHandle"></param>
-        private void QQLogin(IntPtr mainHandle, string qqno, string qqpass)
+        public void ClearALlInfos(IntPtr mainHandle)
         {
-            SystemWindowsAPI.SetForegroundWindow(mainHandle);
-            //点击 标题栏 图标
-            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.MainCaptionLoginButtonPt);
-            //点击后移动鼠标位置 以防止出现【用户信息框】
-            MouseSetPositonAndLeftClick(mainHandle, new Point(1, 1));
-            //            
-            //判断是否有 【登录对话框】
-            IntPtr msgHandle = GetLoginForm();
-            //查找5S后无果，跑出异常
-            if (msgHandle == IntPtr.Zero)
-                throw new Exception("等待超时，登录,【QQ登录框】没有出现。");
-            //
-            Thread.Sleep(AppConfig.TimeAlertCHangeUser*1000);
-            InputPass(mainHandle, qqno, qqpass);
-            //此时 可能出现多种情况。
-            //1.正常情况 登录框 关闭 登陆完成
-            //2.密码错误 
-            //3.需要输入验证码
-            //超时判断
-            Thread.Sleep(AppConfig.TimeAlertCHangeUser*1000);
-            var count = 0;
-            var safeHandle = GetQQSafeCenterForm(10);
-            while (safeHandle != IntPtr.Zero && count < 3)
-            {
-                //安全中心出现，判断10S
-                //处理一次
-                DealWithQQSafeForm(safeHandle, qqno);
-                Console.WriteLine("QQ安全中心" + count);
-                count++;
-                safeHandle = GetQQSafeCenterForm(10);
-            }
-            if (count >= 3)
-                throw new Exception("处理错误，退出登录,处理QQ安全中心失败。");
-            //是否有登录失败，请输入用户名和密码登陆
-            if (!ForgroundIsMain(mainHandle))
-            {
-                msgHandle = SystemWindowsAPI.GetForegroundWindow();
-                var strtitle = new StringBuilder(256);
-                SystemWindowsAPI.GetWindowText(msgHandle, strtitle, 257);
-                if (strtitle.ToString().ToLower() == "error")
-                {
-                    Console.WriteLine("密码错误");
-                    //关闭安全中心窗体，提交错误QQ并重新获取QQ号密码
-                    SystemWindowsAPI.SetActiveWindow(safeHandle);
-                    MouseKeyBoradUtility.KeySendESC();
-                    SendPassErrorQQToServer(qqno);
-                    //
-                    throw new Exception(QQPassErrorMsg);
-                    //MouseKeyBoradUtility.KeySendEnter();
-                    ////
-                    //Thread.Sleep(1000);
-                    ////
-                    ////关闭登录窗体
-                    //MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormClosePt);
-                }
-            }
-            //登陆成功！！
-            
+            DeleteTrySongList(mainHandle);
+            DeleteDownLoadList(mainHandle);
+            ClearSongFolderAndCloseMain();
         }
 
         /// <summary>
@@ -247,9 +460,6 @@ namespace QQMusicClient
         /// </summary>
         public void ClearSongFolderAndCloseMain()
         {
-            var dir = new DirectoryInfo(AppConfig.DownLoadPath);
-            foreach (FileInfo f in dir.GetFiles())
-                f.Delete();
             //如果QQ音乐打开，那么关闭
             foreach (var p in System.Diagnostics.Process.GetProcesses())
             {
@@ -259,26 +469,21 @@ namespace QQMusicClient
                     p.Kill();
                 }
             }
+            //删除下载文件
+            Vevisoft.IO.Directory.DeleteDirectoryContent(AppConfig.DownLoadPath);
+            //删除缓存文件
+            Vevisoft.IO.Directory.DeleteDirectoryContent(AppConfig.AppCachePath);
         }
-
-        private bool GetMainResponseByProcess()
-        {
-            foreach (var p in System.Diagnostics.Process.GetProcesses())
-            {
-                if (p.ProcessName.Contains("QQMusic") && p.MainModule.FileName.ToLower() == AppConfig.AppPath.ToLower())
-                {
-                    Console.WriteLine(p.StartInfo.FileName);
-                    return p.Responding;
-                }
-            }
-            return false;
-        }
-
-        #endregion
 
         #region 删除下载列表内容
-        private void DeleteDownLoadList(IntPtr mainHandle)
+        /// <summary>
+        /// 删除下载列表中所有文件
+        /// </summary>
+        /// <param name="mainHandle"></param>
+        public void DeleteDownLoadList(IntPtr mainHandle)
         {
+            if (mainHandle == IntPtr.Zero)
+                return;
             //点击下载列表 按钮
             MouseSetPositonAndLeftClick(mainHandle,PositionInfoQQMusic.MainDownLoadBtnPt);
             //等待响应
@@ -306,82 +511,243 @@ namespace QQMusicClient
                 Thread.Sleep(1000);
             }
         }
-        #endregion
         /// <summary>
-        ///安全中心 窗体是否还存在，存在则说明验证码输入错误。
-        ///如果正确，密码错误那么还是出现安全中心.只不过是提示密码错误
-        ///当前窗体是否主窗体？    
-        /// </summary>
-        /// <param name="safeHandle"></param>
-        /// <param name="CurrentQQNo"></param>
-        private void DealWithQQSafeForm(IntPtr safeHandle, string CurrentQQNo)
-        {
-            Console.WriteLine("QQ安全中心出现");
-            //判断类型
-            if (IsPassWrong(safeHandle)) //密码错误
-            {
-                Console.WriteLine("密码错误");
-                //关闭安全中心窗体，提交错误QQ并重新获取QQ号密码
-                SystemWindowsAPI.SetActiveWindow(safeHandle);
-                MouseKeyBoradUtility.KeySendESC();
-                SendPassErrorQQToServer(CurrentQQNo);
-                //
-                throw new Exception(QQPassErrorMsg);
-            }
-            else if (IsNeedVeryCode(safeHandle)) //需要输入验证码
-            {
-                Console.WriteLine("登录需要验证码");
-                SendNeedVeryCodeQQToServer(CurrentQQNo);
-                //输入验证码
-                SystemWindowsAPI.SetActiveWindow(safeHandle);
-                InputVeryCodeOnLogin(safeHandle);
-            }
-        }
-
-        #region 退出登录
-
-        /// <summary>
-        /// 退出登录，如果没有登录，那么返回操作
+        /// 清空试听列表中的内容
         /// </summary>
         /// <param name="mainHandle"></param>
-        private void QQLogOut(IntPtr mainHandle)
+        public void DeleteTrySongList(IntPtr mainHandle)
         {
-            SystemWindowsAPI.SetForegroundWindow(mainHandle);
-            //移动鼠标 到 程序 标题栏
-            ClickChangeUser(mainHandle);
-            //
-            //判断是否有 【更改用户提示框】
-            Thread.Sleep(AppConfig.TimeAlertCHangeUser*1000);
-            IntPtr msgHandle = SystemWindowsAPI.GetForegroundWindow();
-            if (msgHandle == mainHandle)
-            {
-                //说明 弹出框 说明没有登录，直接返回
+            if (mainHandle == IntPtr.Zero)
                 return;
-            }
-            //有【更改用户提示框】,那么 鼠标移动 左键单击 【关闭】
-            // 关闭【更改用户提示框】
-            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.ChangeUserAlertClosePt);
-            //
-            //【QQ登录窗体】是否出现
-            var loginHandle = GetLoginForm();
-            if (loginHandle != IntPtr.Zero)
+            //点击下载列表 按钮
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.MaintrySongListBtnPt);
+            //等待响应
+            while (!SystemWindowsAPI.IsExeNotResponse(mainHandle) || !GetMainResponseByProcess())
             {
-                //关闭登录窗体
-                MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormClosePt);
+                Thread.Sleep(1000);
             }
-            else
-                throw new Exception("等待超时，【更改用户提示框】没有出现。");
+            Thread.Sleep(1000);
+            //2.
+           MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.MainTryListenPanelFirstSongPt);
             //
-            //判断是否关闭,即当前窗体是否主窗体
-            if (!ForgroundIsMain(mainHandle, maxTime))
-                throw new Exception("等待超时，【QQ登陆框】没有关闭。");
-
+            Thread.Sleep(AppConfig.TimeKeyInterval);
+            //Ctrl A 全选
+            MouseKeyBoradUtility.KeySendCtrlA();
+            //
+            Thread.Sleep(AppConfig.TimeKeyInterval);
+            //
+            MouseKeyBoradUtility.KeySendDelete();
+            //
+            while (!SystemWindowsAPI.IsExeNotResponse(mainHandle) || !GetMainResponseByProcess())
+            {
+                Thread.Sleep(1000);
+            }
         }
-
         #endregion
+        #endregion  
+        
 
         #region 下载歌曲
 
+        private IntPtr songListIEHandle = IntPtr.Zero;
+        private bool isContainsSongListIE = false;
+        public bool GetSongListHtml(IntPtr mainHandle)
+        {
+            isContainsSongListIE = false;
+            songListIEHandle = IntPtr.Zero;
+            //
+            SystemWindowsAPI.SetForegroundWindow(mainHandle);
+            //点击头像
+            MouseSetPositonAndLeftClick(mainHandle,PositionInfoQQMusic.MainCaptionLoginButtonPt);
+            MouseSetPositonAndLeftClick(mainHandle, new Point(1,1));
+            Thread.Sleep(4000);
+            //需要遍历所有窗体
+            SystemWindowsAPI.FindWindowCallBack callback_songlist = EnumWindowCallBack_SongList;
+            SystemWindowsAPI.EnumWindows(callback_songlist, 0);
+            //
+            if (isContainsSongListIE)
+                ClickGetSongListbtn();
+            return isContainsSongListIE;
+            
+        }
+        public bool ClickGetSongListbtn()
+        {
+            var id = GetHtmlDocument(songListIEHandle);
+            if (id == null)
+                return false;
+            var str = id.body.innerHTML;
+            foreach (IHTMLElement link in id.links)
+            {
+                if (!string.IsNullOrEmpty(link.innerHTML) && link.innerHTML.Contains("点歌"))
+                {
+                    link.click();
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// 是否存在此歌单，存在则点击
+        /// </summary>
+        /// <param name="songlistName"></param>
+        /// <returns></returns>
+        public bool isContainsSOngListAndClick(string songlistName)
+        {
+            var id = GetHtmlDocument(songListIEHandle);
+            if (id == null)
+                return false;
+            var str = id.body.innerHTML;
+            foreach (IHTMLElement link in id.links)
+            {
+                if (!string.IsNullOrEmpty(link.innerHTML)&&link.innerHTML.Contains("《"+songlistName))
+                {
+                    link.click();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void DownLoadSongsBySongListName(IntPtr mainhandle, string songlistName)
+        {
+            if (GetSongListHtml(mainhandle))
+            {
+                Thread.Sleep(4000);
+                //
+               if (isContainsSOngListAndClick(songlistName))
+               {
+                   Thread.Sleep(2000);
+                   //
+                   MouseSetPositonAndLeftClick(mainhandle, PositionInfoQQMusic.MaintrySongListBtnPt);
+                   if (!ForgroundIsMain(mainhandle, 10))
+                   {
+                       MouseKeyBoradUtility.KeySendAltF4();
+                       Thread.Sleep(AppConfig.TimeAlertCHangeUser * 1000);
+                   }
+                   //2.
+                   Thread.Sleep(AppConfig.TimeKeyInterval);
+                   //
+                   MouseSetPositonAndLeftClick(mainhandle, PositionInfoQQMusic.MainTryListenPanelFirstSongPt);
+                   //
+                   Thread.Sleep(AppConfig.TimeKeyInterval);
+                   //Ctrl A 全选
+                   MouseKeyBoradUtility.KeySendCtrlA();
+                   //
+                   Thread.Sleep(AppConfig.TimeKeyInterval);
+                   //
+                   MouseSetPositonAndLeftClick(mainhandle, PositionInfoQQMusic.MaintrySongListDownLoadButtonPt);
+                   //
+                   Thread.Sleep(AppConfig.TimeKeyInterval);
+                   //
+                   MouseKeyBoradUtility.KeySendArrowDown();
+                   //
+                   Thread.Sleep(AppConfig.TimeKeyInterval);
+                   //
+                   MouseKeyBoradUtility.KeySendArrowDown();
+                   //
+                   Thread.Sleep(AppConfig.TimeKeyInterval);
+                   //
+                   MouseKeyBoradUtility.KeySendEnter();
+                   //
+                   //等待响应
+                   while (!SystemWindowsAPI.IsExeNotResponse(mainhandle)
+                       || !GetMainResponseByProcess())
+                   {
+                       Thread.Sleep(1000);
+                   }
+                   //等待下载对话框，判断是否超过限制
+                   var dwlHandle = GetDownLoadDiag(30);
+                   if (dwlHandle != IntPtr.Zero)
+                   {
+                       if (cannotDown)
+                       {
+                           Console.WriteLine(QQDownLoadOverLimit);
+                           throw new Exception(QQDownLoadOverLimit);
+                       }
+                       Thread.Sleep(500);
+                       MouseSetPositonAndLeftClick(mainhandle, PositionInfoQQMusic.DownLoadDiagButtonPt);
+                       //启动计时器 判断验证码输入框是否存在，以及是否下载完成
+                   }
+                   else
+                   {
+                       OnShowInStatusBarEvent("下载对话框没有找到");
+                       throw new Exception("下载对话框没有找到");
+                   }
+                   //等待响应
+                   while (!SystemWindowsAPI.IsExeNotResponse(mainhandle) || !GetMainResponseByProcess())
+                       Thread.Sleep(1000);
+                   //判断10s是否超限
+                   SystemWindowsAPI.SetForegroundWindow(mainhandle);
+                   dwlHandle = GetDownLoadDiag(15);
+                   if (dwlHandle != IntPtr.Zero)
+                   {
+                       if (cannotDown)
+                       {
+                           Console.WriteLine(QQDownLoadOverLimit);
+                           throw new Exception(QQDownLoadOverLimit);
+                       }
+                       //
+                       StartDownLoadTimer();
+                   }
+               }
+               else
+               {
+                   OnShowInStatusBarEvent("没有共享点歌内容");
+                   throw new Exception("没有共享点歌内容");
+               }
+            }
+            else
+            {
+                OnShowInStatusBarEvent("没有共享点歌");
+                throw new Exception("没有共享点歌");
+            }
+        }
+
+        #region 遍历窗体寻找 【点歌内容】
+
+        private bool EnumWindowCallBack_SongList(IntPtr hwnd, int lParam)
+        {
+            var strclsName = new StringBuilder(256);
+            Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(hwnd, strclsName, 257);
+            var strTitle = new StringBuilder(256);
+            Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(hwnd, strTitle, 257);
+            if (!(strclsName.ToString().Trim().ToLower() == "TXGFLayerMask".ToLower() ||
+                  strclsName.ToString().Trim().ToLower() == "TXGuiFoundation".ToLower())) //QQ音乐 查找歌单
+                return true;
+
+            count++;
+            //richTextBox1.AppendText(string.Format("{3}---Title:{0};  ClassName:{1};  Hwnd:{2}\r\n", strTitle, strclsName, hwnd.ToString(), count));
+            //
+            IntPtr chHandle = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(hwnd, IntPtr.Zero, null,
+                                                                                null);
+            if (chHandle != IntPtr.Zero)
+            {
+                strclsName = new StringBuilder(256);
+                Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(chHandle, strclsName, 257);
+                strTitle = new StringBuilder(256);
+                Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(chHandle, strTitle, 257);
+                //
+                IntPtr chHandle2 = SystemWindowsAPI.FindWindowEx(chHandle, IntPtr.Zero, null, null);
+                IntPtr chHandle3 = SystemWindowsAPI.FindWindowEx(chHandle2, IntPtr.Zero, null, null);
+                var didcIEHandler1 = SystemWindowsAPI.FindWindowEx(chHandle3, IntPtr.Zero, null, null);
+                var id = GetHtmlDocument(didcIEHandler1);
+                if (id == null)
+                    return true;
+                var str = id.body.innerHTML;
+                if (str == null) return true;
+                string cookies = id.cookie;
+                if (str.Contains("音乐基因"))
+                {
+                    OnShowInStatusBarEvent("歌单验证码窗体IE句柄");
+                    songListIEHandle = didcIEHandler1;
+                    isContainsSongListIE = str.Contains("点歌");
+                }
+            }
+            return true;
+
+        }
+
+        #endregion
         /*
          * 点击 播放列表
          * 点击 歌曲列表区域
@@ -397,6 +763,7 @@ namespace QQMusicClient
         private void DownLoadSongs(IntPtr mainhandle)
         {
             SystemWindowsAPI.SetForegroundWindow(mainhandle);
+            DeleteTrySongList(mainhandle);
             DeleteDownLoadList(mainhandle);
             SystemWindowsAPI.SetForegroundWindow(mainhandle);
             //1.点击 播放列表
@@ -451,7 +818,11 @@ namespace QQMusicClient
                 MouseSetPositonAndLeftClick(mainhandle, PositionInfoQQMusic.DownLoadDiagButtonPt);
                 //启动计时器 判断验证码输入框是否存在，以及是否下载完成
             }
-            else throw new Exception("下载对话框没有找到");
+            else
+            {
+                OnShowInStatusBarEvent("下载对话框没有找到");
+                throw new Exception("下载对话框没有找到");
+            }
             //等待响应
             while (!SystemWindowsAPI.IsExeNotResponse(mainhandle) || !GetMainResponseByProcess())
                 Thread.Sleep(1000);
@@ -480,6 +851,7 @@ namespace QQMusicClient
             mainHandler = GetMainForm();
             identifyingTimer = new System.Windows.Forms.Timer { Interval = 10 * 1000 };
             identifyingTimer.Tick += identifyingTimer_Tick;
+            OnShowInStatusBarEvent("开始下载");
             identifyingTimer.Start();
         }
         /// <summary>
@@ -491,17 +863,19 @@ namespace QQMusicClient
         {
             try
             {
+                OnShowInStatusBarEvent("查找下载验证码窗体");
                 if (GetDownLoadIdCodeDiagExist())
                 {
+                    OnShowInStatusBarEvent("下载验证码窗体出现");
                     //当前窗体不是主窗体，那么 默认 就是输入验证码窗体 弹出
                     InputDownLoadIdentifyingCode();
 
                 }
             }
-            catch (Exception)
+            catch (Exception e1)
             {
 
-                
+                OnShowInStatusBarEvent("下载验证码窗体"+e1.Message);
             }
 
             //
@@ -545,34 +919,48 @@ namespace QQMusicClient
             //
             //for (int i = 0; i < 4; i++)
             //    MouseKeyBoradUtility.KeySendBackSpace();
-
+            Thread.Sleep(3000);
             var idcode = GetIDCodeDownLoad(didcIEHandler);
+            OnShowInStatusBarEvent("验证码" + idcode);
             //
             Console.WriteLine(idcode);
             mshtml.IHTMLDocument2 id = GetHtmlDocument(didcIEHandler);   
                 //
             if (idcode == "1009" || idcode.Length != 4)
             {
+                OnShowInStatusBarEvent("验证码返回失败");
                 id.parentWindow.execScript("showVcode()", "javascript");
                 throw new Exception(" 验证码返回失败");
             }
             //
-                    
+            
             id.parentWindow.execScript("showElement('id_verify')", "javascript");
             var idtext = id.all.item("vcode", 0) as IHTMLElement;
-            idtext.setAttribute("value", idcode);
+            if (idtext != null)
+            {
+                OnShowInStatusBarEvent("输入验证码" + idcode);
+                idtext.setAttribute("value", idcode);
+            }
+            else
+            {
+                OnShowInStatusBarEvent("没有找到输入验证码" + idcode);
+            }
             //var btnok = id.all.item("", 0) as IHTMLElement;
             foreach ( IHTMLElement btnok in id.links)
             {
                 if (btnok.innerHTML.Contains("确认"))
                 {
+                    OnShowInStatusBarEvent("点击确认按钮" + idcode);
                     btnok.click();
                     break;
                 }
             }
             var errortip = id.all.item("error_tips", 0) as IHTMLElement;
-            if(errortip.innerHTML.Contains("错误"))
+            if (errortip.innerHTML.Contains("错误"))
+            {
+                OnShowInStatusBarEvent("验证码错误" + idcode);
                 id.parentWindow.execScript("showVcode()", "javascript");
+            }
             //btnok.click();
 
             //输入验证码
@@ -581,14 +969,15 @@ namespace QQMusicClient
             //MouseSetPositonAndLeftClick(mainHandler,PositionInfoQQMusic.VeryCodeDownLoadOKPt);
             //判断是否成功。。。。
             //
-            if (!ForgroundIsMain(mainHandler, maxTime))
-                throw new Exception("验证码输入错误");
+            //if (!ForgroundIsMain(mainHandler, maxTime))
+            //    throw new Exception("验证码输入错误");
         }
         private string GetIDCodeDownLoad(IntPtr didcIeHandle)
         {
             mshtml.IHTMLDocument2 id = GetHtmlDocument(didcIeHandle);
             if (id == null)
                 return "";
+            OnShowInStatusBarEvent("获取验证码图片");
             IHTMLControlElement img =
                 id.images.Cast<IHTMLElement>().Where(item => item.id == "imgVerify").Cast<IHTMLControlElement>().FirstOrDefault();
             if (img != null)
@@ -598,6 +987,7 @@ namespace QQMusicClient
                 range.execCommand("Copy", false, null);
                 if (Clipboard.ContainsImage())
                 {
+                    OnShowInStatusBarEvent("保存验证码图片");
                     Clipboard.GetImage().Save(@"c:\bb.bmp");
                     return Vevisoft.ImageRecgnize.IdentifyingCodeRecg.GetCodeByUUCodeWeb(@"c:\bb.bmp", 1014);
                 }
@@ -843,7 +1233,11 @@ namespace QQMusicClient
         //
         private int count = 0;
         private bool isexistDownLoadIDCodeDiag = false;
-        private bool GetDownLoadIdCodeDiagExist()
+        /// <summary>
+        /// 查找下载验证框是否存在
+        /// </summary>
+        /// <returns></returns>
+        public bool GetDownLoadIdCodeDiagExist()
         {
             count = 0;
             isexistDownLoadIDCodeDiag = false;
@@ -853,6 +1247,7 @@ namespace QQMusicClient
             //
             return isexistDownLoadIDCodeDiag;
         }
+        
 
         private IntPtr didcIEHandler = IntPtr.Zero;
 
@@ -862,7 +1257,8 @@ namespace QQMusicClient
             Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(hwnd, strclsName, 257);
             var strTitle = new StringBuilder(256);
             Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(hwnd, strTitle, 257);
-            if (strclsName.ToString().Trim().ToLower() != "TXGFLayerMask".ToLower())
+            if (!(strclsName.ToString().Trim().ToLower() == "TXGFLayerMask".ToLower()||
+                strclsName.ToString().Trim().ToLower() == "TXGuiFoundation".ToLower()))//QQ音乐 查找歌单
                 return true;
 
             count++;
@@ -876,21 +1272,24 @@ namespace QQMusicClient
                 Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(chHandle, strclsName, 257);
                 strTitle = new StringBuilder(256);
                 Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(chHandle, strTitle, 257);
-
-                //SystemWindowsAPI.ShowWindow(hwnd,0);
-                //richTextBox1.AppendText(string.Format("   {3}---Title:{0};  ClassName:{1};  Hwnd:{2}\r\n", strTitle,
-                //                                       strclsName, hwnd.ToString(), count + ".1"));
+               //
                 IntPtr chHandle2 = SystemWindowsAPI.FindWindowEx(chHandle, IntPtr.Zero, null, null);
                 IntPtr chHandle3 = SystemWindowsAPI.FindWindowEx(chHandle2, IntPtr.Zero, null, null);
                 var  didcIEHandler1 = SystemWindowsAPI.FindWindowEx(chHandle3, IntPtr.Zero, null, null);
                 var id = GetHtmlDocument(didcIEHandler1);
+                if (id == null)
+                    return true;
                 var str = id.body.innerHTML;
+                string cookies = id.cookie;
                 if (str.Contains("请输入验证码"))
                 {
+                    OnShowInStatusBarEvent("下载验证码窗体IE句柄");
                     didcIEHandler = didcIEHandler1;
                     isexistDownLoadIDCodeDiag = str.Contains(didcInfo);
+                    OnShowInStatusBarEvent("下载验证码窗体IE句柄" + (isexistDownLoadIDCodeDiag ? "111" : "0000"));
+                    //
+                    return false;
                 }
-
             }
             return true;
             
@@ -975,10 +1374,10 @@ namespace QQMusicClient
             //TODO...
         }
 
-        private int qqIdx = 1;
+        private int qqIdx = 0;
 
-        string[] qqno = new string[] { "2242362305", "1519580187", "1063715267", "1062457275", "1064073775", "1064057103", "1061930934" };
-        string[] qqpass = new string[] { "hangbeic", "nuosjiao", "xd1550000", "xd1550000", "xd1550000", "xd1550000", "xd1550000" };
+        string[] qqno = new string[] {  "1062457275", "1064073775", "1064057103", "1061930934" };
+        string[] qqpass = new string[] {  "xd1550000", "xd1550000", "xd1550000", "xd1550000" };
         /// <summary>
         /// 获取QQ号
         /// </summary>
@@ -1025,14 +1424,19 @@ namespace QQMusicClient
                 rect.Left + PositionInfoQQMusic.IDCodeSafeImgLeftTopPt.X,
                 rect.Top + PositionInfoQQMusic.IDCodeSafeImgLeftTopPt.Y
                 , PositionInfoQQMusic.IDCodeSafeImgSize.Width, PositionInfoQQMusic.IDCodeSafeImgSize.Height);
-            Console.WriteLine("QQID:" + veryCode);
+            OnShowInStatusBarEvent("QQIDCode:" + veryCode);
+            Console.WriteLine("QQIDCode:" + veryCode);
             //
             if (veryCode == "1009" || veryCode.Length != 4)
+            {
+                OnShowInStatusBarEvent("验证码返回失败" + veryCode);
                 throw new Exception(" 验证码返回失败");
+            }
             //输入验证码
             IntPtr editHandle = SystemWindowsAPI.FindWindowEx(safeHandle, IntPtr.Zero, "Edit", null);
             if (editHandle != IntPtr.Zero)
             {
+                OnShowInStatusBarEvent("SetControlValue");
                 Console.WriteLine("SetControlValue");
                 SystemWindowsAPI.SetControlValue(editHandle, veryCode);
             }

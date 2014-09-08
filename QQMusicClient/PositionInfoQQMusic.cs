@@ -19,22 +19,28 @@ namespace QQMusicClient
         /// 主界面【图标登录】按钮。点击后 移动鼠标位置 到 0,0 否则会出现提示框
         /// </summary>
         public static Point MainCaptionLoginButtonPt = new Point(30, 30);
-        /// <summary>
-        /// 【试听列表】按钮位置
-        /// </summary>
+      
         public static Point MainTryListenButtonPt = new Point(70, 175);
         /// <summary>
         /// 【试听列表】第一首歌位置
         /// </summary>
         public static Point MainTryListenPanelFirstSongPt=new Point(175,170);
-        /// <summary>
-        /// 【试听列表】下载按钮位置 ，点击后 下 下 回车。下载弹出框
-        /// </summary>
+     
         public static Point MainTryListenPanelDownLoadButtonPt = new Point(380, 105);
 
+        /// <summary>
+        /// 【试听列表】按钮位置
+        /// </summary>
+       public static Point MaintrySongListBtnPt=new Point(60,170);
+       /// <summary>
+       /// 【试听列表】下载按钮位置 ，点击后 下 下 回车。下载弹出框
+       /// </summary>
+       public static Point MaintrySongListDownLoadButtonPt = new Point(380, 105);
 
-       
-        
+        /// <summary>
+        /// 清空试听列表按钮
+        /// </summary>
+        public static Point MaintrySongListClearBtnPt = new Point(445, 105);
         /// <summary>
         /// 更改用户提示框 关闭按钮
         /// </summary>
