@@ -242,6 +242,7 @@
             this.button10.TabIndex = 1;
             this.button10.Text = "清理文件夹";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // statusStrip1
             // 

@@ -5,34 +5,64 @@ using System.Text;
 
 namespace QQMusicClient.Models
 {
-    public class QQInfo
+    public class QQInfo:ICloneable
     {
         public QQInfo()
         {
-            BeginTime = DateTime.Now;
-            PCName = AppConfig.PCName;
+            BeginTimeStamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
+            PcName = AppConfig.PCName;
+            SongOrderList=new Dictionary<string, int>();
+
         }
 
         public string QQNo { get; set; }
         public string QQPass { get; set; }
-        public string PCName { get; set; }
-        /// <summary>
-        /// 歌单名称
-        /// </summary>
-        public string SongListName { get; set; }
-        /// <summary>
-        /// 歌单索引
-        /// </summary>
-        public int SongListID { get; set; }
-        /// <summary>
-        /// 歌单数量
-        /// </summary>
-        public int SongListCount { get; set; }
+        public string PcName { get; set; }
 
-        public DateTime BeginTime { get; set; }
+        /// <summary>
+        /// 歌单名称,下载数
+        /// </summary>
+        public Dictionary<string, int> SongOrderList { get; set; }
 
-        public DateTime EndTime { get; set; }
+        ///// <summary>
+        ///// 歌单索引
+        ///// </summary>
+        //public int SongListID { get; set; }
+        ///// <summary>
+        ///// 歌单数量
+        ///// </summary>
+        //public int SongListCount { get; set; }
 
-        public int DownLoadNo { get; set; }
+        public string BeginTimeStamp { get; set; }
+
+        public string EndTimeStamp { get; set; }
+
+        //
+        //状态参数
+        /// <summary>
+        /// 当前歌单总数
+        /// </summary>
+        public int CurrentDownloadCount { get; set; }
+        /// <summary>
+        /// 当前歌单的名称
+        /// </summary>
+        public string CurrentSongOrderName { get; set; }
+
+
+        public object Clone()
+        {
+            var model = new Models.QQInfo();
+            model.QQNo = QQNo;
+            model.QQPass = QQPass;
+            model.CurrentSongOrderName = CurrentSongOrderName;
+            model.CurrentDownloadCount = CurrentDownloadCount;
+            model.BeginTimeStamp = BeginTimeStamp;
+            model.EndTimeStamp = EndTimeStamp;
+            foreach (string key in SongOrderList.Keys)
+            {
+                model.SongOrderList.Add(key,SongOrderList[key]);
+            }
+            return model;
+        }
     }
 }

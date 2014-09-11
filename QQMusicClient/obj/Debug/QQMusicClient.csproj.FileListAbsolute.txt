@@ -10,3 +10,4 @@ E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.Propert
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.exe
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.FrmMain.resources

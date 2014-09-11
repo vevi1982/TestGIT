@@ -187,13 +187,32 @@ namespace Vevisoft.Utility.Web
             if (idx2 < 0)
                 return null;
             int idx3 = jsonStr.IndexOf(",", idx2, System.StringComparison.Ordinal);
-            if (idx3 < 0)
+            if (idx3 < 0 && jsonStr.Length < (idx2 + 2))
                 return null;
+            if (idx3 < 0)
+                idx3 = jsonStr.Length;
             string value = jsonStr.Substring(idx2, idx3 - idx2);
             value = value.Replace("\"", "");
             value = value.Replace(":", "");
             value = value.Replace(",", "");
             return value.Trim();
+        }
+
+        public static List<string> GetSubJsonStr(string jsonStr, string name)
+        {
+            int idx = jsonStr.IndexOf(name, System.StringComparison.Ordinal);
+            if (idx < 0)
+                return null;
+            int idx2 = jsonStr.IndexOf("[", idx, System.StringComparison.Ordinal);
+            if (idx2 < 0)
+                return null;
+            int idx3 = jsonStr.IndexOf("]", idx2, System.StringComparison.Ordinal);
+            if (idx3 < 0)
+                return null;
+            string value = jsonStr.Substring(idx2, idx3 - idx2);
+            var array = value.Split('{', '}','[',']');
+            return array.ToList();
+           
         }
     }
     public class HttpDefaultParam

@@ -880,7 +880,11 @@ namespace Vevisoft.WebOperate
             TimeSpan span = new TimeSpan(time2.Ticks - time.Ticks);
             return span.TotalMilliseconds.ToString("F0");
         }
-
+        public static string GetTimeStamp(DateTime dt)
+        {
+            var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+            return (dt - startTime).TotalSeconds.ToString("F0");
+        }
         public static string GetUrlEncodeValue(string value)
         {
             return HttpUtility.UrlEncode(value, Encoding.UTF8);
@@ -893,6 +897,18 @@ namespace Vevisoft.WebOperate
             TimeSpan span = new TimeSpan(time2.Ticks - time.Ticks);
             return span.TotalMilliseconds;
         }
+        /// <summary>  
+        /// 时间戳转为C#格式时间  
+        /// </summary>  
+        /// <param name="timeStamp">Unix时间戳格式</param>  
+        /// <returns>C#格式时间</returns>  
+        public static DateTime GetTime(string timeStamp)
+        {
+            DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            long lTime = long.Parse(timeStamp + "0000000");
+            TimeSpan toNow = new TimeSpan(lTime);
+            return dtStart.Add(toNow);
+        }  
     }
 
 

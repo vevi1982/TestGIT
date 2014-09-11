@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using QQMusicClient.Dlls;
+using QQMusicClient.Models;
 using Vevisoft.WindowsAPI;
 
 namespace QQMusicClient
@@ -19,8 +20,10 @@ namespace QQMusicClient
         public Form1()
         {
             InitializeComponent();
-            core.server=new ServerToInternet();
+            core.Server=new ServerToInternet();
             core.ShowInStatusBarEvent += core_ShowInStatusBarEvent;
+            //
+            new ServerToInternet().GetQQFromServer();
         }
 
         void core_ShowInStatusBarEvent(string text)
@@ -39,7 +42,7 @@ namespace QQMusicClient
         {
             try
             {
-                core.DoOnce();
+                //core.DoOnce();
                 //core.StartDownLoadTimer();
             }
             catch (Exception e1)
@@ -109,13 +112,19 @@ namespace QQMusicClient
         private void button7_Click(object sender, EventArgs e)
         {
             SetMainHandle();
-            core.DownLoadSongsBySongListName(mainHandle,"1-xin");
+            core.DownLoadSongsBySongListName(mainHandle,"新建歌单");
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
             SetMainHandle();
-            core.LoginQQ(mainHandle);
+            core.LoginQQ(mainHandle,new QQInfo(){QQNo="254430994",QQPass="52182467391"});
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            SetMainHandle();
+            core.ClearALlInfos(mainHandle);
         }
 
     }
