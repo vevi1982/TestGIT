@@ -16,12 +16,12 @@ namespace QQMusicClient.Dlls
         public Models.QQInfo GetQQFromServer()
         {
             //测试代码
-            var tmpmodel = new Models.QQInfo {QQNo = "1062457275", QQPass = "xd1550000"};
-            tmpmodel.SongOrderList.Add("1409200101", 200);
-            tmpmodel.SongOrderList.Add("1409200102", 200);
-            tmpmodel.SongOrderList.Add("1409200103", 200);
-            tmpmodel.SongOrderList.Add("1409200104", 200);
-            return tmpmodel;
+            //var tmpmodel = new Models.QQInfo {QQNo = "1062457275", QQPass = "xd1550000"};
+            //tmpmodel.SongOrderList.Add("1409200101", 200);
+            //tmpmodel.SongOrderList.Add("1409200102", 200);
+            //tmpmodel.SongOrderList.Add("1409200103", 200);
+            //tmpmodel.SongOrderList.Add("1409200104", 200);
+            //return tmpmodel;
             //
             try
             {
@@ -76,11 +76,13 @@ namespace QQMusicClient.Dlls
             return true;
         }
 
-        public bool UpdateDownLoadResult(Models.QQInfo model,string ordername)
+        public bool UpdateDownLoadResult(Models.QQInfo model)
         {
+            if (model == null)
+                return false;
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
-            string url = string.Format(ResultUrl, model.QQNo, model.PcName, model.SongOrderList[ordername],
-                                       model.BeginTimeStamp, endstamp, ordername);
+            string url = string.Format(ResultUrl, model.QQNo, model.PcName, model.SongOrderList[model.CurrentSongOrderName],
+                                       model.BeginTimeStamp, endstamp, model.CurrentSongOrderName);
             try
             {
                 Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
@@ -113,12 +115,12 @@ namespace QQMusicClient.Dlls
 
         public bool IPIsRepeat(string ip)
         {
-            return false;
+            //return false;
             var url = string.Format(ValidateIPUrl, ip);
             string result;
             try
             {
-               result= Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
+                result = Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
             }
             catch (Exception)
             {

@@ -25,7 +25,7 @@ namespace QQMusicClient.Dlls
         /// <param name="model"></param>
         /// <param name="ordername"></param>
         /// <returns></returns>
-        bool UpdateDownLoadResult(Models.QQInfo model,string ordername);
+        bool UpdateDownLoadResult(Models.QQInfo model);
         /// <summary>
         /// 发送密码错误QQ
         /// </summary>

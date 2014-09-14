@@ -99,5 +99,11 @@ namespace QQMusicClient
             button1.Enabled = true;
             core.Stop();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+           if( new FrmSetting().ShowDialog()==DialogResult.OK)
+               AppConfig.ReadValue();
+        }
     }
 }

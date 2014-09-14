@@ -154,7 +154,16 @@ namespace QQMusicClient
                 {
                     while (true)
                     {
-                        GetQQAndDownLoadOperate();
+                        try
+                        {
+                            GetQQAndDownLoadOperate();
+                        }
+                        catch (Exception e1)
+                        {
+                            OnShowInStatusBarEvent(e1.Message);
+                            
+                        }
+                        
                     }
                 }) {IsBackground = true};
             workTh.Start();
@@ -169,7 +178,7 @@ namespace QQMusicClient
             catch (Exception)
             {
                 
-                throw;
+                //throw;
             }
         }
         /// <summary>
@@ -227,6 +236,7 @@ namespace QQMusicClient
                 }
                 catch (Exception)
                 {
+                    SendServerDownInfo();
                     ClearSongFolderAndCloseMain();
                     //throw;
                 }
@@ -866,7 +876,17 @@ namespace QQMusicClient
                     return true;
                 }
             }
-            return false;
+            //没有此歌单，查看是否有下一页，在下一页中查找
+             foreach (IHTMLElement link in id.links)
+             {
+                 if (!string.IsNullOrEmpty(link.title) && link.title.Contains("下一页"))
+                 {
+                     link.click();
+                     Thread.Sleep(4000);
+                     return isContainsSOngListAndClick(songlistName);
+                 }
+             }
+             return false;
         }
         #endregion
 
@@ -968,10 +988,19 @@ namespace QQMusicClient
         }
         #endregion
 
+        #region 发送服务器，下载数量
+        public void SendServerDownInfo()
+        {
+            if (qqModel == null)
+                return;
+            qqModel.CurrentDownloadCount = GetSongCountFromFolder();
+            //
+            Server.UpdateDownLoadResult(qqModel);
+        }
+        #endregion
 
-      
         #region 下载监视器，监视下载数量，监视下载验证码，输入下载验证码
-         /// <summary>
+        /// <summary>
         /// 启动下载监视计时器
         /// </summary>
         public void StartDownLoadTimer()
