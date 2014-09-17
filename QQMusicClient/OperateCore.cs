@@ -181,6 +181,7 @@ namespace QQMusicClient
                     {
                         try
                         {
+                            OnShowInStatusBarEvent("Start00000....");
                             GetQQAndDownLoadOperate();
                         }
                         catch (Exception e1)
@@ -201,6 +202,8 @@ namespace QQMusicClient
                 //heartTh.Abort();
 
                 workTh.Abort();
+               
+                
             }
             catch (Exception)
             {
@@ -1232,7 +1235,7 @@ namespace QQMusicClient
                     OnShowInStatusMonitor("保存验证码图片");
                     Clipboard.GetImage().Save(@"c:\bb.bmp");
                     OnShowInStatusMonitor("保存验证码图片成功");
-                    return Vevisoft.ImageRecgnize.IdentifyingCodeRecg.GetCodeByUUCodeWeb(@"c:\bb.bmp", 1014);
+                    return Vevisoft.ImageRecgnize.IdentifyingCodeRecg.GetCodeByUUCodeWeb(@"c:\bb.bmp", 1004);
                 }
             }
             return "";

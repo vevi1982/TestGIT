@@ -4,4 +4,3 @@ E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\Debug\Vevisoft.dll
 E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\Debug\Vevisoft.pdb
 E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\Debug\Interop.Shell32.dll
 E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\Debug\Vevisoft.csproj.ResolveComReference.cache
-E:\Procedure\GitProject\BaiduMusic\Vevisoft\obj\Debug\Vevisoft.csprojResolveAssemblyReference.cache

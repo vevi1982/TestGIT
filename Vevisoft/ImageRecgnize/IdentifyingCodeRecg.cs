@@ -44,7 +44,7 @@ namespace Vevisoft.ImageRecgnize
             //ImageConverter converter = new ImageConverter();
             //byte[] source = (byte[]) converter.ConvertTo(bit, typeof (byte[]));
             var sb = new StringBuilder();
-            UUCodeWrapper.uu_recognizeScreenByCodeTypeA(x, y, widht, height, 1014, sb);
+            UUCodeWrapper.uu_recognizeScreenByCodeTypeA(x, y, widht, height, 1004, sb);
             return sb.ToString();
         }
     }

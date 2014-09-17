@@ -74,7 +74,7 @@ namespace QQMusicClient
             Console.WriteLine("Main Timer Monitor");
             try
             {
-
+                
                 //发送心跳，两分钟
                 if (timerCount >= 2*60*1000/idTimer.Interval)
                 {
@@ -179,6 +179,7 @@ namespace QQMusicClient
             //while (core.WorkThreadIsALive)
             //{
             Thread.Sleep(3000);
+            core.qqModel = null;
             //}
             button2.Enabled = false;
             button1.Enabled = true;
