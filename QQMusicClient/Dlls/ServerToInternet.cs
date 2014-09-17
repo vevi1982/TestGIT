@@ -81,7 +81,7 @@ namespace QQMusicClient.Dlls
             if (model == null)
                 return false;
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
-            string url = string.Format(ResultUrl, model.QQNo, model.PcName, model.SongOrderList[model.CurrentSongOrderName],
+            string url = string.Format(ResultUrl, model.QQNo, model.PcName, model.CurrentDownloadCount,
                                        model.BeginTimeStamp, endstamp, model.CurrentSongOrderName);
             try
             {
@@ -93,7 +93,11 @@ namespace QQMusicClient.Dlls
             }
             return true;
         }
-
+        /// <summary>
+        /// QQ错误，暂时停用此QQ
+        /// </summary>
+        /// <param name="qqNo"></param>
+        /// <returns></returns>
         public bool UpdatePassWrongQQ(string qqNo)
         {
             //TODO....

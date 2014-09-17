@@ -17,12 +17,32 @@ namespace QQMusicClient
     public delegate void ShowInStatusBar(string text);
 
     public delegate string GetDownLoadIDCOde(IntPtr ieHandle);
+
+
     /// <summary>
     /// QQ音乐自动下载操作
     /// </summary>
     public class OperateCore
     {
         public event ShowInStatusBar ShowInStatusBarEvent;
+        public event ShowInStatusBar ShowInStatusMonitor;
+        public event ShowInStatusBar ShowDownLoadInfo;
+
+        protected virtual void OnShowDownLoadInfo(string text)
+        {
+            ShowInStatusBar handler = ShowDownLoadInfo;
+            if (handler != null) handler(text);
+        }
+
+        /// <summary>
+        /// 监控器提示信息
+        /// </summary>
+        /// <param name="text"></param>
+        protected virtual void OnShowInStatusMonitor(string text)
+        {
+            ShowInStatusBar handler = ShowInStatusMonitor;
+            if (handler != null) handler(text);
+        }
 
         protected virtual void OnShowInStatusBarEvent(string text)
         {
@@ -89,6 +109,8 @@ namespace QQMusicClient
             IheartOpe = new HeartOperate(qqModel);
             identifyingTimer = new System.Windows.Forms.Timer { Interval = 10 * 1000 };
             identifyingTimer.Tick += identifyingTimer_Tick;
+            //
+            WorkThreadFlag = true;
         }
         public OperateCore(IServer server, IHeart heart)
         {
@@ -134,25 +156,28 @@ namespace QQMusicClient
 
         #region 整体操作
 
+        public bool WorkThreadFlag { get; set; }
         private Thread heartTh;
         private Thread workTh;
         public void DoWork()
         {
             //开启心跳线程。
             //qq 歌单 下载数量 改变的时候 正常心跳，如果没有变化，停发心跳
-            heartTh = new Thread(() =>
-                {
-                    while (IheartOpe.IsChangedContent(qqModel))
-                    {
-                        Server.SendHeart(AppConfig.PCName);
-                        Thread.Sleep(2*60*1000);
-                    }
-                }) {IsBackground = true};
-            heartTh.Start();
+            //heartTh = new Thread(() =>
+            //    {
+            //        //心跳程序 统一放到监控timer中
+            //        while (IheartOpe.IsChangedContent(qqModel))
+            //        {
+            //            Server.SendHeart(AppConfig.PCName);
+            //            Thread.Sleep(2*60*1000);
+            //        }
+            //    }) {IsBackground = true};
+            //heartTh.Start();
             //工作线程
             workTh = new Thread(() =>
                 {
-                    while (true)
+                    //在十一点早凌晨1点之间不进行操作
+                    while (WorkThreadFlag)//DateTime.Now.Hour<23&&DateTime.Now.Hour>1)
                     {
                         try
                         {
@@ -165,6 +190,7 @@ namespace QQMusicClient
                         }
                         
                     }
+                    OnShowInStatusBarEvent("停止循环下载！");
                 }) {IsBackground = true};
             workTh.Start();
         }
@@ -172,7 +198,8 @@ namespace QQMusicClient
         {
             try
             {
-                heartTh.Abort();
+                //heartTh.Abort();
+
                 workTh.Abort();
             }
             catch (Exception)
@@ -180,35 +207,53 @@ namespace QQMusicClient
                 
                 //throw;
             }
+            
         }
+
+        public bool WorkThreadIsALive
+        {
+            get { return workTh != null && workTh.IsAlive; }
+        }
+
         /// <summary>
         /// 获取QQ信息，并下载其所带所有歌单
         /// </summary>
         public void GetQQAndDownLoadOperate()
         {
+            OnShowInStatusBarEvent("开始...");
+            IsDownLoadOver = false;
+            isMoniterStart = false;
             ChangeIP();
+            OnShowInStatusBarEvent("更换IP（如果）...");
+            var count = 0;
             var model = Server.GetQQFromServer();
             //没有获取就要一直获取，长时间失败 心跳不发
-            while (model == null)
+            while (model == null&&count<4)
             {
+                count++;
                 OnShowInStatusBarEvent("没有获取到QQ");
                 Thread.Sleep(1000);
+                Application.DoEvents();
                 model = Server.GetQQFromServer();
                 //throw new Exception("没有获取到QQ");
             }
+            if(count>3)
+                throw new Exception("没有获取到QQ");
             //
             var orderList = model.SongOrderList.Keys.ToList();
-            for (int i = 0; i < orderList.Count; i++)
-            //foreach (string key in model.SongOrderList.Keys)
-            {
+            //for (int i = 0; i < orderList.Count; i++)
+            ////foreach (string key in model.SongOrderList.Keys)
+            //{
+            var i = 0;
                 var key = orderList[i];
                 try
                 {
-                    identifyingTimer.Stop();
-                    //
+                    //identifyingTimer.Stop();
+                   
                     DoOnce(model,key);
                     //开启监视器堵塞线程？？
                     IsDownLoadOver = false;
+                    isMoniterStart = true;
                     //此时还有一个问题，就是如果堵塞时间太长，（下载没变化，那么提交下载数。结束线程。）
 
                     //StartDownLoadTimer();
@@ -227,20 +272,24 @@ namespace QQMusicClient
                     //thmonitor.Join();
                     while (!IsDownLoadOver)
                     {
-                        DownLoadInfoMonitor();
+                        //DownLoadInfoMonitor();
                         //
                         Console.WriteLine("Monitor Thread");
-                        Thread.Sleep(10 * 1000);
+                        Thread.Sleep(10*1000);
+                        Application.DoEvents();
                     }
-                    
+
                 }
-                catch (Exception)
+                catch (Exception e1)
                 {
                     SendServerDownInfo();
                     ClearSongFolderAndCloseMain();
                     //throw;
+                    Thread.Sleep(5000);
+                    OnShowInStatusBarEvent("aaa  "+ e1.Message);
+                    Thread.Sleep(5000);
                 }
-            }
+            //}
         }
 
         public void StartMonitor_T()
@@ -277,7 +326,10 @@ namespace QQMusicClient
             qqinfo.CurrentDownloadCount = 0;
             qqinfo.CurrentSongOrderName = songlistName;
             qqinfo.BeginTimeStamp = HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
-            qqModel = qqinfo;
+            qqModel = qqinfo; //
+            //
+            OnShowDownLoadInfo(string.Format("QQ:{0}.歌单:{1},歌单数量:{2},当前下载:{3}", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName],qqModel.CurrentDownloadCount));
+            //
             //0.清理下载文件夹和缓存文件夹
             ClearSongFolderAndCloseMain();
             //1.启动QQ
@@ -294,8 +346,13 @@ namespace QQMusicClient
             ClickSongListAndLoadToTryList(mainhandle,songlistName);
             //5.下载歌单
             DownLoadSong_TryList(mainhandle);
+            //
+            //
+            OnShowDownLoadInfo(string.Format("QQ:{0}.歌单:{1},歌单数量:{2},当前下载:{3}", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount));
+            //
         }
         #endregion
+
         #region 启动程序
         /// <summary>
         /// 启动QQ音乐程序
@@ -315,7 +372,7 @@ namespace QQMusicClient
                 throw new Exception("软件路径错误，找不到软件！");
             }
             //
-            System.Diagnostics.Process.Start(AppConfig.AppPath);
+            Process.Start(AppConfig.AppPath);
             //
             OnShowInStatusBarEvent("等待线程启动完全！");
             //
@@ -346,13 +403,23 @@ namespace QQMusicClient
 
         #region 是否启动完全,判断线程
         /// <summary>
-        /// 等待QQ音乐启动完毕
+        /// 等待QQ音乐启动完毕,10S时间
         /// </summary>
         public void WaitMainStartOver()
         {
             //
-            while (GetProcessCount("QQMusicExternal") < 2)
+            var count = 10;
+
+            while (GetProcessCount("QQMusicExternal") < 2 && count > 0)
+            {
+                count--;
                 Thread.Sleep(1000);
+            }
+            if (count <= 0)
+            {
+                OnShowInStatusBarEvent("启动没有完成！");
+                throw new Exception("启动没有完成！");
+            }
         }
 
         private int GetProcessCount(string processName)
@@ -582,7 +649,7 @@ namespace QQMusicClient
         /// 主程序是否无响应,线程方法
         /// </summary>
         /// <returns></returns>
-        private bool GetMainResponseByProcess()
+        public bool GetMainResponseByProcess()
         {
             foreach (var p in System.Diagnostics.Process.GetProcesses())
             {
@@ -607,9 +674,18 @@ namespace QQMusicClient
         /// <param name="mainHandle"></param>
         public void ClearALlInfos(IntPtr mainHandle)
         {
-            DeleteTrySongList(mainHandle);
-            DeleteDownLoadList(mainHandle);
-            ClearSongFolderAndCloseMain();
+            try
+            {
+                DeleteTrySongList(mainHandle);
+                DeleteDownLoadList(mainHandle);
+                ClearSongFolderAndCloseMain();
+            }
+            catch (Exception)
+            {
+                
+              
+            }
+             
         }
 
         /// <summary>
@@ -955,7 +1031,10 @@ namespace QQMusicClient
             if (dwlHandle != IntPtr.Zero)
             {
                 if (cannotDown)
-                {
+                {  
+                    //此QQ下载数目当天够了，发送服务器
+                    Server.UpdateDownLoadResult(qqModel);
+                    //
                     Console.WriteLine(QQDownLoadOverLimit);
                     throw new Exception(QQDownLoadOverLimit);
                 }
@@ -968,17 +1047,24 @@ namespace QQMusicClient
                 OnShowInStatusBarEvent("下载对话框没有找到");
                 throw new Exception("下载对话框没有找到");
             }
+            OnShowInStatusBarEvent("aaaaaaaaaaa");
             //
             //等待响应
             while (!SystemWindowsAPI.IsExeNotResponse(mainhandle) || !GetMainResponseByProcess())
                 Thread.Sleep(1000);
             //判断10s是否超限
+            OnShowInStatusBarEvent("bbbbbbb");
             SystemWindowsAPI.SetForegroundWindow(mainhandle);
+            OnShowInStatusBarEvent("dddddddddddd");
             dwlHandle = GetDownLoadDiag(15);
+            OnShowInStatusBarEvent("ccccccccc");
             if (dwlHandle != IntPtr.Zero)
             {
+                OnShowInStatusBarEvent("eeeeeeeeee");
                 if (cannotDown)
                 {
+                    //此QQ下载数目当天够了，发送服务器
+                    Server.UpdateDownLoadResult(qqModel);
                     Console.WriteLine(QQDownLoadOverLimit);
                     throw new Exception(QQDownLoadOverLimit);
                 }
@@ -996,6 +1082,9 @@ namespace QQMusicClient
             qqModel.CurrentDownloadCount = GetSongCountFromFolder();
             //
             Server.UpdateDownLoadResult(qqModel);
+            //
+            OnShowInStatusBarEvent(string.Format("下载,{0}:{1}:{2}", qqModel.QQNo, qqModel.CurrentSongOrderName,
+                                                 qqModel.CurrentDownloadCount));
         }
         #endregion
 
@@ -1026,40 +1115,53 @@ namespace QQMusicClient
             identifyingTimer.Start();
         }
         /// <summary>
-        /// 下载监视，有验证码输入验证码，没有就算
+        /// 是否启动下载数量监视
         /// </summary>
-        private void DownLoadInfoMonitor()
+        private bool isMoniterStart = false;
+        /// <summary>
+        /// 下载监视，下载数量是否完成
+        /// </summary>
+        public void DownLoadInfoMonitor()
         {
-          
-
+            if (!isMoniterStart)
+                return;
             //
             var songCount = GetSongCountFromFolder();
+            //更新下载数
+            qqModel.CurrentDownloadCount = songCount;
+            //判断下载是否完成
             if (songCount == qqModel.SongOrderList[qqModel.CurrentSongOrderName])
             {
                 //下载完成。。。
-                IsDownLoadOver = true;
+                SendServerDownInfo();
                 //清楚下载缓存，及列表
                 ClearALlInfos(mainHandler);
                 //
+                OnShowInStatusBarEvent(qqModel.CurrentSongOrderName + "下载完成," + qqModel.CurrentDownloadCount);
+                IsDownLoadOver = true;
                 return;
             }
-            else OnShowInStatusBarEvent("已下载" + songCount);
+            else
+            {
+                OnShowDownLoadInfo(string.Format("QQ:{0}.歌单:{1},歌单数量:{2},当前下载:{3}", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount));
+                OnShowInStatusBarEvent("已下载" + songCount);
+            }
         }
         public void JudgeDownLoadIDCodeAndInput()
         {
             try
             {
-                OnShowInStatusBarEvent("查找下载验证码窗体");
+                //OnShowInStatusMonitor("查找下载验证码窗体");
                 if (GetDownLoadIdCodeDiagExist())
                 {
-                    OnShowInStatusBarEvent("下载验证码窗体出现");
+                    OnShowInStatusMonitor("下载验证码窗体出现");
                     //当前窗体不是主窗体，那么 默认 就是输入验证码窗体 弹出
                     InputDownLoadIdentifyingCode();
                 }
             }
             catch (Exception e1)
             {
-                OnShowInStatusBarEvent("下载验证码窗体" + e1.Message);
+                OnShowInStatusMonitor("下载验证码窗体" + e1.Message);
             }
         }
         /// <summary>
@@ -1073,7 +1175,7 @@ namespace QQMusicClient
             //GetDownLoadIdCodeDiagExist();
             var idcode = GetIDCodeDownLoad(didcIEHandler);
             //var idcode = OnGetDownLoadIdcOdeEvent(didcIEHandler);
-            OnShowInStatusBarEvent("验证码" + idcode);
+            OnShowInStatusMonitor("验证码" + idcode);
             //
             Console.WriteLine(idcode);
            
@@ -1081,7 +1183,7 @@ namespace QQMusicClient
                 //
             if (idcode == "1009" || idcode.Length != 4)
             {
-                OnShowInStatusBarEvent("验证码返回失败");
+                OnShowInStatusMonitor("验证码返回失败");
                 id.parentWindow.execScript("showVcode()", "javascript");
                 throw new Exception(" 验证码返回失败");
             }
@@ -1090,27 +1192,25 @@ namespace QQMusicClient
             var idtext = id.all.item("vcode", 0) as IHTMLElement;
             if (idtext != null)
             {
-                OnShowInStatusBarEvent("输入验证码" + idcode);
+                OnShowInStatusMonitor("输入验证码" + idcode);
                 idtext.setAttribute("value", idcode);
             }
             else
-            {
-                OnShowInStatusBarEvent("没有找到输入验证码" + idcode);
-            }
+                OnShowInStatusMonitor("没有找到输入验证码" + idcode);
             //var btnok = id.all.item("", 0) as IHTMLElement;
             foreach ( IHTMLElement btnok in id.links)
             {
                 if (btnok.innerHTML.Contains("确认"))
                 {
-                    OnShowInStatusBarEvent("点击确认按钮" + idcode);
+                    OnShowInStatusMonitor("点击确认按钮" + idcode);
                     btnok.click();
                     break;
                 }
             }
             var errortip = id.all.item("error_tips", 0) as IHTMLElement;
-            if (errortip.innerHTML.Contains("错误"))
+            if (errortip != null && errortip.innerHTML.Contains("错误"))
             {
-                OnShowInStatusBarEvent("验证码错误" + idcode);
+                OnShowInStatusMonitor("验证码错误" + idcode);
                 id.parentWindow.execScript("showVcode()", "javascript");
             }
         }
@@ -1119,7 +1219,7 @@ namespace QQMusicClient
             mshtml.IHTMLDocument2 id = GetHtmlDocument(didcIeHandle);
             if (id == null)
                 return "";
-            OnShowInStatusBarEvent("获取验证码图片");
+            OnShowInStatusMonitor("获取验证码图片");
             IHTMLControlElement img =
                 id.images.Cast<IHTMLElement>().Where(item => item.id == "imgVerify").Cast<IHTMLControlElement>().FirstOrDefault();
             if (img != null)
@@ -1129,22 +1229,40 @@ namespace QQMusicClient
                 bool bol1 = range.execCommand("Copy", false, null);
                 if (Clipboard.ContainsImage())
                 {
-                    OnShowInStatusBarEvent("保存验证码图片");
+                    OnShowInStatusMonitor("保存验证码图片");
                     Clipboard.GetImage().Save(@"c:\bb.bmp");
+                    OnShowInStatusMonitor("保存验证码图片成功");
                     return Vevisoft.ImageRecgnize.IdentifyingCodeRecg.GetCodeByUUCodeWeb(@"c:\bb.bmp", 1014);
                 }
             }
             return "";
         }
+
         /// <summary>
         /// 获取下载数量
         /// </summary>
         /// <returns></returns>
         private int GetSongCountFromFolder()
         {
-            return Directory.Exists(AppConfig.DownLoadPath) ? 
-                Directory.GetFiles(AppConfig.DownLoadPath).Length : 0;
+            //缓存下载量
+            var catchCount = 0;
+            var catchPath = AppConfig.AppCachePath;
+            if (catchPath.EndsWith("\\"))
+               catchPath.Substring(0, AppConfig.AppCachePath.Length - 1);
+            var QMDL = string.Format("{0}\\QMDL", AppConfig.AppCachePath);
+            if (Directory.Exists(QMDL))
+            {
+                string[] files = Directory.GetFiles(QMDL);
+                catchCount += files.Count(file => file.EndsWith(".cache"));
+            }
+            //复制到下载目录的下载量
+            var downCount = 0;
+            if (Directory.Exists(AppConfig.DownLoadPath))
+                downCount = Directory.GetFiles(AppConfig.DownLoadPath).Length;
+            //
+            return Math.Max(catchCount, downCount);
         }
+
         #endregion
        
 
@@ -1214,38 +1332,54 @@ namespace QQMusicClient
                 //TXGFLayerMask
                 var faTitle = new StringBuilder(256);
                 SystemWindowsAPI.GetWindowText(fatherHwnd, faTitle, 257);
-                if (faTitle.ToString().Contains("下载"))
+                if (!string.IsNullOrEmpty(faTitle.ToString()) && faTitle.ToString().Contains("下载"))
                 {
                     //属于下载对话框的子窗体。查找IE
                     var strclsName = new StringBuilder(256);
-                    Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(hwnd, strclsName, 257);
+                    SystemWindowsAPI.GetClassName(hwnd, strclsName, 257);
                     var strTitle = new StringBuilder(256);
-                    Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(hwnd, strTitle, 257);
+                    SystemWindowsAPI.GetWindowText(hwnd, strTitle, 257);
                     if (strclsName.ToString().Trim().ToLower() != "TXGFLayerMask".ToLower())
                         return true;
-                    IntPtr chHandle = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(hwnd, IntPtr.Zero, null,
-                                                                                null);
+                    IntPtr chHandle = SystemWindowsAPI.FindWindowEx(hwnd, IntPtr.Zero, null,null);
                     if (chHandle != IntPtr.Zero)
                     {
-                        strclsName = new StringBuilder(256);
-                        Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(chHandle, strclsName, 257);
-                        strTitle = new StringBuilder(256);
-                        Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(chHandle, strTitle, 257);
+                        //strclsName = new StringBuilder(256);
+                        //Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(chHandle, strclsName, 257);
+                        //strTitle = new StringBuilder(256);
+                        //Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(chHandle, strTitle, 257);
 
                         //SystemWindowsAPI.ShowWindow(hwnd,0);
                         //richTextBox1.AppendText(string.Format("   {3}---Title:{0};  ClassName:{1};  Hwnd:{2}\r\n", strTitle,
                         //                                       strclsName, hwnd.ToString(), count + ".1"));
-                        IntPtr chHandle2 = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(chHandle, IntPtr.Zero, null, null);
-                        IntPtr chHandle3 = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(chHandle2, IntPtr.Zero, null, null);
-                        didcIEHandler = Vevisoft.WindowsAPI.SystemWindowsAPI.FindWindowEx(chHandle3, IntPtr.Zero, null, null);
-                        mshtml.IHTMLDocument2 id = GetHtmlDocument(didcIEHandler);
+                        IntPtr chHandle2 = SystemWindowsAPI.FindWindowEx(chHandle, IntPtr.Zero, null, null);
+                        IntPtr chHandle3 = SystemWindowsAPI.FindWindowEx(chHandle2, IntPtr.Zero, null, null);
+                        didcIEHandler = SystemWindowsAPI.FindWindowEx(chHandle3, IntPtr.Zero, null, null);
+                        if (didcIEHandler == IntPtr.Zero)
+                            return true;
+                        var id = GetHtmlDocument(didcIEHandler);
+                        if (id == null)
+                            return true;
                         var str = id.body.innerHTML;
+                        if (string.IsNullOrEmpty(str))
+                            return true;
+                        if (qqModel == null)
+                            return true;
                         qqModel.SongOrderList[qqModel.CurrentSongOrderName] = GetSongCount(str);
+                            // GetSongCount(str);
+                        OnShowInStatusBarEvent("歌单总数为" + qqModel.SongOrderList[qqModel.CurrentSongOrderName]);
+                        OnShowInStatusMonitor("歌单总数为" + qqModel.SongOrderList[qqModel.CurrentSongOrderName]);
                         cannotDown = str.Contains("下载数量已达到上限");
                     }
                 }
             }
             return true;
+        }
+
+        public int GetSongCOuntByliClassName(string html)
+        {
+            //data-downtype  查看此字段包含的次数
+            return System.Text.RegularExpressions.Regex.Matches(html, "data-downtype").Count;
         }
         /// <summary>
         /// 获取歌单歌曲总数
@@ -1453,9 +1587,9 @@ namespace QQMusicClient
                 try
                 {
                     strclsName = new StringBuilder(256);
-                    Vevisoft.WindowsAPI.SystemWindowsAPI.GetClassName(chHandle, strclsName, 257);
+                    SystemWindowsAPI.GetClassName(chHandle, strclsName, 257);
                     strTitle = new StringBuilder(256);
-                    Vevisoft.WindowsAPI.SystemWindowsAPI.GetWindowText(chHandle, strTitle, 257);
+                    SystemWindowsAPI.GetWindowText(chHandle, strTitle, 257);
                     //
                     IntPtr chHandle2 = SystemWindowsAPI.FindWindowEx(chHandle, IntPtr.Zero, null, null);
                     IntPtr chHandle3 = SystemWindowsAPI.FindWindowEx(chHandle2, IntPtr.Zero, null, null);
@@ -1469,12 +1603,11 @@ namespace QQMusicClient
                     string cookies = id.cookie;
                     if (str != null && str.Contains("请输入验证码"))
                     {
-                        OnShowInStatusBarEvent("下载验证码窗体IE句柄");
+                        OnShowInStatusMonitor("下载验证码窗体IE句柄");
                         didcIEHandler = didcIEHandler1;
                         isexistDownLoadIDCodeDiag = str.Contains(didcInfo);
-                        OnShowInStatusBarEvent("下载验证码窗体IE句柄" + (isexistDownLoadIDCodeDiag ? "111" : "0000"));
+                        OnShowInStatusMonitor("下载验证码窗体IE句柄" + (isexistDownLoadIDCodeDiag ? "111" : "0000"));
                         //
-                        return false;
                     }
                 }
                 catch 
@@ -1594,6 +1727,11 @@ namespace QQMusicClient
         {
             
         }
+
+        public virtual void SetQQDownLoadEnough()
+        {
+            
+        }
         #endregion
 
         #region 关于验证码
@@ -1699,6 +1837,7 @@ namespace QQMusicClient
                     {
                         Thread.Sleep(1000);
                     }
+
                     //等待下载对话框，判断是否超过限制
                     var dwlHandle = GetDownLoadDiag(30);
                     if (dwlHandle != IntPtr.Zero)
@@ -1780,7 +1919,7 @@ namespace QQMusicClient
             }
             //
             ClearALlInfos(mainHanle);
-
+            IsDownLoadOver = false;
         }
 
         /*
@@ -1879,5 +2018,25 @@ namespace QQMusicClient
 
         #endregion
 
+        public int SendHeartFailedCount { get; set; }
+        public bool IsInfoChanged { get { return IheartOpe.IsChangedContent(qqModel); } }
+        /// <summary>
+        /// 发送心跳
+        /// </summary>
+        /// <param name="p"></param>
+        internal void SendHeart(string p)
+        {
+            if (IheartOpe.IsChangedContent(qqModel))
+            {
+                SendHeartFailedCount = 0;
+                OnShowInStatusMonitor("发送心跳!");
+                Server.SendHeart(p);
+            }
+            else
+            {
+                SendHeartFailedCount++;
+                OnShowInStatusMonitor("没有发送心跳! " + SendHeartFailedCount);
+            }
+        }
     }
 }

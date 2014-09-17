@@ -5,32 +5,107 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using Vevisoft.WindowsAPI;
 using mshtml;
+using Timer = System.Windows.Forms.Timer;
 
 namespace QQMusicClient
 {
-    
+
     public partial class FrmMain : Form
     {
         OperateCore core = new OperateCore();
-        System.Windows.Forms.Timer idTimer=new Timer();
+        System.Windows.Forms.Timer idTimer = new Timer();
         public FrmMain()
         {
             InitializeComponent();
             core.ShowInStatusBarEvent += core_ShowInStatusBarEvent;
+            core.ShowInStatusMonitor += core_ShowInStatusMonitor;
             core.GetDownLoadIDCOdeEvent += core_GetDownLoadIDCOdeEvent;
-            idTimer.Interval = 10*1000;
+            core.ShowDownLoadInfo += core_ShowDownLoadInfo;
+            idTimer.Interval = 10 * 1000;
             idTimer.Tick += idTimer_Tick;
-            idTimer.Start();
+
         }
 
+        void core_ShowDownLoadInfo(string text)
+        {
+            if (textBox1.InvokeRequired)
+            {
+                this.Invoke(new ShowInStatusBar(ShowTaskInfo3), text);
+            }
+            else textBox1.Text = text;
+        }
+
+        private void ShowTaskInfo3(string text)
+        {
+            textBox1.Text = text;
+        }
+
+        void core_ShowInStatusMonitor(string text)
+        {
+            if (statusStrip1.InvokeRequired)
+            {
+                this.Invoke(new ShowInStatusBar(ShowTaskInfo2), text);
+            }
+            else toolStripStatusLabel4.Text = text;
+        }
+
+        private void ShowTaskInfo2(string text)
+        {
+            toolStripStatusLabel4.Text = text;
+            statusStrip1.Refresh();
+        }
+
+        private int timerCount = 0;
+        /// <summary>
+        /// 四个职责：
+        /// 1.发送心跳
+        /// 2.判断是否下载完成
+        /// 3.填写下载验证码
+        /// 4.4分钟内没有变化，那么重新开始下载流程
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void idTimer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine(" Main Timer");
-            if(core!=null)
-                core.JudgeDownLoadIDCodeAndInput();
+            Console.WriteLine("Main Timer Monitor");
+            try
+            {
+
+                //发送心跳，两分钟
+                if (timerCount >= 2*60*1000/idTimer.Interval)
+                {
+                    if (core != null)
+                        core.SendHeart(AppConfig.PCName);
+                    timerCount = 0;
+                }
+                else
+                    timerCount++;
+                //2个周期内下载数没有变化，那么从新开始下载
+                if (core != null && ((core.SendHeartFailedCount > 0) /*||!core.GetMainResponseByProcess()*/))
+                {
+                    button2_Click(null, null);
+
+                    button1_Click(null, null);
+                    //
+                    return;
+                }
+
+                //判断下载是否完成
+                if (core != null)
+                    core.DownLoadInfoMonitor();
+                //10秒判断一次
+                if (core != null)
+                    core.JudgeDownLoadIDCodeAndInput();
+            }
+            catch (Exception e1)
+            {
+                ShowTaskInfo("监视器:"+e1.Message);
+            }
+            
         }
         #region 获取验证码
         public mshtml.IHTMLDocument2 GetHtmlDocument(IntPtr hwnd)
@@ -67,13 +142,13 @@ namespace QQMusicClient
             return "";
         }
         #endregion
-       
+
 
         void core_ShowInStatusBarEvent(string text)
         {
             if (statusStrip1.InvokeRequired)
             {
-                this.Invoke(new ShowInStatusBar(ShowTaskInfo),text);
+                this.Invoke(new ShowInStatusBar(ShowTaskInfo), text);
             }
             else toolStripStatusLabel1.Text = text;
         }
@@ -86,8 +161,12 @@ namespace QQMusicClient
         {
             button1.Enabled = false;
             button2.Enabled = true;
+            button4.Enabled = true;
             //
+            timerCount = 0;
+            core.SendHeartFailedCount = 0;
             core.DoWork();
+            idTimer.Start();
             //
             //core.StartMonitor_T();
             //core.StartDownLoadTimer();
@@ -95,15 +174,29 @@ namespace QQMusicClient
 
         private void button2_Click(object sender, EventArgs e)
         {
+            core.Stop();
+            idTimer.Stop();
+            //while (core.WorkThreadIsALive)
+            //{
+            Thread.Sleep(3000);
+            //}
             button2.Enabled = false;
             button1.Enabled = true;
-            core.Stop();
+            button4.Enabled = false;
+
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-           if( new FrmSetting().ShowDialog()==DialogResult.OK)
-               AppConfig.ReadValue();
+            if (new FrmSetting().ShowDialog() == DialogResult.OK)
+                AppConfig.ReadValue();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (core != null)
+                core.WorkThreadFlag = false;
+            button4.Enabled = false;
         }
     }
 }

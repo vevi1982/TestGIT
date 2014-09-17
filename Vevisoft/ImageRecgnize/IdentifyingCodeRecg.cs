@@ -11,7 +11,7 @@ namespace Vevisoft.ImageRecgnize
     密保选我的生日，输入 19801026
      */
     /// <summary>
-    /// sunzhenkui,my120630,1014
+    /// sunzhenkui,my120630,1014  vevisoft shiyuxing521
     /// </summary>
     public class IdentifyingCodeRecg
     {

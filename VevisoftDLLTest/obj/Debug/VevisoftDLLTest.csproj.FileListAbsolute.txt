@@ -12,3 +12,4 @@ E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.Win
 E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.exe
 E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.pdb
+E:\Procedure\GitProject\BaiduMusic\VevisoftDLLTest\obj\Debug\VevisoftDLLTest.HOOK.FrmShowWindowHook.resources

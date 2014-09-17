@@ -23,6 +23,20 @@ namespace QQMusicClient.Dlls
         /// <returns></returns>
         public bool IsChangedContent(Models.QQInfo model)
         {
+            //在半夜11点至 凌晨1点之间 无条件发送心跳。因为程序此时停止
+            if (DateTime.Now.Hour >= 23 && DateTime.Now.Hour <= 1)
+            {
+                return true;
+            }
+            if (model == null)
+            {
+                if (currentModel != null)
+                {
+                    currentModel = null;
+                    return true;
+                }
+                else return false;
+            }
             if (currentModel == null)
             {
                 currentModel = model == null ? null : model.Clone() as Models.QQInfo;

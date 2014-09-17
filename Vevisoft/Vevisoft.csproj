@@ -83,6 +83,7 @@
     <Compile Include="WindowsAPI\MouseKeyBoradUtility.cs" />
     <Compile Include="WindowsAPI\Shell32Utility.cs" />
     <Compile Include="WindowsAPI\SystemWindowsAPI.cs" />
+    <Compile Include="WindowsAPI\WindowsHook.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DataBase\" />
