@@ -179,7 +179,7 @@ namespace QQMusicClient
             //while (core.WorkThreadIsALive)
             //{
             Thread.Sleep(3000);
-            core.qqModel = null;
+            
             //}
             button2.Enabled = false;
             button1.Enabled = true;

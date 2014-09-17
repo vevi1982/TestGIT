@@ -291,6 +291,7 @@ namespace QQMusicClient
                     Thread.Sleep(5000);
                     OnShowInStatusBarEvent("aaa  "+ e1.Message);
                     Thread.Sleep(5000);
+                    qqModel = null;
                 }
             //}
         }
