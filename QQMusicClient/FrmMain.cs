@@ -25,9 +25,25 @@ namespace QQMusicClient
             core.ShowInStatusMonitor += core_ShowInStatusMonitor;
             core.GetDownLoadIDCOdeEvent += core_GetDownLoadIDCOdeEvent;
             core.ShowDownLoadInfo += core_ShowDownLoadInfo;
+
+            core.ShowLog += core_ShowLog;
             idTimer.Interval = 10 * 1000;
             idTimer.Tick += idTimer_Tick;
 
+        }
+
+        void core_ShowLog(string text)
+        {
+            if (label1.InvokeRequired)
+            {
+                this.Invoke(new ShowInStatusBar(ShowTaskInfo4), text);
+            }
+            else label1.Text = text;
+        }
+
+        private void ShowTaskInfo4(string text)
+        {
+            label1.Text = text;
         }
 
         void core_ShowDownLoadInfo(string text)

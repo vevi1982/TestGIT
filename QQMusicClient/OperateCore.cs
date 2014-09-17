@@ -24,6 +24,14 @@ namespace QQMusicClient
     /// </summary>
     public class OperateCore
     {
+        public event ShowInStatusBar ShowLog;
+
+        protected virtual void OnShowLog(string text)
+        {
+            ShowInStatusBar handler = ShowLog;
+            if (handler != null) handler(text);
+        }
+
         public event ShowInStatusBar ShowInStatusBarEvent;
         public event ShowInStatusBar ShowInStatusMonitor;
         public event ShowInStatusBar ShowDownLoadInfo;
@@ -223,10 +231,12 @@ namespace QQMusicClient
         /// </summary>
         public void GetQQAndDownLoadOperate()
         {
+            OnShowLog("Wait DownLoadOver111");
             OnShowInStatusBarEvent("开始...");
             IsDownLoadOver = false;
             isMoniterStart = false;
             ChangeIP();
+            OnShowLog("22222");
             OnShowInStatusBarEvent("更换IP（如果）...");
             var count = 0;
             var model = Server.GetQQFromServer();
@@ -240,8 +250,11 @@ namespace QQMusicClient
                 model = Server.GetQQFromServer();
                 //throw new Exception("没有获取到QQ");
             }
-            if(count>3)
+            if (count > 3)
+            {
+                OnShowLog("33333");
                 throw new Exception("没有获取到QQ");
+            }
             //
             var orderList = model.SongOrderList.Keys.ToList();
             //for (int i = 0; i < orderList.Count; i++)
@@ -277,6 +290,7 @@ namespace QQMusicClient
                     {
                         //DownLoadInfoMonitor();
                         //
+                        OnShowLog("Wait DownLoadOver");
                         Console.WriteLine("Monitor Thread");
                         Thread.Sleep(10*1000);
                         Application.DoEvents();
@@ -1143,6 +1157,7 @@ namespace QQMusicClient
                 //
                 OnShowInStatusBarEvent(qqModel.CurrentSongOrderName + "下载完成," + qqModel.CurrentDownloadCount);
                 IsDownLoadOver = true;
+                OnShowLog("IsDownLoadOver = true");
                 return;
             }
             else
