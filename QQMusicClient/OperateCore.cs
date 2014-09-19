@@ -167,6 +167,8 @@ namespace QQMusicClient
         public bool WorkThreadFlag { get; set; }
         private Thread heartTh;
         private Thread workTh;
+
+        private bool notUpdate = false;//更新数据
         public void DoWork()
         {
             //开启心跳线程。
@@ -187,6 +189,7 @@ namespace QQMusicClient
                     //在十一点早凌晨1点之间不进行操作
                     while (WorkThreadFlag)//DateTime.Now.Hour<23&&DateTime.Now.Hour>1)
                     {
+                        notUpdate = false;
                         try
                         {
                             OnShowInStatusBarEvent("Start00000....");
@@ -194,6 +197,14 @@ namespace QQMusicClient
                         }
                         catch (Exception e1)
                         {
+                            Vevisoft.Log.VeviLog2.WriteLogInfo("000  " + e1.Message);
+                            if (qqModel != null&&!notUpdate)
+                            {
+                                GetDownLoadInfoFromTecentServer(qqModel);
+                                //OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
+                                SendServerDownInfo();
+                            }
+                            ClearSongFolderAndCloseMain();
                             OnShowInStatusBarEvent(e1.Message);
                             
                         }
@@ -207,18 +218,12 @@ namespace QQMusicClient
         {
             try
             {
-                //heartTh.Abort();
-
                 workTh.Abort();
-               
-                
             }
             catch (Exception)
             {
-                
-                //throw;
             }
-            
+
         }
 
         public bool WorkThreadIsALive
@@ -241,7 +246,7 @@ namespace QQMusicClient
             var count = 0;
             var model = Server.GetQQFromServer();
             //没有获取就要一直获取，长时间失败 心跳不发
-            while (model == null&&count<4)
+            while (model == null && count < 4)
             {
                 count++;
                 OnShowInStatusBarEvent("没有获取到QQ");
@@ -255,59 +260,71 @@ namespace QQMusicClient
                 OnShowLog("33333");
                 throw new Exception("没有获取到QQ");
             }
+            GetDownLoadInfoFromTecentServer(model);
+            //
+            if (model != null && (model.RemainNum == 0&&model.DownLoadNum>800))
+            {
+                //周下载量足够
+                notUpdate = true;
+                return;
+            }
+            //
+            var forCount = 3;
             //
             var orderList = model.SongOrderList.Keys.ToList();
-            //for (int i = 0; i < orderList.Count; i++)
-            ////foreach (string key in model.SongOrderList.Keys)
-            //{
-            var i = 0;
-                var key = orderList[i];
-                try
+            //确保一个QQ没有剩余.但是只能使用3次。如果有个歌单正好全部不能下载，那么就会停在这里了。
+            while (model.RemainNum != 0 && forCount>0)
+            {
+                foreach (var key in orderList)
                 {
-                    //identifyingTimer.Stop();
-                   
-                    DoOnce(model,key);
-                    //开启监视器堵塞线程？？
-                    IsDownLoadOver = false;
-                    isMoniterStart = true;
-                    //此时还有一个问题，就是如果堵塞时间太长，（下载没变化，那么提交下载数。结束线程。）
-
-                    //StartDownLoadTimer();
-                    //
-                    //var thmonitor=new Thread(() =>
-                    //    {
-                    //        while (!IsDownLoadOver)
-                    //        {
-                    //            //DownLoadInfoMonitor();
-                    //            //
-                    //            Console.WriteLine("Monitor Thread");
-                    //            Thread.Sleep(10*1000);
-                    //        }
-                    //    });
-                    //thmonitor.Start();
-                    //thmonitor.Join();
-                    while (!IsDownLoadOver)
+                    try
                     {
-                        //DownLoadInfoMonitor();
+                        GetDownLoadInfoFromTecentServer(model);
                         //
-                        OnShowLog("Wait DownLoadOver");
-                        Console.WriteLine("Monitor Thread");
-                        Thread.Sleep(10*1000);
-                        Application.DoEvents();
+                        if (model.RemainNum == 0)
+                            break;
+                        //
+                        DoOnce(model, key);
+                        //开始下载
+                        IsDownLoadOver = false;
+                        //开始监视下载状态.下载数，下载验证码...
+                        isMoniterStart = true;
+                        //等待下载完成
+                        while (!IsDownLoadOver && SendHeartFailedCount < 1)
+                        {
+                            OnShowLog("Wait DownLoadOver");
+                            Console.WriteLine("Monitor Thread");
+                            Thread.Sleep(10*1000);
+                            Application.DoEvents();
+                        }
+                        //禁用监视，以防报错.开始登陆或者重新获取QQ下载
+                        isMoniterStart = false;
                     }
-
+                    catch (Exception e1)
+                    {
+                        //throw;
+                        // Thread.Sleep(5000);
+                        Vevisoft.Log.VeviLog2.WriteLogInfo("aaa  " + e1.Message);
+                        OnShowInStatusBarEvent("aaa  " + e1.Message);
+                        Thread.Sleep(5000);
+                        //qqModel = null;
+                    }
+                    
                 }
-                catch (Exception e1)
-                {
-                    SendServerDownInfo();
-                    ClearSongFolderAndCloseMain();
-                    //throw;
-                    Thread.Sleep(5000);
-                    OnShowInStatusBarEvent("aaa  "+ e1.Message);
-                    Thread.Sleep(5000);
-                    qqModel = null;
-                }
-            //}
+                forCount--;
+                GetDownLoadInfoFromTecentServer(model);
+                //
+                Thread.Sleep(2000);
+            }
+            //再次提交，不在每次歌单下载完后提交
+            if (qqModel != null)
+            {
+                GetDownLoadInfoFromTecentServer(qqModel);
+                //OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
+                SendServerDownInfo();
+            }
+            ClearSongFolderAndCloseMain();
+           
         }
 
         public void StartMonitor_T()
@@ -345,8 +362,9 @@ namespace QQMusicClient
             qqinfo.CurrentSongOrderName = songlistName;
             qqinfo.BeginTimeStamp = HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
             qqModel = qqinfo; //
+            GetDownLoadInfoFromTecentServer(qqModel);
             //
-            OnShowDownLoadInfo(string.Format("QQ:{0}.歌单:{1},歌单数量:{2},当前下载:{3}", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName],qqModel.CurrentDownloadCount));
+            OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter,qqModel.DownLoadNum, qqModel.RemainNum));
             //
             //0.清理下载文件夹和缓存文件夹
             ClearSongFolderAndCloseMain();
@@ -366,7 +384,7 @@ namespace QQMusicClient
             DownLoadSong_TryList(mainhandle);
             //
             //
-            OnShowDownLoadInfo(string.Format("QQ:{0}.歌单:{1},歌单数量:{2},当前下载:{3}", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount));
+            OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
             //
         }
         #endregion
@@ -711,19 +729,27 @@ namespace QQMusicClient
         /// </summary>
         public void ClearSongFolderAndCloseMain()
         {
-            //如果QQ音乐打开，那么关闭
-            foreach (var p in System.Diagnostics.Process.GetProcesses())
+            try
             {
-                if (p.ProcessName.Contains("QQMusic") && p.MainModule.FileName.ToLower() == AppConfig.AppPath.ToLower())
+                //如果QQ音乐打开，那么关闭
+                foreach (var p in System.Diagnostics.Process.GetProcesses())
                 {
-                    Console.WriteLine(p.StartInfo.FileName);
-                    p.Kill();
+                    if (p.ProcessName.Contains("QQMusic") &&
+                        p.MainModule.FileName.ToLower() == AppConfig.AppPath.ToLower())
+                    {
+                        Console.WriteLine(p.StartInfo.FileName);
+                        p.Kill();
+                    }
                 }
+                //删除下载文件
+                Vevisoft.IO.Directory.DeleteDirectoryContent(AppConfig.DownLoadPath);
+                //删除缓存文件
+                Vevisoft.IO.Directory.DeleteDirectoryContent(AppConfig.AppCachePath);
             }
-            //删除下载文件
-            Vevisoft.IO.Directory.DeleteDirectoryContent(AppConfig.DownLoadPath);
-            //删除缓存文件
-            Vevisoft.IO.Directory.DeleteDirectoryContent(AppConfig.AppCachePath);
+            catch (Exception)
+            {
+            }
+
         }
 
         #region 删除下载列表内容
@@ -1150,19 +1176,21 @@ namespace QQMusicClient
             //判断下载是否完成
             if (songCount == qqModel.SongOrderList[qqModel.CurrentSongOrderName])
             {
-                //下载完成。。。
-                SendServerDownInfo();
+                //下载完成。。。不提交。总体歌单下载完成后提交
+                //SendServerDownInfo();
                 //清楚下载缓存，及列表
                 ClearALlInfos(mainHandler);
                 //
-                OnShowInStatusBarEvent(qqModel.CurrentSongOrderName + "下载完成," + qqModel.CurrentDownloadCount);
                 IsDownLoadOver = true;
                 OnShowLog("IsDownLoadOver = true");
+                OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));               
+                OnShowInStatusBarEvent(qqModel.CurrentSongOrderName + "下载完成," + qqModel.CurrentDownloadCount);
+                
                 return;
             }
             else
             {
-                OnShowDownLoadInfo(string.Format("QQ:{0}.歌单:{1},歌单数量:{2},当前下载:{3}", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount));
+                OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
                 OnShowInStatusBarEvent("已下载" + songCount);
             }
         }
@@ -1328,6 +1356,8 @@ namespace QQMusicClient
                 IsConNotDownLoadSong();
             return handle;
         }
+
+        private string downloadCookie = "";
         /// <summary>
         /// 是否下载数量已达到上限
         /// </summary>
@@ -1384,7 +1414,65 @@ namespace QQMusicClient
                             return true;
                         if (qqModel == null)
                             return true;
+                        //
+                        downloadCookie = id.cookie;
+                       
                         qqModel.SongOrderList[qqModel.CurrentSongOrderName] = GetSongCount(str);
+                        //获取剩余数量
+                        GetDownLoadInfoFromTecentServer(qqModel);
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        if (qqModel.SongOrderList[qqModel.CurrentSongOrderName] > qqModel.RemainNum)
+                        {
+                            //取消选择
+                            var elements2 =
+                                id.all.Cast<mshtml.HTMLDivElement>()
+                                  .Where(
+                                      item =>
+                                      (item.className == "checkbox checkbox_press js_nl" ||
+                                       item.className == "checkbox js_nl checkbox_press"));
+                            foreach (HTMLDivElement htmlDivElement in elements2)
+                            {
+                                Console.WriteLine(htmlDivElement.outerHTML);
+                                htmlDivElement.click();
+                                var str2 = htmlDivElement.innerHTML;
+                                Console.WriteLine(htmlDivElement.outerHTML);
+                            }
+                            //var songlistDivEle =
+                            //    id.all.Cast<IHTMLElement>().FirstOrDefault(item => item.id == "id_songlist") as IHTMLElement;
+                            //if (titleelement != null)
+                            //    titleelement.innerHTML = "您共选择了1首歌曲";
+
+                            //剩余数没有歌单数量多。那么减少下载数量                           
+                            //
+                            //选择足够数量
+                            //checkbox js_nl
+
+                            var elements3 =
+                                id.all.Cast<mshtml.HTMLSpanElement>()
+                                  .Where(item => item.className == "checkbox js_nl");
+                            bool isfirst = true;
+                            //剩余下载数
+                            var count = qqModel.RemainNum;
+                            //
+                            foreach (HTMLSpanElement htmlDivElement in elements3)
+                            {
+                                if (count > 0)
+                                {
+                                    if (htmlDivElement
+                                            .parentElement.parentElement
+                                            .parentElement.parentElement.id == "id_songlist")
+                                    {
+                                        Console.WriteLine(htmlDivElement.outerHTML);
+                                        htmlDivElement.click();
+                                        var str2 = htmlDivElement.innerHTML;
+                                        Console.WriteLine(htmlDivElement.outerHTML);
+                                        count--;
+                                    }
+                                }
+                            }
+                        }
+                        //
                             // GetSongCount(str);
                         OnShowInStatusBarEvent("歌单总数为" + qqModel.SongOrderList[qqModel.CurrentSongOrderName]);
                         OnShowInStatusMonitor("歌单总数为" + qqModel.SongOrderList[qqModel.CurrentSongOrderName]);
@@ -1393,6 +1481,23 @@ namespace QQMusicClient
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// 获取下载数 剩余下载数信息
+        /// </summary>
+        /// <param name="model"></param>
+        private bool GetDownLoadInfoFromTecentServer(Models.QQInfo model)
+        {
+            bool val= TencentServer.GetDownLoadInfoFromTencentServer(model, downloadCookie) > -1;
+            if (model != null && model.SongOrderList != null && !string.IsNullOrEmpty(model.CurrentSongOrderName))
+                OnShowDownLoadInfo(
+                    string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},",
+                                  model.QQNo, model.CurrentSongOrderName,
+                                  model.SongOrderList[qqModel.CurrentSongOrderName], model.CurrentDownloadCount,
+                                  model.DayCounter, model.DownLoadNum, model.RemainNum));
+
+            return val;
         }
 
         public int GetSongCOuntByliClassName(string html)

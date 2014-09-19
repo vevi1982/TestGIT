@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using QQMusicClient.Dlls;
 using Vevisoft.WindowsAPI;
 using mshtml;
 using Timer = System.Windows.Forms.Timer;
@@ -32,6 +33,12 @@ namespace QQMusicClient
 
         }
 
+
+        public FrmMain(bool auto):this()
+        {
+            button1_Click(null,null);    
+        }
+
         void core_ShowLog(string text)
         {
             if (label1.InvokeRequired)
@@ -48,16 +55,16 @@ namespace QQMusicClient
 
         void core_ShowDownLoadInfo(string text)
         {
-            if (textBox1.InvokeRequired)
+            if (richTextBox1.InvokeRequired)
             {
                 this.Invoke(new ShowInStatusBar(ShowTaskInfo3), text);
             }
-            else textBox1.Text = text;
+            else richTextBox1.Text = text;
         }
 
         private void ShowTaskInfo3(string text)
         {
-            textBox1.Text = text;
+            richTextBox1.Text = text;
         }
 
         void core_ShowInStatusMonitor(string text)
@@ -103,11 +110,11 @@ namespace QQMusicClient
                 //2个周期内下载数没有变化，那么从新开始下载
                 if (core != null && ((core.SendHeartFailedCount > 0) /*||!core.GetMainResponseByProcess()*/))
                 {
-                    button2_Click(null, null);
+                    //button2_Click(null, null);
 
-                    button1_Click(null, null);
-                    //
-                    return;
+                    //button1_Click(null, null);
+                    ////
+                    //return;
                 }
 
                 //判断下载是否完成
@@ -214,6 +221,16 @@ namespace QQMusicClient
             if (core != null)
                 core.WorkThreadFlag = false;
             button4.Enabled = false;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if(string.IsNullOrEmpty(textBox1.Text.Trim()))
+                return;
+            var s=new TencentServer();
+            var model = new Models.QQInfo();
+            model.QQNo = textBox1.Text;
+            MessageBox.Show(TencentServer.GetDownLoadInfoStrFromTencentServer(model, ""));
         }
     }
 }

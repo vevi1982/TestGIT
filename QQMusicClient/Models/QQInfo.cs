@@ -37,6 +37,16 @@ namespace QQMusicClient.Models
 
         public string EndTimeStamp { get; set; }
 
+        /// <summary>
+        /// 当日已下载数量
+        /// </summary>
+        public int DownLoadNum { get; set; }
+        /// <summary>
+        /// 当日剩余下载数量
+        /// </summary>
+        public int RemainNum { get; set; }
+
+        public int DayCounter { get; set; }
         //
         //状态参数
         /// <summary>

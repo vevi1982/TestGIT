@@ -195,6 +195,8 @@ namespace Vevisoft.Utility.Web
             value = value.Replace("\"", "");
             value = value.Replace(":", "");
             value = value.Replace(",", "");
+            value = value.Replace("}", "");
+            value = value.Replace(")", "");
             return value.Trim();
         }
 
@@ -235,7 +237,7 @@ namespace Vevisoft.Utility.Web
         {
             this._reTryCount = 3;
             this.Url = url;
-            this.UserAgent = HttpDefaultParam.DefaultAcceptEncoding;
+            this.UserAgent = HttpDefaultParam.DefaultUserAgent;
             this.Accpt = HttpDefaultParam.DefaultAccpt;
             this.AccptEncoding = HttpDefaultParam.DefaultAcceptEncoding;
             this.AccptLanguage = HttpDefaultParam.DefaultAcceptLanguage;

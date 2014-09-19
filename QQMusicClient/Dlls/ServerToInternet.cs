@@ -29,9 +29,13 @@ namespace QQMusicClient.Dlls
                 //eg:{"dayCounter":0,"monthCounter":0,"weekCounter":0,"isUsing":1,"qqNo":"1519580187","qqPassword":"nuosjiao","isEnable":1}
                 string qqno = Vevisoft.Utility.Web.HttpResponseUtility.GetValueFromJson(value, "qqNo");
                 string qqPassword = Vevisoft.Utility.Web.HttpResponseUtility.GetValueFromJson(value, "qqPassword");
+                //
+                var DayCounter = Vevisoft.Utility.Web.HttpResponseUtility.GetValueFromJson(value, "dayCounter");
                 //分解Order
                 var orders = Vevisoft.Utility.Web.HttpResponseUtility.GetSubJsonStr(value, "orderName");
                 var model = new Models.QQInfo {QQNo = qqno, QQPass = qqPassword};
+                if (!string.IsNullOrEmpty(DayCounter))
+                    model.DayCounter = int.Parse(DayCounter);
                 foreach (var order in orders)
                 {
                     if (order == null)
@@ -80,8 +84,12 @@ namespace QQMusicClient.Dlls
         {
             if (model == null)
                 return false;
+            var updateNo = 0;
+            //
+            updateNo = 800 - model.DayCounter-model.RemainNum;
+
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
-            string url = string.Format(ResultUrl, model.QQNo, model.PcName, model.CurrentDownloadCount,
+            string url = string.Format(ResultUrl, model.QQNo, model.PcName, updateNo,
                                        model.BeginTimeStamp, endstamp, model.CurrentSongOrderName);
             try
             {

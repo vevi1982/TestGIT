@@ -8,3 +8,6 @@ E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.Propertie
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.exe
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.pdb
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.Form2.resources
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\VSCM.dll
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\VSCM.pdb

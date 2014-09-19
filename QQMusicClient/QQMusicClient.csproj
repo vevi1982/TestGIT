@@ -71,6 +71,7 @@
     <Compile Include="Dlls\IHeart.cs" />
     <Compile Include="Dlls\IServer.cs" />
     <Compile Include="Dlls\ServerToInternet.cs" />
+    <Compile Include="Dlls\TencentServer.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQMusicClient", "QQMusicCli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQMusicShareSongList", "QQMusicShareSongList\QQMusicShareSongList.csproj", "{513D2583-C0AE-4098-8DA3-57C420DEAF1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSCM", "VSCM\VSCM.csproj", "{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,16 @@ Global
 		{513D2583-C0AE-4098-8DA3-57C420DEAF1E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{513D2583-C0AE-4098-8DA3-57C420DEAF1E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{513D2583-C0AE-4098-8DA3-57C420DEAF1E}.Release|x86.ActiveCfg = Release|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{78D72FCD-4A98-413A-8E5F-5F1619BC1C5A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

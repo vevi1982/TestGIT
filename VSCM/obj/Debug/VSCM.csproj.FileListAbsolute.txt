@@ -1,0 +1,7 @@
+E:\Procedure\GitProject\BaiduMusic\VSCM\bin\Debug\VSCM.dll
+E:\Procedure\GitProject\BaiduMusic\VSCM\bin\Debug\VSCM.pdb
+E:\Procedure\GitProject\BaiduMusic\VSCM\obj\Debug\VSCM.dll
+E:\Procedure\GitProject\BaiduMusic\VSCM\obj\Debug\VSCM.pdb
+E:\Procedure\GitProject\BaiduMusic\VSCM\bin\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\VSCM\bin\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\VSCM\obj\Debug\VSCM.csprojResolveAssemblyReference.cache
