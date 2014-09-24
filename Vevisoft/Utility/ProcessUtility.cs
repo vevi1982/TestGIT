@@ -44,7 +44,7 @@ namespace Vevisoft.Utility
                 }
             }
             //托盘区清理
-
+            WindowsAPI.SystemWindowsAPI.RefreshTray();
 
             return false;
         }

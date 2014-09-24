@@ -5,3 +5,4 @@ E:\Procedure\GitProject\BaiduMusic\VSCM\obj\Debug\VSCM.pdb
 E:\Procedure\GitProject\BaiduMusic\VSCM\bin\Debug\Vevisoft.dll
 E:\Procedure\GitProject\BaiduMusic\VSCM\bin\Debug\Vevisoft.pdb
 E:\Procedure\GitProject\BaiduMusic\VSCM\obj\Debug\VSCM.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\VSCM\bin\Debug\MySql.Data.dll

@@ -11,3 +11,4 @@ E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\Debug\QQMusicShareSo
 E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\Debug\QQMusicShareSongList.exe
 E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\obj\Debug\QQMusicShareSongList.pdb
 E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\Debug\SQLite.NET.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicShareSongList\bin\Debug\MySql.Data.dll

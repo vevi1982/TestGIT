@@ -11,3 +11,4 @@ E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.csproj.
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.exe
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.pdb
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\obj\Debug\QQMusicClient.FrmMain.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\Debug\MySql.Data.dll

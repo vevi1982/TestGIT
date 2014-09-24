@@ -9,3 +9,4 @@ E:\Procedure\GitProject\BaiduMusic\BaiduMusicClient\obj\Debug\BaiduMusicClient.P
 E:\Procedure\GitProject\BaiduMusic\BaiduMusicClient\obj\Debug\BaiduMusicClient.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\BaiduMusicClient\obj\Debug\BaiduMusicClient.exe
 E:\Procedure\GitProject\BaiduMusic\BaiduMusicClient\obj\Debug\BaiduMusicClient.pdb
+E:\Procedure\GitProject\BaiduMusic\BaiduMusicClient\bin\Debug\MySql.Data.dll

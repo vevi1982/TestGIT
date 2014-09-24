@@ -1,0 +1,12 @@
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\QQMusicUpdateDL.exe.config
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\QQMusicUpdateDL.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\QQMusicUpdateDL.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\MySql.Data.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.Form1.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.Properties.Resources.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.csproj.GenerateResource.Cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.pdb

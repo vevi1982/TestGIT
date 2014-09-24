@@ -12,7 +12,8 @@ namespace QQMusicClient.Dlls
 
         private const string ResultUrl =
             "http://i.singmusic.cn:8180/portals/setDownloadCounter?qqNo={0}&cpName={1}&increment={2}&beginTime={3}&endTime={4}&orderName={5}";
-        
+
+        private const string WrongUrl = "http://i.singmusic.cn:8180/portals/setAccountStatus?qqNo={0}&status=0";
         public Models.QQInfo GetQQFromServer()
         {
             //测试代码
@@ -79,7 +80,11 @@ namespace QQMusicClient.Dlls
             }
             return true;
         }
-
+        /// <summary>
+        /// 上传播放数
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public bool UpdateDownLoadResult(Models.QQInfo model)
         {
             if (model == null)
@@ -89,7 +94,7 @@ namespace QQMusicClient.Dlls
             updateNo = 800 - model.DayCounter-model.RemainNum;
 
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
-            string url = string.Format(ResultUrl, model.QQNo, model.PcName, updateNo,
+            string url = string.Format(ResultUrl, model.QQNo, model.PcName, model.DLCount,
                                        model.BeginTimeStamp, endstamp, model.CurrentSongOrderName);
             try
             {
@@ -109,7 +114,17 @@ namespace QQMusicClient.Dlls
         public bool UpdatePassWrongQQ(string qqNo)
         {
             //TODO....
-            return true;
+            var url = string.Format(WrongUrl, qqNo);
+            string result;
+            try
+            {
+                result = Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return Convert.ToBoolean(result);
         }
 
 

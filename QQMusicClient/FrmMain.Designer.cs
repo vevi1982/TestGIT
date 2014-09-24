@@ -187,6 +187,7 @@
             this.Controls.Add(this.button1);
             this.Name = "FrmMain";
             this.Text = "QQ音乐自动下载程序";
+            this.Load += new System.EventHandler(this.FrmMain_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);

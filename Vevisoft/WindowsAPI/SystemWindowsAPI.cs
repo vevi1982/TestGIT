@@ -328,6 +328,64 @@ namespace Vevisoft.WindowsAPI
             //    //return htmlDoc;
             //}
         }
+
+        public static bool IsExeNotResponse(string appTitle)
+        {
+            var hwnd = Vevisoft.WindowsAPI.SystemWindowsAPI.FindMainWindowHandle(appTitle, 200, 10);
+            if (hwnd == IntPtr.Zero)
+                hwnd = Vevisoft.WindowsAPI.SystemWindowsAPI.FindMainWindowHandle(appTitle+"（未响应）", 200, 10);
+            if (hwnd != IntPtr.Zero)
+                return Vevisoft.WindowsAPI.SystemWindowsAPI.IsExeNotResponse(hwnd);
+            //
+            return true;
+        }
         #endregion
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        public static extern int SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
+        public static void RefreshTray()
+        {
+           RefreshTray_XP();
+        }
+        public static IntPtr MakeLParam(int LoWord, int HiWord)
+        {
+            return (IntPtr)((HiWord << 16) | (LoWord & 0xffff));
+        }
+        public static void RefreshTray_XP()
+        {   const int WM_MOUSEMOVE = 0x200;
+            IntPtr k = FindWindow("Shell_TrayWnd", null);
+            k = FindWindowEx(k, IntPtr.Zero, "TrayNotifyWnd", null);
+            k = FindWindowEx(k, IntPtr.Zero, "SysPager", null);
+            k = FindWindowEx(k, IntPtr.Zero, "ToolbarWindow32", null);
+            RECT nr = new RECT();
+
+            GetWindowRect((IntPtr)k, ref nr);
+
+            for (int x = 0; x < nr.Right; x = x + 2)
+            {
+                for (int y = 0; y < nr.Bottom; y = y + 2)
+                {
+                    SendMessage(k, WM_MOUSEMOVE, 0, MakeLParam(x, y));
+                }
+            }
+        }
+        public static void RefreshTray_Win7()
+        {
+            const int WM_MOUSEMOVE = 0x200;
+            IntPtr k = FindWindow("Shell_TrayWnd", null);
+            k = FindWindowEx(k, IntPtr.Zero, "TrayNotifyWnd", null);
+            k = FindWindowEx(k, IntPtr.Zero, "SysPager", null);
+            k = FindWindowEx(k, IntPtr.Zero, "ToolbarWindow32", null);
+            RECT nr = new RECT();
+
+            GetWindowRect((IntPtr)k, ref nr);
+
+            for (int x = 0; x < nr.Right; x = x + 2)
+            {
+                for (int y = 0; y < nr.Bottom; y = y + 2)
+                {
+                    SendMessage(k, WM_MOUSEMOVE, 0, MakeLParam(x, y));
+                }
+            }
+        }
     }
 }

@@ -36,7 +36,8 @@ namespace QQMusicClient
 
         public FrmMain(bool auto):this()
         {
-            button1_Click(null,null);    
+
+            button1_Click(null, null);    
         }
 
         void core_ShowLog(string text)
@@ -108,7 +109,7 @@ namespace QQMusicClient
                 else
                     timerCount++;
                 //2个周期内下载数没有变化，那么从新开始下载
-                if (core != null && ((core.SendHeartFailedCount > 0) /*||!core.GetMainResponseByProcess()*/))
+                if (core != null && ((OperateCore.SendHeartFailedCount > 0) /*||!core.GetMainResponseByProcess()*/))
                 {
                     //button2_Click(null, null);
 
@@ -182,17 +183,27 @@ namespace QQMusicClient
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            //Thread t=new Thread(() =>
+            //    {
+            //        while (true)
+            //        {
+            //            Thread.Sleep(100);
+            //        }
+            //    });
+           
+            //t.Start();
+            //t.Join();
             button1.Enabled = false;
             button2.Enabled = true;
             button4.Enabled = true;
             //
             timerCount = 0;
-            core.SendHeartFailedCount = 0;
+            OperateCore.SendHeartFailedCount = 0;
             core.DoWork();
             idTimer.Start();
-            //
-            //core.StartMonitor_T();
-            //core.StartDownLoadTimer();
+
+            core.StartMonitor_T();
+            core.StartDownLoadTimer();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -231,6 +242,11 @@ namespace QQMusicClient
             var model = new Models.QQInfo();
             model.QQNo = textBox1.Text;
             MessageBox.Show(TencentServer.GetDownLoadInfoStrFromTencentServer(model, ""));
+        }
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }

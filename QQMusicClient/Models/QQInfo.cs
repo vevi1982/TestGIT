@@ -12,7 +12,7 @@ namespace QQMusicClient.Models
             BeginTimeStamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
             PcName = AppConfig.PCName;
             SongOrderList=new Dictionary<string, int>();
-
+            DLCount = 0;
         }
 
         public string QQNo { get; set; }
@@ -47,6 +47,10 @@ namespace QQMusicClient.Models
         public int RemainNum { get; set; }
 
         public int DayCounter { get; set; }
+        /// <summary>
+        /// 下载次数
+        /// </summary>
+        public int DLCount { get; set; }
         //
         //状态参数
         /// <summary>

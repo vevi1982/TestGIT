@@ -92,6 +92,7 @@
     </Compile>
     <Compile Include="Models\QQInfo.cs" />
     <Compile Include="OperateCore.cs" />
+    <Compile Include="OperateCoreNew.cs" />
     <Compile Include="PositionInfoQQMusic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

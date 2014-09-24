@@ -883,7 +883,7 @@ namespace Vevisoft.WebOperate
         public static string GetTimeStamp(DateTime dt)
         {
             var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
-            return (dt - startTime).TotalSeconds.ToString("F0");
+            return (dt - startTime).TotalMilliseconds.ToString("F0");
         }
         public static string GetUrlEncodeValue(string value)
         {

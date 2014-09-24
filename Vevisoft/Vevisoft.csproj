@@ -51,6 +51,9 @@
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\Dlls\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -64,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="DBUtility\MysqlHelper.cs" />
     <Compile Include="ImageRecgnize\IdentifyingCodeRecg.cs" />
     <Compile Include="ImageRecgnize\UUCodeWrapper.cs" />
     <Compile Include="IO\Directory.cs" />
