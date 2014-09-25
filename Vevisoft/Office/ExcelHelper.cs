@@ -20,7 +20,7 @@ namespace Vevisoft.Office
             string strCon = string.Format("Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=1;\"", filename);
                            
             var myConn = new OleDbConnection(strCon);
-            string strCom = " SELECT * FROM ["+sheetName+"$]";
+            string strCom = "SELECT * FROM [" + sheetName + "$]";
             myConn.Open();
             var myCommand = new OleDbDataAdapter(strCom, myConn);
             ds = new DataSet();

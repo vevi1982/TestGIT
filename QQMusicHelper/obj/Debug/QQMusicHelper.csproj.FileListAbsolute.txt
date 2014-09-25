@@ -1,0 +1,8 @@
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\bin\Debug\QQMusicHelper.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\bin\Debug\QQMusicHelper.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\obj\Debug\QQMusicHelper.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\obj\Debug\QQMusicHelper.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\obj\Debug\QQMusicHelper.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\bin\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\bin\Debug\MySql.Data.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicHelper\bin\Debug\Vevisoft.pdb

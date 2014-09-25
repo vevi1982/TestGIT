@@ -174,47 +174,44 @@ namespace QQMusicClient
 
         private bool notUpdate = false;//更新数据
         public void DoWork()
-        {
-            //开启心跳线程。
-            //qq 歌单 下载数量 改变的时候 正常心跳，如果没有变化，停发心跳
-            //heartTh = new Thread(() =>
-            //    {
-            //        //心跳程序 统一放到监控timer中
-            //        while (IheartOpe.IsChangedContent(qqModel))
-            //        {
-            //            Server.SendHeart(AppConfig.PCName);
-            //            Thread.Sleep(2*60*1000);
-            //        }
-            //    }) {IsBackground = true};
-            //heartTh.Start();
+        {            
             //工作线程
             workTh = new Thread(() =>
                 {
-                    //在十一点早凌晨1点之间不进行操作
-                    while (/*WorkThreadFlag)//*/DateTime.Now.Hour<23&&DateTime.Now.Hour>=0)
+                    while (true)
                     {
-                        notUpdate = false;
-                        try
+                        //在十一点早凌晨1点之间不进行操作
+                        if (/*WorkThreadFlag)//*/DateTime.Now.Hour < 23 && DateTime.Now.Hour >= 0)
                         {
-                            OnShowInStatusBarEvent("Start00000....");
-                            GetQQAndDownLoadOperate();
-                        }
-                        catch (Exception e1)
-                        {
-                            Vevisoft.Log.VeviLog2.WriteLogInfo("000  " + e1.Message);
-                            if (qqModel != null&&!notUpdate)
+                            notUpdate = false;
+                            try
                             {
-                                GetDownLoadInfoFromTecentServer(qqModel);
-                                //OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
-                                SendServerDownInfo();
+                                OnShowInStatusBarEvent("Start00000....");
+                                GetQQAndDownLoadOperate();
                             }
-                            ClearSongFolderAndCloseMain();
-                            OnShowInStatusBarEvent(e1.Message);
-                            
+                            catch (Exception e1)
+                            {
+                                Vevisoft.Log.VeviLog2.WriteLogInfo("000  " + e1.Message);
+                                if (qqModel != null && !notUpdate)
+                                {
+                                    GetDownLoadInfoFromTecentServer(qqModel);
+                                    //OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},", qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
+                                    SendServerDownInfo();
+                                }
+                                ClearSongFolderAndCloseMain();
+                                OnShowInStatusBarEvent(e1.Message);
+
+                            }
+
                         }
-                        
+                        else
+                        {
+                            OnShowInStatusBarEvent("停止循环下载！");
+                            Thread.Sleep(1000);
+                        }
                     }
-                    OnShowInStatusBarEvent("停止循环下载！");
+                    
+                 
                 }) {IsBackground = true};
             workTh.Start();
         }

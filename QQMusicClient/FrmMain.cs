@@ -44,7 +44,7 @@ namespace QQMusicClient
         {
             if (label1.InvokeRequired)
             {
-                this.Invoke(new ShowInStatusBar(ShowTaskInfo4), text);
+                this.BeginInvoke(new ShowInStatusBar(ShowTaskInfo4), text);
             }
             else label1.Text = text;
         }
@@ -58,7 +58,7 @@ namespace QQMusicClient
         {
             if (richTextBox1.InvokeRequired)
             {
-                this.Invoke(new ShowInStatusBar(ShowTaskInfo3), text);
+                this.BeginInvoke(new ShowInStatusBar(ShowTaskInfo3), text);
             }
             else richTextBox1.Text = text;
         }
@@ -72,7 +72,7 @@ namespace QQMusicClient
         {
             if (statusStrip1.InvokeRequired)
             {
-                this.Invoke(new ShowInStatusBar(ShowTaskInfo2), text);
+                this.BeginInvoke(new ShowInStatusBar(ShowTaskInfo2), text);
             }
             else toolStripStatusLabel4.Text = text;
         }
@@ -172,14 +172,14 @@ namespace QQMusicClient
         {
             if (statusStrip1.InvokeRequired)
             {
-                this.Invoke(new ShowInStatusBar(ShowTaskInfo), text);
+                this.BeginInvoke(new ShowInStatusBar(ShowTaskInfo), text);
             }
             else toolStripStatusLabel1.Text = text;
         }
         public void ShowTaskInfo(string text)
         {
             toolStripStatusLabel1.Text = text;
-            statusStrip1.Refresh();
+            //statusStrip1.Refresh();
         }
         private void button1_Click(object sender, EventArgs e)
         {

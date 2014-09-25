@@ -18,16 +18,17 @@ namespace QQMusicUpdateDL
         public MySqlDBCOre()
         {
             helper=new MysqlHelper(connstr);
-           
-                MySql.Data.MySqlClient.MySqlConnectionStringBuilder conn=new MySqlConnectionStringBuilder(
-                    );
-            
         }
 
         public DataTable GetAccountInfo()
         {
             var sql = "select * from account";
             return helper.ExecuteDataTable(sql, null);
+        }
+
+        public bool ExecuteSql(string sql)
+        {
+            return helper.ExecuteNonQuery(sql, null);
         }
     }
 }

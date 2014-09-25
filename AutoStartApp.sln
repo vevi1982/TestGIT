@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSCM", "VSCM\VSCM.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQMusicUpdateDL", "QQMusicUpdateDL\QQMusicUpdateDL.csproj", "{56D49ED9-BB16-433D-BC6B-0B73B1263AD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQMusicHelper", "QQMusicHelper\QQMusicHelper.csproj", "{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,16 @@ Global
 		{56D49ED9-BB16-433D-BC6B-0B73B1263AD6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{56D49ED9-BB16-433D-BC6B-0B73B1263AD6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{56D49ED9-BB16-433D-BC6B-0B73B1263AD6}.Release|x86.ActiveCfg = Release|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6E1F7D42-7AE7-40AD-A2C3-28DDCCC7B8F5}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

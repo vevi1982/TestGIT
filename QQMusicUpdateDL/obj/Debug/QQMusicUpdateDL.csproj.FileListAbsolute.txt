@@ -10,3 +10,6 @@ E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.Pro
 E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.exe
 E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\QQMusicHelper.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\bin\Debug\QQMusicHelper.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicUpdateDL\obj\Debug\QQMusicUpdateDL.FrmAddQQ.resources

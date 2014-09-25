@@ -54,11 +54,20 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmAddQQ.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmAddQQ.Designer.cs">
+      <DependentUpon>FrmAddQQ.cs</DependentUpon>
+    </Compile>
     <Compile Include="MySqlDBCOre.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmAddQQ.resx">
+      <DependentUpon>FrmAddQQ.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,6 +90,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QQMusicHelper\QQMusicHelper.csproj">
+      <Project>{6e1f7d42-7ae7-40ad-a2c3-28ddccc7b8f5}</Project>
+      <Name>QQMusicHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vevisoft\Vevisoft.csproj">
       <Project>{ce924025-dfb4-4716-ac6a-3bfc8111ad33}</Project>
       <Name>Vevisoft</Name>
