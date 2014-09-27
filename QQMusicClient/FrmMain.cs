@@ -18,7 +18,7 @@ namespace QQMusicClient
     public partial class FrmMain : Form
     {
         OperateCore core = new OperateCore();
-        System.Windows.Forms.Timer idTimer = new Timer();
+        Timer idTimer = new Timer();
         public FrmMain()
         {
             InitializeComponent();

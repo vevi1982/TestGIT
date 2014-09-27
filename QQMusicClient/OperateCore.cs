@@ -396,7 +396,7 @@ namespace QQMusicClient
             IntPtr mainhandle = StartApp();
             mainHandler = mainhandle;
             //2.登录QQ
-            LoginQQ(mainhandle, qqinfo);//登录失败则抛出异常
+            LoginQQ(mainhandle, qqinfo);//登录失败则抛出异常d
             //3.清理临时歌单与下载列表
             DeleteDownLoadList(mainhandle);
             Thread.Sleep(3000);
@@ -1028,7 +1028,6 @@ namespace QQMusicClient
         /// <param name="mainhandle"></param>
         public void DownLoadSong_TryList(IntPtr mainhandle)
         {
-
             //
             MouseSetPositonAndLeftClick(mainhandle, PositionInfoQQMusic.MaintrySongListBtnPt);
             //等待加载

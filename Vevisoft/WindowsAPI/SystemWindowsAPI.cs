@@ -66,7 +66,7 @@ namespace Vevisoft.WindowsAPI
         public static extern IntPtr GetActiveWindow();
 
         //
-        [DllImport("user32", EntryPoint = "GetTopWindow")]
+        [DllImport("user32.dll", EntryPoint = "GetTopWindow")]
         public static extern IntPtr GetTopWindow(IntPtr hwnd);
 
         //
@@ -202,19 +202,18 @@ namespace Vevisoft.WindowsAPI
 
         public delegate bool FindWindowCallBack(IntPtr hwnd, int lParam);
 
-        [DllImport("user32")]
-
+        [DllImport("user32.dll")]
         public static extern int EnumWindows(FindWindowCallBack x, int y);
 
         #endregion
 
-        [DllImport("user32", EntryPoint = "SendMessage")]
+        [DllImport("user32.dll", EntryPoint = "SendMessage")]
         public static extern int SendMessage(IntPtr hwnd, uint wMsg, int wParam, ref int lParam);
 
         [DllImport("user32.dll", EntryPoint = "SendMessageA")]
         public static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, string lParam);
 
-        [DllImport("user32", EntryPoint = "RegisterWindowMessage")]
+        [DllImport("user32.dll", EntryPoint = "RegisterWindowMessage")]
         public static extern uint RegisterWindowMessage(string lpString);
 
         [DllImport("OLEACC.DLL", EntryPoint = "ObjectFromLresult")]

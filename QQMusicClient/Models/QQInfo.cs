@@ -45,7 +45,13 @@ namespace QQMusicClient.Models
         /// 当日剩余下载数量
         /// </summary>
         public int RemainNum { get; set; }
-
+        /// <summary>
+        /// 下载开始时的剩余量
+        /// </summary>
+        public int OriRemain { get; set; }
+        /// <summary>
+        /// 下载开始时的记录数据
+        /// </summary>
         public int DayCounter { get; set; }
         /// <summary>
         /// 下载次数

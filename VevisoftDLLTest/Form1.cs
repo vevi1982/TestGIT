@@ -53,5 +53,10 @@ namespace VevisoftDLLTest
         {
             new IdentifyingCode.FrmCode().Show();
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            new FrmInputDLIDCode().Show();
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace Vevisoft.ImageRecgnize
         public static string GetCodeByUUCodeWeb(string imagePath,int codetype )
         {
             int SoftID = 93025;
+            //"2920E48D-6F5F-45F6-AB6E-FFD9E94EB582"
             string SoftKey = "03ff02294b15451e943c1326915a54fc";
             UUCodeWrapper.uu_setSoftInfoA(SoftID, SoftKey);
             UUCodeWrapper.uu_loginA("sunzhenkui", "my120630");
@@ -25,7 +26,7 @@ namespace Vevisoft.ImageRecgnize
             //byte[] source = (byte[]) converter.ConvertTo(bit, typeof (byte[]));
             var sb = new StringBuilder();
             UUCodeWrapper.uu_recognizeByCodeTypeAndPathA(imagePath, codetype, sb);
-            return sb.ToString();
+            return sb.ToString().Substring(sb.Length-4,4);
         }
         /// <summary>
         /// 截图 并获取验证码。
@@ -45,7 +46,7 @@ namespace Vevisoft.ImageRecgnize
             //byte[] source = (byte[]) converter.ConvertTo(bit, typeof (byte[]));
             var sb = new StringBuilder();
             UUCodeWrapper.uu_recognizeScreenByCodeTypeA(x, y, widht, height, 1004, sb);
-            return sb.ToString();
+            return sb.ToString().Substring(sb.Length - 4, 4);
         }
     }
 }
