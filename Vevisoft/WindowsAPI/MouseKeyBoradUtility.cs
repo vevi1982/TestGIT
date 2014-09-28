@@ -22,6 +22,23 @@ namespace Vevisoft.WindowsAPI
 
         #endregion
 
+        #region 鼠标消息参数
+
+        private const int WM_MOUSEFIRST = 0x0200; //移动鼠标时发生
+        private const int WM_MOUSEMOVE = 0x0200; //移动鼠标时发生，同WM_MOUSEFIRST
+        private const int WM_LBUTTONDOWN = 0x0201; //按下鼠标左键
+        private const int WM_LBUTTONUP = 0x0202; //释放鼠标左键
+        private const int WM_LBUTTONDBLCLK = 0x0203; //双击鼠标左键
+        private const int WM_RBUTTONDOWN = 0x0204; //按下鼠标右键
+        private const int WM_RBUTTONUP = 0x0205; //释放鼠标右键
+        private const int WM_RBUTTONDBLCLK = 0x0206; //双击鼠标右键
+        private const int WM_MBUTTONDOWN = 0x0207; //按下鼠标中键
+        private const int WM_MBUTTONUP = 0x0208; //释放鼠标中键
+        private const int WM_MBUTTONDBLCLK = 0x0209; //双击鼠标中键
+
+        #endregion
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        public static extern int SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
         #region 鼠标API
 
         /// <summary>
@@ -61,6 +78,30 @@ namespace Vevisoft.WindowsAPI
             mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
         }
 
+        /// <summary>
+        /// 发送消息的鼠标单击操作
+        /// </summary>
+        /// <param name="fromHwnd"></param>
+        /// <param name="mousePt"></param>
+        public static void MouseLeftClickSendMsg(IntPtr fromHwnd, int x,int y)
+        {
+            SendMessage(fromHwnd, WM_LBUTTONDOWN, 0, MakeLParam(x, y));
+            SendMessage(fromHwnd, WM_LBUTTONUP, 0, MakeLParam(x, y));
+        }
+        /// <summary>
+        /// 发送消息的鼠标右键点击操作
+        /// </summary>
+        /// <param name="fromHwnd"></param>
+        /// <param name="mousePt"></param>
+        public static void MouseRightClickSendMsg(IntPtr fromHwnd, int x, int y)
+        {
+            SendMessage(fromHwnd, WM_RBUTTONDOWN, 0, MakeLParam(x, y));
+            SendMessage(fromHwnd, WM_RBUTTONUP, 0, MakeLParam(x, y));
+        }
+        public static IntPtr MakeLParam(int LoWord, int HiWord)
+        {
+            return (IntPtr)((HiWord << 16) | (LoWord & 0xffff));
+        }
         #endregion
 
         #region 键盘API
@@ -119,21 +160,25 @@ namespace Vevisoft.WindowsAPI
             keybd_event(38, 0, 0, 0);
             keybd_event(38, 0, 2, 0);
         }
+
         public static void KeySendArrowDown()
         {
             keybd_event(40, 0, 0, 0);
             keybd_event(40, 0, 2, 0);
         }
+
         public static void KeySendArrowLeft()
         {
             keybd_event(37, 0, 0, 0);
             keybd_event(37, 0, 2, 0);
         }
+
         public static void KeySendArrowRight()
         {
             keybd_event(39, 0, 0, 0);
             keybd_event(39, 0, 2, 0);
         }
+
         public static void KeySendEnter()
         {
             keybd_event(0xD, 0, 0, 0);
@@ -173,6 +218,7 @@ namespace Vevisoft.WindowsAPI
             keybd_event(0x11, 0, 2, 0);
             keybd_event(67, 0, 2, 0);
         }
+
         public static void KeySendAltF4()
         {
             keybd_event(18, 0, 0, 0);
@@ -180,6 +226,7 @@ namespace Vevisoft.WindowsAPI
             keybd_event(18, 0, 2, 0);
             keybd_event(115, 0, 2, 0);
         }
+
         /// <summary>
         /// del按键
         /// </summary>

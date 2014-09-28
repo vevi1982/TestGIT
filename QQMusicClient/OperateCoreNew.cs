@@ -113,6 +113,7 @@ namespace QQMusicClient
                     {
                         while (MainThreadFlag)
                         {
+                            OnShowStepEvent("开始下载！");
                             //0点开始，晚上11点结束
                             if ((DateTime.Now.Hour < 23 && DateTime.Now.Hour >= 0)||(DateTime.Now.Hour==23&&DateTime.Now.Minute<30))
                             {
@@ -203,7 +204,7 @@ namespace QQMusicClient
             //
             var songlistNames = qqModel.SongOrderList.Keys.ToArray();
             //将此QQ的剩余下载量下完
-            while (qqdlinfo.Remain!=0)
+            while (qqModel.RemainNum != 0)
             {
                 for (int i = 0; i < songlistNames.Length; i++)
                 {

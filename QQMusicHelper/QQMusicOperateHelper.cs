@@ -246,6 +246,7 @@ namespace QQMusicHelper
             SetMousePosition(mainHandle, PositionInfoQQMusic.MainCaptionPt);
             //右键点击
             MouseKeyBoradUtility.MouseRightClick();
+            //MouseKeyBoradUtility.MouseRightClickSendMsg(mainHandle, PositionInfoQQMusic.MainCaptionPt.X, PositionInfoQQMusic.MainCaptionPt.Y);
             //
             //等待右键菜单弹出
             Thread.Sleep(2 * 1000);
@@ -261,6 +262,7 @@ namespace QQMusicHelper
         {
             SetMousePosition(mainHandle, relativePt);
             MouseKeyBoradUtility.MouseLeftClick();
+            //MouseKeyBoradUtility.MouseLeftClickSendMsg(mainHandle,relativePt.X,relativePt.Y);
         }
         /// <summary>
         /// 移动鼠标到相应的位置

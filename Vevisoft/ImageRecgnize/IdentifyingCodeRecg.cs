@@ -26,7 +26,9 @@ namespace Vevisoft.ImageRecgnize
             //byte[] source = (byte[]) converter.ConvertTo(bit, typeof (byte[]));
             var sb = new StringBuilder();
             UUCodeWrapper.uu_recognizeByCodeTypeAndPathA(imagePath, codetype, sb);
-            return sb.ToString().Substring(sb.Length-4,4);
+            if (sb.ToString().Length >= 4)
+                return sb.ToString().Substring(sb.Length - 4, 4);
+            else return "";
         }
         /// <summary>
         /// 截图 并获取验证码。
@@ -46,7 +48,9 @@ namespace Vevisoft.ImageRecgnize
             //byte[] source = (byte[]) converter.ConvertTo(bit, typeof (byte[]));
             var sb = new StringBuilder();
             UUCodeWrapper.uu_recognizeScreenByCodeTypeA(x, y, widht, height, 1004, sb);
-            return sb.ToString().Substring(sb.Length - 4, 4);
+            if (sb.ToString().Length >= 4)
+                return sb.ToString().Substring(sb.Length - 4, 4);
+            else return "";
         }
     }
 }
