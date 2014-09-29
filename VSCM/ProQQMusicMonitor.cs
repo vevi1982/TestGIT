@@ -68,19 +68,19 @@ namespace VSCM
             msg = "QQMusic " + (qmNotResponse ? "not res" : "can res") + "1111";
             Vevisoft.Log.VeviLog2.WriteLogInfo(msg);
             //2分钟后 主程序没反应。停止主程序
-            if (bol2)
-            {
-                Vevisoft.Log.VeviLog2.WriteLogInfo("22222");
-                if(apNotResponse ){
-                Vevisoft.Utility.ProcessUtility.KillProcess(MyAppName, MyAPPPath);
-                apNotResponse = false;
-                Vevisoft.Log.VeviLog2.WriteLogInfo("333333");
-                //
-                //如果我的APP不存在，那么打开它
-                if (!Vevisoft.Utility.ProcessUtility.ProcessExist(MyAppName, MyAPPPath))
-                    Vevisoft.Utility.ProcessUtility.OpenProjectByProcess(MyAPPPath, MyAPPArguments);
-                }
-            }
+            //if (bol2)
+            //{
+            //    Vevisoft.Log.VeviLog2.WriteLogInfo("22222");
+            //    if(apNotResponse ){
+            //    Vevisoft.Utility.ProcessUtility.KillProcess(MyAppName, MyAPPPath);
+            //    apNotResponse = false;
+            //    Vevisoft.Log.VeviLog2.WriteLogInfo("333333");
+            //    //
+            //    //如果我的APP不存在，那么打开它
+            //    if (!Vevisoft.Utility.ProcessUtility.ProcessExist(MyAppName, MyAPPPath))
+            //        Vevisoft.Utility.ProcessUtility.OpenProjectByProcess(MyAPPPath, MyAPPArguments);
+            //    }
+            //}
             apNotResponse = bol2;
             msg = MyAPPPath + (apNotResponse ? "not res" : "can res ") + "2222";
             Vevisoft.Log.VeviLog2.WriteLogInfo(msg);

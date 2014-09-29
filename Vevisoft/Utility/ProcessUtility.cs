@@ -16,12 +16,16 @@ namespace Vevisoft.Utility
         {
             foreach (var p in Process.GetProcesses())
             {
-                if (p.ProcessName.ToLower().Contains(processName.ToLower())
-                    && p.MainModule.FileName.ToLower() == appPath.ToLower())
-                {
-                    Console.WriteLine(p.StartInfo.FileName);
-                    return p.Responding;
-                }
+                if (p.ProcessName.ToLower()==(processName.ToLower()))
+                    if (!string.IsNullOrEmpty(appPath))
+                    {
+                        if (p.MainModule.FileName.ToLower() == appPath.ToLower())
+                        {
+                            Console.WriteLine(p.StartInfo.FileName);
+                            return p.Responding;
+                        }
+                    }
+                    else return p.Responding;
             }
             return false;
         }
@@ -36,12 +40,21 @@ namespace Vevisoft.Utility
         {
             foreach (var p in Process.GetProcesses())
             {
-                if (p.ProcessName.ToLower().Contains(processName.ToLower()) && p.MainModule.FileName.ToLower() == appPath.ToLower())
-                {
-                    Console.WriteLine(p.StartInfo.FileName);
-                    p.Kill();
-                    p.Close();
-                }
+                if (p.ProcessName.ToLower()==(processName.ToLower()))
+                    if (!string.IsNullOrEmpty(appPath))
+                    {
+                        if (p.MainModule.FileName.ToLower() == appPath.ToLower())
+                        {
+                            Console.WriteLine(p.StartInfo.FileName);
+                            p.Kill();
+                            p.Close();
+                        }
+                    }
+                    else
+                    {
+                        p.Kill();
+                        p.Close();
+                    }
             }
             //托盘区清理
             WindowsAPI.SystemWindowsAPI.RefreshTray();
@@ -59,11 +72,16 @@ namespace Vevisoft.Utility
         {
             foreach (var p in Process.GetProcesses())
             {
-                if (p.ProcessName.ToLower().Contains(processName.ToLower()) && p.MainModule.FileName.ToLower() == appPath.ToLower())
-                {
-                    Console.WriteLine(p.StartInfo.FileName);
-                    return true;
-                }
+                if (p.ProcessName.ToLower()==processName.ToLower())
+                    if (!string.IsNullOrEmpty(appPath))
+                    {
+                        if (p.MainModule.FileName.ToLower() == appPath.ToLower())
+                        {
+                            Console.WriteLine(p.StartInfo.FileName);
+                            return true;
+                        }
+                    }
+                    else return true;
             }
             return false;
         }

@@ -50,8 +50,8 @@ namespace AutoStartApp
                     MyAppName = textBox2.Text,
                     MyAPPArguments = textBox3.Text,
                     QQMusicPath = textBox4.Text,
-                    StartHour=APPConfig.StartHour,
-            EndHour=APPConfig.EndHour
+                    StartHour = APPConfig.StartHour,
+                    EndHour = APPConfig.EndHour
                 };
             //
             monitor.Start(APPConfig.TimerInterval);
@@ -113,7 +113,7 @@ namespace AutoStartApp
 
         private void button7_Click(object sender, EventArgs e)
         {
-            var bol = ProcessUtility.GetResponseByProcess("QQMusicClient","");
+            var bol = ProcessUtility.GetResponseByProcess("QQMusic","");
             var msg = textBox2.Text + (bol ? "true" : "false");
             MessageBox.Show(msg);
         }
