@@ -13,9 +13,13 @@ namespace QQMusicClient.Dlls
         private const string ResultUrl =
             "http://i.singmusic.cn:8180/portals/setDownloadCounter?qqNo={0}&cpName={1}&increment={2}&beginTime={3}&endTime={4}&orderName={5}";
 
+        private const string UpdateQQAcount =
+            "http://i.singmusic.cn:8180/portals/setDayCounter?qqNo={0}&cpName={1}&orderName={2}&orderCounter={3}";
+
         private const string WrongUrl = "http://i.singmusic.cn:8180/portals/setAccountStatus?qqNo={0}&status=0";
         public Models.QQInfo GetQQFromServer()
         {
+            //http://i.singmusic.cn:8180/portals/setDayCounter?qqNo=1065496319&cpName=cp01&orderName=1409200101&orderCounter=800
             //测试代码
             //var tmpmodel = new Models.QQInfo {QQNo = "1062457275", QQPass = "xd1550000"};
             //tmpmodel.SongOrderList.Add("1409200101", 200);
@@ -81,7 +85,7 @@ namespace QQMusicClient.Dlls
             return true;
         }
         /// <summary>
-        /// 上传播放数
+        /// 上传下载数
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -94,8 +98,8 @@ namespace QQMusicClient.Dlls
             updateNo = model.OriRemain  - model.RemainNum;
 
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
-            string url = string.Format(ResultUrl, model.QQNo, model.PcName, updateNo,
-                                       model.BeginTimeStamp, endstamp, model.CurrentSongOrderName);
+            string url = string.Format(UpdateQQAcount, model.QQNo, model.PcName,
+                                        updateNo,model.CurrentSongOrderName);
             try
             {
                 Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
@@ -156,5 +160,36 @@ namespace QQMusicClient.Dlls
             return Convert.ToBoolean(result);
         }
 
+
+        /// <summary>
+        /// 上传歌单数量
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool UpdateDownLoadOrder(Models.QQInfo model)
+        {
+            if (model == null)
+                return false;
+            if (model.CurrentDownloadCount == 0)
+                return true;
+            var updateNo = 0;
+            //
+            updateNo = model.CurrentDownloadCount;
+
+            string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
+            string url = string.Format(ResultUrl, model.QQNo, model.PcName, updateNo,
+                                       model.BeginTimeStamp, endstamp, model.CurrentSongOrderName);
+            model.BeginTimeStamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
+            model.CurrentDownloadCount = 0;
+            try
+            {
+                Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

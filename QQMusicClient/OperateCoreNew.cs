@@ -133,6 +133,9 @@ namespace QQMusicClient
                                         }
                                         OnShowStepEvent("讲下载数提交到服务器中。" + (qqModel.OriRemain - qqModel.RemainNum));
                                         Server.UpdateDownLoadResult(qqModel);
+                                        //上传歌单下载数
+                                        Server.UpdateDownLoadOrder(qqModel);
+                                        OnShowHeartEvent("上传下载歌单数" + qqModel.CurrentDownloadCount);
                                     }
                                     //关闭并清理下载信息
                                     QQMusicOperateHelper.CloseAndCLearAll(AppConfig.AppPath, AppConfig.DownLoadPath, AppConfig.AppCachePath);
@@ -200,6 +203,7 @@ namespace QQMusicClient
                 qqModel.OriRemain = qqModel.RemainNum = qqdlinfo.Remain;
                 IsDownLoadOver = false;
                 FailedSendHeartCount = 0;
+                //qqModel.QQPass += "1";
             }
             //
             var songlistNames = qqModel.SongOrderList.Keys.ToArray();
@@ -239,6 +243,9 @@ namespace QQMusicClient
                         lock (qqModel)
                         {
                             GetQQInfo();
+                            //上传歌单下载数
+                            Server.UpdateDownLoadOrder(qqModel);
+                            OnShowHeartEvent("上传下载歌单数" + qqModel.CurrentDownloadCount);
                         }
                         //关闭并清理下载信息
                         QQMusicOperateHelper.CloseAndCLearAll(AppConfig.AppPath,AppConfig.DownLoadPath,AppConfig.AppCachePath);
@@ -247,8 +254,12 @@ namespace QQMusicClient
                     {
                         Vevisoft.Log.VeviLog2.WriteLogInfo("111  " + e1.Message);
                         OnShowErrorEvent(e1.Message);
+                        //上传歌单下载数
+                        Server.UpdateDownLoadOrder(qqModel);
+                        OnShowHeartEvent("上传下载歌单数"+qqModel.CurrentDownloadCount);
                         if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg)
                         {
+                            OnShowErrorEvent(e1.Message);
                             throw e1;
                         }
                     }

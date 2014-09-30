@@ -27,6 +27,12 @@ namespace QQMusicClient.Dlls
         /// <returns></returns>
         bool UpdateDownLoadResult(Models.QQInfo model);
         /// <summary>
+        /// 上传下载的歌单信息，歌单 下载数量 时间  QQ号 客户端
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        bool UpdateDownLoadOrder(Models.QQInfo model);
+        /// <summary>
         /// 发送密码错误QQ
         /// </summary>
         /// <param name="qqNo"></param>
