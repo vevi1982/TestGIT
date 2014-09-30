@@ -115,7 +115,7 @@ namespace QQMusicClient
                         {
                             OnShowStepEvent("开始下载！");
                             //0点开始，晚上11点结束
-                            if ((DateTime.Now.Hour < 23 && DateTime.Now.Hour >= 0)||(DateTime.Now.Hour==23&&DateTime.Now.Minute<30))
+                            if ((DateTime.Now.Hour < 23 && DateTime.Now.Hour >= 1)||(DateTime.Now.Hour==0&&DateTime.Now.Minute>5))
                             {
                                 try
                                 {
