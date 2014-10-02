@@ -115,7 +115,8 @@ namespace QQMusicClient
                         {
                             OnShowStepEvent("开始下载！");
                             //0点开始，晚上11点结束
-                            if ((DateTime.Now.Hour < 23 && DateTime.Now.Hour >= 1)||(DateTime.Now.Hour==0&&DateTime.Now.Minute>5))
+                            if ((DateTime.Now.Hour < 23 && DateTime.Now.Hour >= 1)||
+                                (DateTime.Now.Hour==0&&DateTime.Now.Minute>(30+int.Parse(AppConfig.PCName.Substring(2,2)))))
                             {
                                 try
                                 {
@@ -200,7 +201,7 @@ namespace QQMusicClient
             var qqdlinfo = DownLoadInfoHelper.GetDownLoadInfo(qqModel.QQNo);
             lock (qqModel)
             {
-                qqModel.OriRemain = qqModel.RemainNum = qqdlinfo.Remain;
+                qqModel.DLCount = qqModel.OriRemain = qqModel.RemainNum = qqdlinfo.Remain;
                 IsDownLoadOver = false;
                 FailedSendHeartCount = 0;
                 //qqModel.QQPass += "1";
@@ -235,6 +236,12 @@ namespace QQMusicClient
                                 IsDownLoadOver = qqModel.CurrentDownloadCount ==
                                                  qqModel.SongOrderList[qqModel.CurrentSongOrderName];
                                 ShowDownLoadLogInfo();
+                            
+                            }
+                            //如果超过11:30分，那么抛出异常。退出
+                            if (DateTime.Now.Hour == 23 && DateTime.Now.Minute >= 30)
+                            {
+                                throw new Exception("已经半夜了，该休息了。老板");
                             }
                             //if (IsDownLoadOver)
                             //    break;
@@ -257,7 +264,7 @@ namespace QQMusicClient
                         //上传歌单下载数
                         Server.UpdateDownLoadOrder(qqModel);
                         OnShowHeartEvent("上传下载歌单数"+qqModel.CurrentDownloadCount);
-                        if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg)
+                        if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg || e1.Message.StartsWith("已经半夜了"))
                         {
                             OnShowErrorEvent(e1.Message);
                             throw e1;

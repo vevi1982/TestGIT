@@ -99,7 +99,7 @@ namespace QQMusicClient.Dlls
 
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
             string url = string.Format(UpdateQQAcount, model.QQNo, model.PcName,
-                                        updateNo,model.CurrentSongOrderName);
+                                        model.CurrentSongOrderName,updateNo);
             try
             {
                 Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
@@ -170,17 +170,20 @@ namespace QQMusicClient.Dlls
         {
             if (model == null)
                 return false;
-            if (model.CurrentDownloadCount == 0)
-                return true;
-            var updateNo = 0;
+           
             //
-            updateNo = model.CurrentDownloadCount;
-
+            var dlinfo = QQMusicHelper.DownLoadInfoHelper.GetDownLoadInfo(model.QQNo);
+            var updateNo = 0;
+            updateNo = model.DLCount - dlinfo.Remain;
+            if (updateNo <= 0)
+                return true;
+           
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
             string url = string.Format(ResultUrl, model.QQNo, model.PcName, updateNo,
                                        model.BeginTimeStamp, endstamp, model.CurrentSongOrderName);
             model.BeginTimeStamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
             model.CurrentDownloadCount = 0;
+            model.DLCount = dlinfo.Remain;
             try
             {
                 Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
