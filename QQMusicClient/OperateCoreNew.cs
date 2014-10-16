@@ -206,6 +206,13 @@ namespace QQMusicClient
                 FailedSendHeartCount = 0;
                 //qqModel.QQPass += "1";
             }
+            if (qqModel.RemainNum == 0)
+            {
+                //使此QQ不可用
+                Server.UpdatePassWrongQQ(qqModel.QQNo);
+                Thread.Sleep(2*1000);
+                return;
+            }
             //
             var songlistNames = qqModel.SongOrderList.Keys.ToArray();
             //将此QQ的剩余下载量下完
@@ -267,6 +274,10 @@ namespace QQMusicClient
                         if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg || e1.Message.StartsWith("已经半夜了"))
                         {
                             OnShowErrorEvent(e1.Message);
+                            throw e1;
+                        }
+                        if (e1.Message.StartsWith("OleAut reported a type mismatch"))
+                        {
                             throw e1;
                         }
                     }

@@ -91,5 +91,10 @@ namespace VevisoftDLLTest.HOOK
                 button7.Text = "Resp 1";
             else button7.Text = "Resp 0";
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            textBox3.Text = GetMainForm() + "";
+        }
     }
 }

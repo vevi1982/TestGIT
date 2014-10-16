@@ -1,0 +1,13 @@
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\Vevisoft.Excel.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\Vevisoft.Excel.pdb
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\ICSharpCode.SharpZipLib.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.OOXML.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.OpenXml4Net.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.OpenXmlFormats.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.xml
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.OOXML.xml
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.OpenXml4Net.xml
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.pdb

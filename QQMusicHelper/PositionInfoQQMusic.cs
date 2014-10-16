@@ -24,7 +24,7 @@ namespace QQMusicHelper
         /// <summary>
         /// 【试听列表】第一首歌位置
         /// </summary>
-        public static Point MainTryListenPanelFirstSongPt = new Point(175, 250);
+        public static Point MainTryListenPanelFirstSongPt = new Point(210, 250);
 
         public static Point MainTryListenPanelDownLoadButtonPt = new Point(380, 105);
 
@@ -35,12 +35,12 @@ namespace QQMusicHelper
         /// <summary>
         /// 【试听列表】下载按钮位置 ，点击后 下 下 回车。下载弹出框
         /// </summary>
-        public static Point MaintrySongListDownLoadButtonPt = new Point(380, 105);
+        public static Point MaintrySongListDownLoadButtonPt = new Point(380, 115);
 
         /// <summary>
         /// 清空试听列表按钮
         /// </summary>
-        public static Point MaintrySongListClearBtnPt = new Point(445, 105);
+        public static Point MaintrySongListClearBtnPt = new Point(445, 115);
         /// <summary>
         /// 更改用户提示框 关闭按钮
         /// </summary>
