@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.txtDownLoadPath = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -45,9 +48,9 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.txtPcName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtDownLoadPath = new System.Windows.Forms.TextBox();
-            this.button4 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -55,8 +58,11 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.txtDownLoadPath);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.txtPath);
@@ -64,10 +70,20 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 53);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(371, 88);
+            this.groupBox1.Size = new System.Drawing.Size(371, 105);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "QQMusicExePath";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(329, 45);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(36, 23);
+            this.button4.TabIndex = 1;
+            this.button4.Text = "...";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button1
             // 
@@ -78,6 +94,23 @@
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // txtDownLoadPath
+            // 
+            this.txtDownLoadPath.Location = new System.Drawing.Point(89, 47);
+            this.txtDownLoadPath.Name = "txtDownLoadPath";
+            this.txtDownLoadPath.ReadOnly = true;
+            this.txtDownLoadPath.Size = new System.Drawing.Size(234, 21);
+            this.txtDownLoadPath.TabIndex = 3;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 50);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(77, 12);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "DownLoadPath";
             // 
             // txtPath
             // 
@@ -105,7 +138,7 @@
             this.groupBox2.Controls.Add(this.txtAdslName);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(0, 141);
+            this.groupBox2.Location = new System.Drawing.Point(0, 158);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(371, 111);
             this.groupBox2.TabIndex = 1;
@@ -220,32 +253,32 @@
             this.label5.TabIndex = 2;
             this.label5.Text = "ClientName";
             // 
-            // label6
+            // label7
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 50);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 12);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "DownLoadPath";
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 77);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(83, 12);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "DownCachePath";
             // 
-            // txtDownLoadPath
+            // textBox1
             // 
-            this.txtDownLoadPath.Location = new System.Drawing.Point(89, 47);
-            this.txtDownLoadPath.Name = "txtDownLoadPath";
-            this.txtDownLoadPath.ReadOnly = true;
-            this.txtDownLoadPath.Size = new System.Drawing.Size(234, 21);
-            this.txtDownLoadPath.TabIndex = 3;
+            this.textBox1.Location = new System.Drawing.Point(89, 74);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(234, 21);
+            this.textBox1.TabIndex = 3;
             // 
-            // button4
+            // button5
             // 
-            this.button4.Location = new System.Drawing.Point(329, 45);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(36, 23);
-            this.button4.TabIndex = 1;
-            this.button4.Text = "...";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button5.Location = new System.Drawing.Point(329, 72);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(36, 23);
+            this.button5.TabIndex = 1;
+            this.button5.Text = "...";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // FrmSetting
             // 
@@ -291,5 +324,8 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox txtDownLoadPath;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label7;
     }
 }

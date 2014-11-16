@@ -17,6 +17,9 @@ namespace QQMusicClient
         public FrmMainNew()
         {
             InitializeComponent();
+            //
+            toolStripStatusLabel7.Text = Application.ProductVersion;
+            //
             core=new OperateCoreNew();
             core.ShowDownLoadInfo += core_ShowDownLoadInfo;
             core.ShowStepEvent += core_ShowStepEvent;
@@ -44,6 +47,8 @@ namespace QQMusicClient
                 else
                     timerCount++;
                 //2个周期内下载数没有变化，那么从新开始下载
+                //if(core!=null&&timerCount>2)
+                //    core
                 //if (core != null )//&& ((OperateCore.SendHeartFailedCount > 0) /*||!core.GetMainResponseByProcess()*/))
                 //{
                 //    //button2_Click(null, null);
@@ -170,6 +175,12 @@ namespace QQMusicClient
             var s = new TencentServer();
             var model = new Models.QQInfo {QQNo = textBox1.Text};
             MessageBox.Show(TencentServer.GetDownLoadInfoStrFromTencentServer(model, ""));
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (new FrmSetting().ShowDialog() == DialogResult.OK)
+                AppConfig.ReadValue();
         }
     }
 }

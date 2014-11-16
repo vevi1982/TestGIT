@@ -11,3 +11,7 @@ E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\NPOI.
 E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.csprojResolveAssemblyReference.cache
 E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.dll
 E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.pdb
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.UCImportExcel.resources
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\obj\Debug\Vevisoft.Excel.csproj.GenerateResource.Cache
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\Vevisoft.DataStructure.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.Excel\bin\Debug\Vevisoft.DataStructure.pdb

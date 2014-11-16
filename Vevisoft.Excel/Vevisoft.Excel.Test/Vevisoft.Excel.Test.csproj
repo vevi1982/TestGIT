@@ -32,8 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.Data.v12.1, Version=12.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v12.1.Core, Version=12.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v12.1, Version=12.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraBars.v12.1, Version=12.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v12.1, Version=12.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGrid.v12.1, Version=12.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,11 +57,21 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmGridControlTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmGridControlTest.Designer.cs">
+      <DependentUpon>FrmGridControlTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmGridControlTest.resx">
+      <DependentUpon>FrmGridControlTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -65,6 +82,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -76,9 +94,25 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VeviSoft.Controls\VeviSoft.Controls.csproj">
+      <Project>{552d3b66-15db-436c-bccd-9fe1bbcf05ab}</Project>
+      <Name>VeviSoft.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vevisoft.DataStructure\Vevisoft.DataStructure.csproj">
+      <Project>{de9ebb00-d703-47b6-ae64-e901c96a907e}</Project>
+      <Name>Vevisoft.DataStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VeviSoft.DBUtility\DBUtility.csproj">
+      <Project>{0988c62e-247f-471f-a183-db509c7a3839}</Project>
+      <Name>DBUtility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vevisoft.Excel\Vevisoft.Excel.csproj">
       <Project>{f0762a18-18ed-49c2-8733-33918b03651e}</Project>
       <Name>Vevisoft.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vevisoft.Theme\Vevisoft.Theme.csproj">
+      <Project>{d82f4139-68ad-476e-9135-cac0493e5134}</Project>
+      <Name>Vevisoft.Theme</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

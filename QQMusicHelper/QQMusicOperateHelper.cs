@@ -36,7 +36,7 @@ namespace QQMusicHelper
             while (!process.Responding)
             {
                 Thread.Sleep(1000);
-            }
+            } Thread.Sleep(1000);
             WaitMainStartOver();
             return true;
         }
@@ -59,6 +59,11 @@ namespace QQMusicHelper
         private static int GetProcessCount(string processName)
         {
             return System.Diagnostics.Process.GetProcesses().Count(process => process.ProcessName == processName);
+        }
+
+        public static bool IsQQMusicStart()
+        {
+            return GetProcessCount("QQMusicExternal") == 2;
         }
         #endregion
 

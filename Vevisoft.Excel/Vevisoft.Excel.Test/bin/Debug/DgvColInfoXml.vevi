@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="GB2312"?>
+<Datas>
+  <QCMLB>
+    <Col DBColName="ZBDM" ShowColName="装备代码" ExcelColName="" />
+    <Col DBColName="ZBMC" ShowColName="装备名称" ExcelColName="" />
+    <Col DBColName="QCDM" ShowColName="器材代码" ExcelColName="" />
+    <Col DBColName="QCMC" ShowColName="器材名称" ExcelColName="" />
+    <Col DBColName="THGG" ShowColName="图号规格" ExcelColName="" />
+    <Col DBColName="ZHH" ShowColName="组合号" ExcelColName="" />
+    <Col DBColName="JLDW" ShowColName="计量单位" ExcelColName="" />
+    <Col DBColName="JYS" ShowColName="机用数" ExcelColName="" />
+    <Col DBColName="GGFG" ShowColName="筹措分工" ExcelColName="" />
+    <Col DBColName="CGJG" ShowColName="采购价格" ExcelColName="" />
+    <Col DBColName="SFDJ" ShowColName="修复单价(元)" ExcelColName="" />
+    <Col DBColName="DXXHDE" ShowColName="大修消耗定额" ExcelColName="" />
+    <Col DBColName="ZXXHDE" ShowColName="中修消耗定额" ExcelColName="" />
+    <Col DBColName="XXXHDE" ShowColName="小修消耗定额" ExcelColName="" />
+    <Col DBColName="BYNXHDE" ShowColName="保养年消耗定额" ExcelColName="" />
+    <Col DBColName="DZNXHBZ" ShowColName="单装年消耗标准" ExcelColName="" />
+    <Col DBColName="CCGYBZ" ShowColName="筹措供应标准" ExcelColName="" />
+    <Col DBColName="JDJZZGYBZ" ShowColName="基地级周转供应标准" ExcelColName="" />
+    <Col DBColName="ZJJZZGYBZ" ShowColName="中继级周转供应标准" ExcelColName="" />
+    <Col DBColName="GBGYBZ" ShowColName="基本供应标准" ExcelColName="" />
+    <Col DBColName="ZL" ShowColName="战略" ExcelColName="" />
+    <Col DBColName="ZY" ShowColName="战役" ExcelColName="" />
+    <Col DBColName="ZS" ShowColName="战术" ExcelColName="" />
+    <Col DBColName="HS1" ShowColName="1号箱" ExcelColName="" />
+    <Col DBColName="HS2" ShowColName="2号箱" ExcelColName="" />
+    <Col DBColName="HS3" ShowColName="3号箱" ExcelColName="" />
+    <Col DBColName="SZPTBZ" ShowColName="随装配套标准" ExcelColName="" />
+    <Col DBColName="SJSJ" ShowColName="审价时间" ExcelColName="" />
+    <Col DBColName="SCCJ" ShowColName="生产厂家" ExcelColName="" />
+  </QCMLB>
+  <UnitInfo_ZB>
+    <Col DBColName="uName" ShowColName="姓名" ExcelColName="" />
+    <Col DBColName="uSex" ShowColName="性别" ExcelColName="" />
+    <Col DBColName="uPost" ShowColName="职务" ExcelColName="" />
+    <Col DBColName="uTel" ShowColName="联系电话" ExcelColName="" />
+    <Col DBColName="uAddress" ShowColName="通讯地址" ExcelColName="" />
+  </UnitInfo_ZB>
+  <UnitInfo_BD>
+    <Col DBColName="uName" ShowColName="姓名" ExcelColName="" />
+    <Col DBColName="uSex" ShowColName="性别" ExcelColName="" />
+    <Col DBColName="uPost" ShowColName="职务" ExcelColName="" />
+    <Col DBColName="uTel" ShowColName="联系电话" ExcelColName="" />
+    <Col DBColName="uAddress" ShowColName="通讯地址" ExcelColName="" />
+  </UnitInfo_BD>
+  <UnitInfo_JDJ>
+    <Col DBColName="uName" ShowColName="姓名" ExcelColName="" />
+    <Col DBColName="uSex" ShowColName="性别" ExcelColName="" />
+    <Col DBColName="uPost" ShowColName="职务" ExcelColName="" />
+    <Col DBColName="uTel" ShowColName="联系电话" ExcelColName="" />
+    <Col DBColName="uAddress" ShowColName="通讯地址" ExcelColName="" />
+  </UnitInfo_JDJ>
+  <tabSHDWXX>
+    <Col DBColName="CKDM" ShowColName="仓库代码" ExcelColName="" />
+    <Col DBColName="CKMC" ShowColName="仓库名称" ExcelColName="" />
+    <Col DBColName="TXDZ" ShowColName="通信地址" ExcelColName="" />
+    <Col DBColName="YZBM" ShowColName="邮政编码" ExcelColName="" />
+    <Col DBColName="KHMC" ShowColName="开户名称" ExcelColName="" />
+    <Col DBColName="KHYH" ShowColName="开户银行" ExcelColName="" />
+    <Col DBColName="YHZH" ShowColName="银行账号" ExcelColName="" />
+    <Col DBColName="XZZGBM" ShowColName="行政主管部门" ExcelColName="" />
+    <Col DBColName="FZRXM" ShowColName="负责人姓名" ExcelColName="" />
+    <Col DBColName="FZRDFGDDH" ShowColName="负责人地方固定电话" ExcelColName="" />
+    <Col DBColName="FZRYDDH" ShowColName="负责人手机号码" ExcelColName="" />
+    <Col DBColName="LXRXM" ShowColName="联系人姓名" ExcelColName="" />
+    <Col DBColName="LXRDFGDDH" ShowColName="联系人地方固定电话" ExcelColName="" />
+    <Col DBColName="LXRYDDH" ShowColName="联系人手机号码" ExcelColName="" />
+    <Col DBColName="LXRCZH" ShowColName="联系人传真号" ExcelColName="" />
+    <Col DBColName="TLJ" ShowColName="铁路局" ExcelColName="" />
+    <Col DBColName="TLFJ" ShowColName="铁路局分局" ExcelColName="" />
+    <Col DBColName="ZCDZ" ShowColName="整车到站" ExcelColName="" />
+    <Col DBColName="LDDZ" ShowColName="零担到站" ExcelColName="" />
+    <Col DBColName="CFQCZL" ShowColName="存放器材种类" ExcelColName="" />
+    <Col DBColName="CKKSL" ShowColName="仓库库数量" ExcelColName="" />
+    <Col DBColName="CKKMJ" ShowColName="仓库库面积" ExcelColName="" />
+  </tabSHDWXX>
+  <tabGFXXK>
+    <Col DBColName="DBJMC" ShowColName="所属代表局名称" ExcelColName="" />
+    <Col DBColName="GFDM" ShowColName="供方代码" ExcelColName="" />
+    <Col DBColName="GFDWMC" ShowColName="供方单位名称" ExcelColName="" />
+    <Col DBColName="SHDDW" ShowColName="所属大单位" ExcelColName="" />
+    <Col DBColName="GFTXDZ" ShowColName="供方通信地址" ExcelColName="" />
+    <Col DBColName="GFYZBM" ShowColName="供方邮政编码" ExcelColName="" />
+    <Col DBColName="FDDBR" ShowColName="法人代表或委托人" ExcelColName="" />
+    <Col DBColName="KHMC" ShowColName="供方开户名称" ExcelColName="" />
+    <Col DBColName="KHYH" ShowColName="供方开户银行" ExcelColName="" />
+    <Col DBColName="YHZH" ShowColName="供方银行账号" ExcelColName="" />
+    <Col DBColName="XZZGBM" ShowColName="供方行政主管部门" ExcelColName="" />
+    <Col DBColName="JZZGBM" ShowColName="供方合同鉴证主管部门" ExcelColName="" />
+    <Col DBColName="GFFZR" ShowColName="供方负责人姓名" ExcelColName="" />
+    <Col DBColName="FZRGDDH" ShowColName="负责人地方固定电话" ExcelColName="" />
+    <Col DBColName="FZRYDDH" ShowColName="负责人手机号码" ExcelColName="" />
+    <Col DBColName="GFLXR" ShowColName="联系人姓名" ExcelColName="" />
+    <Col DBColName="LXRGDDH" ShowColName="联系人地方固定电话" ExcelColName="" />
+    <Col DBColName="LXRYDDH" ShowColName="联系人手机号码" ExcelColName="" />
+    <Col DBColName="LXRCZH" ShowColName="联系人传真号码" ExcelColName="" />
+    <Col DBColName="DBSMC" ShowColName="代表室名称" ExcelColName="" />
+    <Col DBColName="DBSFZR" ShowColName="代表室负责人" ExcelColName="" />
+    <Col DBColName="DBSNXGDDH" ShowColName="代表室内线固定电话" ExcelColName="" />
+    <Col DBColName="DBSDFGDDH" ShowColName="代表室地方固定电话" ExcelColName="" />
+    <Col DBColName="DBSYDDH" ShowColName="代表室手机号码" ExcelColName="" />
+  </tabGFXXK>
+  <QCBMK>
+    <Col DBColName="QCBM" ShowColName="器材编码" ExcelColName="" />
+    <Col DBColName="QCMC" ShowColName="器材名称" ExcelColName="" />
+    <Col DBColName="XLBM" ShowColName="小类代码" ExcelColName="" />
+    <Col DBColName="XLMC" ShowColName="小类名称" ExcelColName="" />
+    <Col DBColName="GGXH" ShowColName="规格型号" ExcelColName="" />
+    <Col DBColName="DW" ShowColName="单位" ExcelColName="" />
+    <Col DBColName="CKDJ" ShowColName="参考单价" ExcelColName="" />
+    <Col DBColName="SCCJ" ShowColName="生产厂家" ExcelColName="" />
+    <Col DBColName="BZ" ShowColName="备注" ExcelColName="" />
+  </QCBMK>
+  <tabZCQCK>
+    <Col DBColName="QCDM" ShowColName="器材代码" ExcelColName="" />
+    <Col DBColName="SBDM" ShowColName="设备代码" ExcelColName="" />
+    <Col DBColName="SBMC" ShowColName="设备名称" ExcelColName="" />
+    <Col DBColName="GGXH" ShowColName="规格型号" ExcelColName="" />
+    <Col DBColName="CTBZGG" ShowColName="成套标准规格" ExcelColName="" />
+    <Col DBColName="WXJB" ShowColName="维修级别" ExcelColName="" />
+    <Col DBColName="ZZBH" ShowColName="主帐编号" ExcelColName="" />
+    <Col DBColName="XS" ShowColName="箱数" ExcelColName="" />
+    <Col DBColName="DW" ShowColName="单位" ExcelColName="" />
+    <Col DBColName="KFH" ShowColName="库房号" ExcelColName="" />
+    <Col DBColName="SL" ShowColName="数量" ExcelColName="" />
+    <Col DBColName="DJ" ShowColName="单价" ExcelColName="" />
+    <Col DBColName="JE" ShowColName="金额" ExcelColName="" />
+    <Col DBColName="BZPZ" ShowColName="标准品种" ExcelColName="" />
+    <Col DBColName="BZSL" ShowColName="标准数量" ExcelColName="" />
+    <Col DBColName="BZJE" ShowColName="标准金额" ExcelColName="" />
+    <Col DBColName="RKNF" ShowColName="入库年份" ExcelColName="" />
+    <Col DBColName="CCDD" ShowColName="储存地点" ExcelColName="" />
+    <Col DBColName="SCNF" ShowColName="生产年份" ExcelColName="" />
+    <Col DBColName="TTBFBJ" ShowColName="淘汰/报废标记" ExcelColName="" />
+    <Col DBColName="CTLXBJ" ShowColName="成套/零星标记" ExcelColName="" />
+    <Col DBColName="BZ" ShowColName="备注" ExcelColName="" />
+  </tabZCQCK>
+  <CBQCXXK>
+    <Col DBColName="QCDM" ShowColName="器材代码" ExcelColName="" />
+    <Col DBColName="SBDM" ShowColName="设备代码" ExcelColName="" />
+    <Col DBColName="SBMC" ShowColName="设备名称" ExcelColName="" />
+    <Col DBColName="GGXH" ShowColName="规格型号" ExcelColName="" />
+    <Col DBColName="CTBZGG" ShowColName="成套标准规格" ExcelColName="" />
+    <Col DBColName="WXJB" ShowColName="维修级别" ExcelColName="" />
+    <Col DBColName="ZZBH" ShowColName="主帐编号" ExcelColName="" />
+    <Col DBColName="XS" ShowColName="箱数" ExcelColName="" />
+    <Col DBColName="DW" ShowColName="单位" ExcelColName="" />
+    <Col DBColName="KFH" ShowColName="库房号" ExcelColName="" />
+    <Col DBColName="SL" ShowColName="数量" ExcelColName="" />
+    <Col DBColName="DJ" ShowColName="单价" ExcelColName="" />
+    <Col DBColName="JE" ShowColName="金额" ExcelColName="" />
+    <Col DBColName="BZPZ" ShowColName="标准品种" ExcelColName="" />
+    <Col DBColName="BZSL" ShowColName="标准数量" ExcelColName="" />
+    <Col DBColName="BZJE" ShowColName="标准金额" ExcelColName="" />
+    <Col DBColName="RKNF" ShowColName="入库年份" ExcelColName="" />
+    <Col DBColName="CCDD" ShowColName="储存地点" ExcelColName="" />
+    <Col DBColName="SCNF" ShowColName="生产年份" ExcelColName="" />
+    <Col DBColName="TTBFBJ" ShowColName="淘汰/报废标记" ExcelColName="" />
+    <Col DBColName="CTLXBJ" ShowColName="成套/零星标记" ExcelColName="" />
+    <Col DBColName="BZ" ShowColName="备注" ExcelColName="" />
+  </CBQCXXK>
+  <tabQJKXX>
+    <Col DBColName="SBGLDM" ShowColName="设备归类代码" ExcelColName="" />
+    <Col DBColName="SBMC" ShowColName="设备名称" ExcelColName="" />
+    <Col DBColName="QSL" ShowColName="轻损率" ExcelColName="" />
+    <Col DBColName="ZSL" ShowColName="中损率" ExcelColName="" />
+    <Col DBColName="ZHSL" ShowColName="重损率" ExcelColName="" />
+    <Col DBColName="QCFLDM" ShowColName="器材分类代码" ExcelColName="" />
+    <Col DBColName="QCFLMC" ShowColName="器材分类名称" ExcelColName="" />
+    <Col DBColName="QCLX" ShowColName="器材类型" ExcelColName="" />
+    <Col DBColName="SCQK" ShowColName="生产情况" ExcelColName="" />
+    <Col DBColName="TDCPDM" ShowColName="替代产品代码" ExcelColName="" />
+    <Col DBColName="TDCPMC" ShowColName="替代产品名称" ExcelColName="" />
+    <Col DBColName="SJQK" ShowColName="审价情况" ExcelColName="" />
+    <Col DBColName="DW" ShowColName="单位" ExcelColName="" />
+    <Col DBColName="JYS" ShowColName="机用数" ExcelColName="" />
+    <Col DBColName="JSBZ" ShowColName="基数标准" ExcelColName="" />
+    <Col DBColName="GZJG" ShowColName="购置价格" ExcelColName="" />
+    <Col DBColName="SCDWDM" ShowColName="生产单位代码" ExcelColName="" />
+    <Col DBColName="SCDWMC" ShowColName="生产单位名称" ExcelColName="" />
+    <Col DBColName="BZQK" ShowColName="标准情况" ExcelColName="" />
+    <Col DBColName="JGZYPZ" ShowColName="基供专用品种" ExcelColName="" />
+    <Col DBColName="JGZYSL" ShowColName="基供专用数量" ExcelColName="" />
+    <Col DBColName="JGZYJE" ShowColName="基供专用金额" ExcelColName="" />
+    <Col DBColName="JGTYPZ" ShowColName="基供通用品种" ExcelColName="" />
+    <Col DBColName="JGTYSL" ShowColName="基供通用数量" ExcelColName="" />
+    <Col DBColName="JGTYJE" ShowColName="基供通用金额" ExcelColName="" />
+    <Col DBColName="JGZPZ" ShowColName="基供总品种" ExcelColName="" />
+    <Col DBColName="JGZSL" ShowColName="基供总数量" ExcelColName="" />
+    <Col DBColName="JGZJE" ShowColName="基供总金额" ExcelColName="" />
+    <Col DBColName="CGZYPZ" ShowColName="筹供专用品种" ExcelColName="" />
+    <Col DBColName="CGZYSL" ShowColName="筹供专用数量" ExcelColName="" />
+    <Col DBColName="CGZYJE" ShowColName="筹供专用金额" ExcelColName="" />
+    <Col DBColName="CGTYPZ" ShowColName="筹供通用品种" ExcelColName="" />
+    <Col DBColName="CGTYSL" ShowColName="筹供通用数量" ExcelColName="" />
+    <Col DBColName="CGTYJE" ShowColName="筹供通用金额" ExcelColName="" />
+    <Col DBColName="CGZPZ" ShowColName="筹供总品种" ExcelColName="" />
+    <Col DBColName="CGZSL" ShowColName="筹供总数量" ExcelColName="" />
+    <Col DBColName="CGZJE" ShowColName="筹供总金额" ExcelColName="" />
+    <Col DBColName="DXZYPZ" ShowColName="大修专用品种" ExcelColName="" />
+    <Col DBColName="DXZYSL" ShowColName="大修专用数量" ExcelColName="" />
+    <Col DBColName="DXZYJE" ShowColName="大修专用金额" ExcelColName="" />
+    <Col DBColName="DXTYPZ" ShowColName="大修通用品种" ExcelColName="" />
+    <Col DBColName="DXTYSL" ShowColName="大修通用数量" ExcelColName="" />
+    <Col DBColName="DXTYJE" ShowColName="大修通用金额" ExcelColName="" />
+    <Col DBColName="DXZPZ" ShowColName="大修总品种" ExcelColName="" />
+    <Col DBColName="DXZSL" ShowColName="大修总数量" ExcelColName="" />
+    <Col DBColName="DXZJE" ShowColName="大修总金额" ExcelColName="" />
+    <Col DBColName="ZXZYPZ" ShowColName="中修专用品种" ExcelColName="" />
+    <Col DBColName="ZXZYSL" ShowColName="中修专用数量" ExcelColName="" />
+    <Col DBColName="ZXZYJE" ShowColName="中修专用金额" ExcelColName="" />
+    <Col DBColName="ZXTYPZ" ShowColName="中修通用品种" ExcelColName="" />
+    <Col DBColName="ZXTYSL" ShowColName="中修通用数量" ExcelColName="" />
+    <Col DBColName="ZXTYJE" ShowColName="中修通用金额" ExcelColName="" />
+    <Col DBColName="ZXZPZ" ShowColName="中修总品种" ExcelColName="" />
+    <Col DBColName="ZXZSL" ShowColName="中修总数量" ExcelColName="" />
+    <Col DBColName="ZXZJE" ShowColName="中修总金额" ExcelColName="" />
+    <Col DBColName="XXZYPZ" ShowColName="小修专用品种" ExcelColName="" />
+    <Col DBColName="XXZYSL" ShowColName="小修专用数量" ExcelColName="" />
+    <Col DBColName="XXZYJE" ShowColName="小修专用金额" ExcelColName="" />
+    <Col DBColName="XXTYPZ" ShowColName="小修通用品种" ExcelColName="" />
+    <Col DBColName="XXTYSL" ShowColName="小修通用数量" ExcelColName="" />
+    <Col DBColName="XXTYJE" ShowColName="小修通用金额" ExcelColName="" />
+    <Col DBColName="XXZPZ" ShowColName="小修总品种" ExcelColName="" />
+    <Col DBColName="XXZSL" ShowColName="小修总数量" ExcelColName="" />
+    <Col DBColName="XXZJE" ShowColName="小修总金额" ExcelColName="" />
+    <Col DBColName="ZLZYPZ" ShowColName="战略专用品种" ExcelColName="" />
+    <Col DBColName="ZLZYSL" ShowColName="战略专用数量" ExcelColName="" />
+    <Col DBColName="ZLZYJE" ShowColName="战略专用金额" ExcelColName="" />
+    <Col DBColName="ZLTYPZ" ShowColName="战略通用品种" ExcelColName="" />
+    <Col DBColName="ZLTYSL" ShowColName="战略通用数量" ExcelColName="" />
+    <Col DBColName="ZLTYJE" ShowColName="战略通用金额" ExcelColName="" />
+    <Col DBColName="ZLZPZ" ShowColName="战略总品种" ExcelColName="" />
+    <Col DBColName="ZLZSL" ShowColName="战略总数量" ExcelColName="" />
+    <Col DBColName="ZLZJE" ShowColName="战略总金额" ExcelColName="" />
+    <Col DBColName="ZYZYPZ" ShowColName="战役专用品种" ExcelColName="" />
+    <Col DBColName="ZYZYSL" ShowColName="战役专用数量" ExcelColName="" />
+    <Col DBColName="ZYZYJE" ShowColName="战役专用金额" ExcelColName="" />
+    <Col DBColName="ZYTYPZ" ShowColName="战役通用品种" ExcelColName="" />
+    <Col DBColName="ZYTYSL" ShowColName="战役通用数量" ExcelColName="" />
+    <Col DBColName="ZYTYJE" ShowColName="战役通用金额" ExcelColName="" />
+    <Col DBColName="ZYZPZ" ShowColName="战役总品种" ExcelColName="" />
+    <Col DBColName="ZYZSL" ShowColName="战役总数量" ExcelColName="" />
+    <Col DBColName="ZYZJE" ShowColName="战役总金额" ExcelColName="" />
+    <Col DBColName="ZSZYPZ" ShowColName="战术专用品种" ExcelColName="" />
+    <Col DBColName="ZSZYSL" ShowColName="战术专用数量" ExcelColName="" />
+    <Col DBColName="ZSZYJE" ShowColName="战术专用金额" ExcelColName="" />
+    <Col DBColName="ZSTYPZ" ShowColName="战术通用品种" ExcelColName="" />
+    <Col DBColName="ZSTYSL" ShowColName="战术通用数量" ExcelColName="" />
+    <Col DBColName="ZSTYJE" ShowColName="战术通用金额" ExcelColName="" />
+    <Col DBColName="ZSZPZ" ShowColName="战术总品种" ExcelColName="" />
+    <Col DBColName="ZSZSL" ShowColName="战术总数量" ExcelColName="" />
+    <Col DBColName="ZSZJE" ShowColName="战术总金额" ExcelColName="" />
+    <Col DBColName="SZZYPZ" ShowColName="随装专用品种" ExcelColName="" />
+    <Col DBColName="SZZYSL" ShowColName="随装专用数量" ExcelColName="" />
+    <Col DBColName="SZZYJE" ShowColName="随装专用金额" ExcelColName="" />
+    <Col DBColName="SZTYPZ" ShowColName="随装通用品种" ExcelColName="" />
+    <Col DBColName="SZTYSL" ShowColName="随装通用数量" ExcelColName="" />
+    <Col DBColName="SZTYJE" ShowColName="随装通用金额" ExcelColName="" />
+    <Col DBColName="SZZPZ" ShowColName="随装总品种" ExcelColName="" />
+    <Col DBColName="SZZSL" ShowColName="随装总数量" ExcelColName="" />
+    <Col DBColName="SZZJE" ShowColName="随装总金额" ExcelColName="" />
+    <Col DBColName="HZYPZ1" ShowColName="一号专用品种" ExcelColName="" />
+    <Col DBColName="HZYSL1" ShowColName="一号专用数量" ExcelColName="" />
+    <Col DBColName="HZYJE1" ShowColName="一号专用金额" ExcelColName="" />
+    <Col DBColName="HTYPZ1" ShowColName="一号通用品种" ExcelColName="" />
+    <Col DBColName="HTYSL1" ShowColName="一号通用数量" ExcelColName="" />
+    <Col DBColName="HTYJE1" ShowColName="一号通用金额" ExcelColName="" />
+    <Col DBColName="HZPZ1" ShowColName="一号总品种" ExcelColName="" />
+    <Col DBColName="HZSL1" ShowColName="一号总数量" ExcelColName="" />
+    <Col DBColName="HZJE1" ShowColName="一号总金额" ExcelColName="" />
+    <Col DBColName="HZYPZ2" ShowColName="二号专用品种" ExcelColName="" />
+    <Col DBColName="HZYSL2" ShowColName="二号专用数量" ExcelColName="" />
+    <Col DBColName="HZYJE2" ShowColName="二号专用金额" ExcelColName="" />
+    <Col DBColName="HTYPZ2" ShowColName="二号通用品种" ExcelColName="" />
+    <Col DBColName="HTYSL2" ShowColName="二号通用数量" ExcelColName="" />
+    <Col DBColName="HTYJE2" ShowColName="二号通用金额" ExcelColName="" />
+    <Col DBColName="HZPZ2" ShowColName="二号总品种" ExcelColName="" />
+    <Col DBColName="HZSL2" ShowColName="二号总数量" ExcelColName="" />
+    <Col DBColName="HZJE2" ShowColName="二号总金额" ExcelColName="" />
+    <Col DBColName="HZYPZ3" ShowColName="三号专用品种" ExcelColName="" />
+    <Col DBColName="HZYSL3" ShowColName="三号专用数量" ExcelColName="" />
+    <Col DBColName="HZYJE3" ShowColName="三号专用金额" ExcelColName="" />
+    <Col DBColName="HTYPZ3" ShowColName="三号通用品种" ExcelColName="" />
+    <Col DBColName="HTYSL3" ShowColName="三号通用数量" ExcelColName="" />
+    <Col DBColName="HTYJE3" ShowColName="三号通用金额" ExcelColName="" />
+    <Col DBColName="HZPZ3" ShowColName="三号总品种" ExcelColName="" />
+    <Col DBColName="HZSL3" ShowColName="三号总数量" ExcelColName="" />
+    <Col DBColName="HZJE3" ShowColName="三号总金额" ExcelColName="" />
+    <Col DBColName="CTX1HSL" ShowColName="成套箱一号数量" ExcelColName="" />
+    <Col DBColName="CTX2HSL" ShowColName="成套箱二号数量" ExcelColName="" />
+    <Col DBColName="CTX3HSL" ShowColName="成套箱三号数量" ExcelColName="" />
+    <Col DBColName="CTXZPZ" ShowColName="成套箱总品种" ExcelColName="" />
+    <Col DBColName="CTXZSL" ShowColName="成套箱总数量" ExcelColName="" />
+    <Col DBColName="CTXZJE" ShowColName="成套箱总金额" ExcelColName="" />
+  </tabQJKXX>
+  <ZBSLTJ>
+    <Col DBColName="DWDM" ShowColName="单位代码" ExcelColName="" />
+    <Col DBColName="DDWMC" ShowColName="大单位名称" ExcelColName="" />
+    <Col DBColName="DWMC" ShowColName="单位名称" ExcelColName="" />
+    <Col DBColName="SBDMCC" ShowColName="设备代码(层次)" ExcelColName="" />
+    <Col DBColName="SBLB" ShowColName="设备类别" ExcelColName="" />
+    <Col DBColName="SBMC" ShowColName="设备名称" ExcelColName="" />
+    <Col DBColName="DW" ShowColName="单位" ExcelColName="" />
+    <Col DBColName="SBJZ" ShowColName="设备价值" ExcelColName="" />
+    <Col DBColName="JYS" ShowColName="机用数" ExcelColName="" />
+    <Col DBColName="JSBZ" ShowColName="基数标准" ExcelColName="" />
+    <Col DBColName="SBDM" ShowColName="设备代码" ExcelColName="" />
+    <Col DBColName="SBSL" ShowColName="设备数量" ExcelColName="" />
+  </ZBSLTJ>
+  <DHQCMXBMK>
+    <Col DBColName="QCDM" ShowColName="器材代码" ExcelColName="" />
+    <Col DBColName="QCMC" ShowColName="器材名称" ExcelColName="" />
+    <Col DBColName="GGXH" ShowColName="规格型号" ExcelColName="" />
+    <Col DBColName="DW" ShowColName="单位" ExcelColName="" />
+    <Col DBColName="DJ" ShowColName="单价" ExcelColName="" />
+    <Col DBColName="DTSL" ShowColName="单套数量" ExcelColName="" />
+    <Col DBColName="DTJE" ShowColName="单套金额" ExcelColName="" />
+    <Col DBColName="BZ" ShowColName="备注" ExcelColName="" />
+    <Col DBColName="SCGC" ShowColName="生产工厂" ExcelColName="" />
+  </DHQCMXBMK>
+  <DHSBQCGXK>
+    <Col DBColName="SBDM" ShowColName="设备代码" ExcelColName="" />
+    <Col DBColName="QCDM" ShowColName="器材代码" ExcelColName="" />
+    <Col DBColName="XMH" ShowColName="项目号" ExcelColName="" />
+    <Col DBColName="GYXFL" ShowColName="供应箱分类" ExcelColName="" />
+    <Col DBColName="SCGC" ShowColName="生产工厂" ExcelColName="" />
+  </DHSBQCGXK>
+  <BMZXL>
+    <Col DBColName="ZXLDM" ShowColName="中小类编码" ExcelColName="" />
+    <Col DBColName="ZXLMC" ShowColName="中小类名称" ExcelColName="" />
+  </BMZXL>
+  <tabXFXXK>
+    <Col DBColName="DBJMC" ShowColName="所属代表局名称" ExcelColName="" />
+    <Col DBColName="XFDM" ShowColName="需方代码" ExcelColName="" />
+    <Col DBColName="XFDWMC" ShowColName="需方单位名称" ExcelColName="" />
+    <Col DBColName="XFTXDZ" ShowColName="需方通信地址" ExcelColName="" />
+    <Col DBColName="XFYZBM" ShowColName="需方邮政编码" ExcelColName="" />
+    <Col DBColName="FDDBR" ShowColName="法人代表或委托人" ExcelColName="" />
+    <Col DBColName="KHMC" ShowColName="需方开户名称" ExcelColName="" />
+    <Col DBColName="KHYH" ShowColName="需方开户银行" ExcelColName="" />
+    <Col DBColName="YHZH" ShowColName="需方银行账号" ExcelColName="" />
+    <Col DBColName="XZZGBM" ShowColName="需方行政主管部门" ExcelColName="" />
+    <Col DBColName="JZZGBM" ShowColName="需方合同鉴证主管部门" ExcelColName="" />
+    <Col DBColName="XFFZR" ShowColName="需方负责人姓名" ExcelColName="" />
+    <Col DBColName="FZRGDDH" ShowColName="负责人地方固定电话" ExcelColName="" />
+    <Col DBColName="FZRYDDH" ShowColName="负责人手机号码" ExcelColName="" />
+    <Col DBColName="XFLXR" ShowColName="联系人姓名" ExcelColName="" />
+    <Col DBColName="LXRGDDH" ShowColName="联系人地方固定电话" ExcelColName="" />
+    <Col DBColName="LXRYDDH" ShowColName="联系人手机号码" ExcelColName="" />
+    <Col DBColName="LXRCZH" ShowColName="联系人传真号码" ExcelColName="" />
+  </tabXFXXK>
+  <QCJGB>
+    <Col DBColName="ZBMC" ShowColName="装备名称" ExcelColName="" />
+    <Col DBColName="ZBDM" ShowColName="装备代码" ExcelColName="" />
+    <Col DBColName="QCMC" ShowColName="器材名称" ExcelColName="" />
+    <Col DBColName="QCDM" ShowColName="器材代码" ExcelColName="" />
+    <Col DBColName="GGXH" ShowColName="规格型号" ExcelColName="" />
+    <Col DBColName="SJDJ" ShowColName="审价单价" ExcelColName="" />
+    <Col DBColName="SJBJ" ShowColName="审价标记" ExcelColName="" />
+    <Col DBColName="ND" ShowColName="审价年度" ExcelColName="" />
+  </QCJGB>
+  <Test>
+    <Col DBColName="C1" ShowColName="水电费" ExcelColName="C1" IsPri="True" />
+    <Col DBColName="C2" ShowColName="水电费1" ExcelColName="C2" IsPri="False" />
+    <Col DBColName="C3" ShowColName="水电费2" ExcelColName="C3" IsPri="False" />
+  </Test>
+</Datas>

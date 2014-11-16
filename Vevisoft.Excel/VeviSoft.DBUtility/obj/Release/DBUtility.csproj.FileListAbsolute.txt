@@ -1,0 +1,6 @@
+E:\YanJiuSuo\Procedure\EDRSNew\EDRSNew\DBUtility\bin\Release\Maticsoft.DBUtility.dll
+E:\YanJiuSuo\Procedure\EDRSNew\EDRSNew\DBUtility\bin\Release\IBatisNet.Common.dll
+E:\YanJiuSuo\Procedure\EDRSNew\EDRSNew\DBUtility\bin\Release\IBatisNet.DataMapper.dll
+E:\YanJiuSuo\Procedure\EDRSNew\EDRSNew\DBUtility\bin\Release\MySql.Data.dll
+E:\YanJiuSuo\Procedure\EDRSNew\EDRSNew\DBUtility\bin\Release\System.Data.SQLite.DLL
+E:\YanJiuSuo\Procedure\EDRSNew\EDRSNew\DBUtility\obj\Release\Maticsoft.DBUtility.dll

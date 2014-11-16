@@ -141,7 +141,7 @@ namespace Vevisoft.Excel.Core
                     if (firstRow == null)
                         return data;
                     int cellCount = firstRow.LastCellNum; //一行最后一个cell的编号 即总的列数
-                    startRow = isFirstRowColumn ? sheet.FirstRowNum + 1 : sheet.FirstRowNum;
+                    startRow = isFirstRowColumn ? sheet.FirstRowNum + 1 : sheet.FirstRowNum+0;
 
                     for (int i = firstRow.FirstCellNum; i < cellCount; ++i)
                     {

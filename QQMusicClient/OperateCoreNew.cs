@@ -73,15 +73,15 @@ namespace QQMusicClient
         /// <summary>
         /// QQ信息
         /// </summary>
-        private static Models.QQInfo qqModel;
+        private  Models.QQInfo qqModel;
         /// <summary>
         /// 发送心跳失败的计数
         /// </summary>
-        private static int FailedSendHeartCount = 0;
+        int FailedSendHeartCount = 0;
         /// <summary>
         /// 是否下载完成
         /// </summary>
-        private static bool IsDownLoadOver = false;
+        private  bool IsDownLoadOver = false;
 
         /// <summary>
         /// 服务器选项
@@ -242,6 +242,9 @@ namespace QQMusicClient
                                 qqModel.CurrentDownloadCount = GetSongCountFromFolder();
                                 IsDownLoadOver = qqModel.CurrentDownloadCount ==
                                                  qqModel.SongOrderList[qqModel.CurrentSongOrderName];
+                                if(!IsDownLoadOver)
+                                    if (!QQMusicOperateHelper.IsQQMusicStart())
+                                        IsDownLoadOver = true;
                                 ShowDownLoadLogInfo();
                             
                             }
@@ -253,6 +256,7 @@ namespace QQMusicClient
                             //if (IsDownLoadOver)
                             //    break;
                         }
+                        OnShowStepEvent("下载完成或中断" + qqModel.CurrentSongOrderName);                     
                         //
                         lock (qqModel)
                         {
@@ -387,6 +391,7 @@ namespace QQMusicClient
         private int GetSongCountFromFolder()
         {
             //缓存下载量
+            OnShowStepEvent("获取下载数" ); 
             var catchCount = 0;
             var catchPath = AppConfig.AppCachePath;
             if (catchPath.EndsWith("\\"))
@@ -401,6 +406,13 @@ namespace QQMusicClient
             var downCount = 0;
             if (Directory.Exists(AppConfig.DownLoadPath))
                 downCount = Directory.GetFiles(AppConfig.DownLoadPath).Length;
+            foreach (string file in Directory.GetFiles(AppConfig.DownLoadPath))
+            {
+                if (!file.EndsWith("mp3"))
+                    downCount--;
+            }
+            OnShowStepEvent(string.Format("获取下载数({0},{1})", downCount, catchCount));            
+            return downCount;
             //
             return Math.Max(catchCount, downCount);
         }
@@ -419,8 +431,10 @@ namespace QQMusicClient
                     OnShowHeartEvent("发送心跳");
                 }
                 else
-                {
+                {                    
                     FailedSendHeartCount++;
+                    if (FailedSendHeartCount > 2)
+                        IsDownLoadOver = true;
                     OnShowHeartEvent("没有发送心跳" + FailedSendHeartCount);
                 }
             }

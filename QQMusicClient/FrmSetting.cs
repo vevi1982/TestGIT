@@ -24,6 +24,7 @@ namespace QQMusicClient
             //
             txtPath.Text = AppConfig.AppPath;
             txtDownLoadPath.Text = AppConfig.DownLoadPath;
+            textBox1.Text = AppConfig.AppCachePath;
             //
             txtAdslName.Text = AppConfig.ADSLName;
             txtUserName.Text = AppConfig.ADSLUserName;
@@ -36,6 +37,7 @@ namespace QQMusicClient
             AppConfig.ChangeIP = checkBox1.Checked;
             AppConfig.AppPath = txtPath.Text.Trim();
             AppConfig.DownLoadPath = txtDownLoadPath.Text.Trim();
+            AppConfig.AppCachePath = textBox1.Text.Trim();
             AppConfig.ADSLName = txtAdslName.Text.Trim();
             AppConfig.ADSLUserName = txtUserName.Text.Trim();
             AppConfig.ADSLPass = txtAdslPass.Text.Trim();
@@ -67,6 +69,15 @@ namespace QQMusicClient
             if (opdiag.ShowDialog() == DialogResult.OK)
             {
                 txtDownLoadPath.Text = opdiag.SelectedPath;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var opdiag = new FolderBrowserDialog();
+            if (opdiag.ShowDialog() == DialogResult.OK)
+            {
+                textBox1.Text = opdiag.SelectedPath;
             }
         }
     }

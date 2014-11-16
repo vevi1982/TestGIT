@@ -1,0 +1,5 @@
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.DataStructure\bin\Debug\Vevisoft.DataStructure.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.DataStructure\bin\Debug\Vevisoft.DataStructure.pdb
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.DataStructure\obj\Debug\Vevisoft.DataStructure.dll
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.DataStructure\obj\Debug\Vevisoft.DataStructure.pdb
+E:\Procedure\GitProject\BaiduMusic\Vevisoft.Excel\Vevisoft.DataStructure\obj\Debug\Vevisoft.DataStructure.csprojResolveAssemblyReference.cache
