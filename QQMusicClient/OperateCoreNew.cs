@@ -115,8 +115,9 @@ namespace QQMusicClient
                         {
                             OnShowStepEvent("开始下载！");
                             //0点开始，晚上11点结束
-                            if ((DateTime.Now.Hour < 23 && DateTime.Now.Hour >= 1)||
-                                (DateTime.Now.Hour==0&&DateTime.Now.Minute>(30+int.Parse(AppConfig.PCName.Substring(2,2)))))
+                            var endtime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 50, 0);
+                            var starttime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 00, 30, 0);
+                            if (DateTime.Compare(DateTime.Now,starttime)>0&&DateTime.Compare(endtime,DateTime.Now)>0)
                             {
                                 try
                                 {
@@ -244,12 +245,15 @@ namespace QQMusicClient
                                                  qqModel.SongOrderList[qqModel.CurrentSongOrderName];
                                 if(!IsDownLoadOver)
                                     if (!QQMusicOperateHelper.IsQQMusicStart())
+                                    {
                                         IsDownLoadOver = true;
+                                        OnShowErrorEvent("QQ音乐已经关闭" + qqModel.CurrentSongOrderName);    
+                                        Thread.Sleep(2000);
+                                    }
                                 ShowDownLoadLogInfo();
-                            
                             }
                             //如果超过11:30分，那么抛出异常。退出
-                            if (DateTime.Now.Hour == 23 && DateTime.Now.Minute >= 30)
+                            if (DateTime.Now.Hour == 23 && DateTime.Now.Minute >= 55)
                             {
                                 throw new Exception("已经半夜了，该休息了。老板");
                             }
@@ -260,6 +264,7 @@ namespace QQMusicClient
                         //
                         lock (qqModel)
                         {
+                            OnShowStepEvent("获取实际下载数" + qqModel.CurrentSongOrderName); 
                             GetQQInfo();
                             //上传歌单下载数
                             Server.UpdateDownLoadOrder(qqModel);
@@ -286,6 +291,18 @@ namespace QQMusicClient
                         }
                     }
                 }
+                //判断下载数，如果下载数<100.那么可能是歌单为分享，提交错误，更换QQ
+                lock (qqModel)
+                {
+                    if (qqModel.DownLoadNum < 101)
+                    {
+                        //提交错误QQ
+                        Server.UpdatePassWrongQQ(qqModel.QQNo);
+                        Vevisoft.Log.VeviLog2.WriteLogInfo("QQ歌单未分享" + qqModel.QQNo);
+                        throw new Exception("QQ歌单未分享" + qqModel.QQNo);
+                    }    
+                }
+                
             }
             //提交到服务器中
             lock (qqModel)
@@ -377,13 +394,21 @@ namespace QQMusicClient
             }
             ShowDownLoadLogInfo();  
         }
+
         private void ShowDownLoadLogInfo()
         {
-            if (qqModel != null && qqModel.CurrentSongOrderName!=null)
-                OnShowDownLoadInfo(string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},",
-              qqModel.QQNo, qqModel.CurrentSongOrderName, qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount, qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
-           
+            lock (qqModel)
+            {
+                if (qqModel != null && qqModel.CurrentSongOrderName != null)
+                    OnShowDownLoadInfo(
+                        string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},",
+                                      qqModel.QQNo, qqModel.CurrentSongOrderName,
+                                      qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount,
+                                      qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
+                OnShowErrorEvent("显示下载信息。");
+            }
         }
+
         /// <summary>
         /// 获取下载数量
         /// </summary>

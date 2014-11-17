@@ -5,8 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using QQMusicClient.Dlls;
+using Timer = System.Windows.Forms.Timer;
 
 namespace QQMusicClient
 {
@@ -17,6 +19,7 @@ namespace QQMusicClient
         public FrmMainNew()
         {
             InitializeComponent();
+            SetLocation(this);
             //
             toolStripStatusLabel7.Text = Application.ProductVersion;
             //
@@ -29,7 +32,28 @@ namespace QQMusicClient
             idTimer.Interval = 10 * 1000;
             idTimer.Tick += idTimer_Tick;
         }
-
+        private void SetLocation(Form frm)
+        {
+            Rectangle ScreenArea = System.Windows.Forms.Screen.GetWorkingArea(this);
+            //左下角显示
+            frm.StartPosition = FormStartPosition.Manual;
+            frm.Location=new Point(0,ScreenArea.Height-frm.Height);
+        }
+        private int notSendHeartCount = 0;
+        private void GetNotSendHeartCount(string text)
+        {
+            if (text.StartsWith("没有发送心跳"))
+            {
+                text = text.Replace("没有发送心跳", "");
+                try
+                {
+                    notSendHeartCount = Convert.ToInt32(text);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
         private int timerCount = 0;
         private void idTimer_Tick(object sender, EventArgs e)
         {
@@ -46,6 +70,8 @@ namespace QQMusicClient
                 }
                 else
                     timerCount++;
+                if (notSendHeartCount > 3)
+                    ReStartWork();
                 //2个周期内下载数没有变化，那么从新开始下载
                 //if(core!=null&&timerCount>2)
                 //    core
@@ -81,7 +107,6 @@ namespace QQMusicClient
         public FrmMainNew(bool auto)
             : this()
         {
-
             button1_Click(null, null);    
         }
         #region Log显示
@@ -92,6 +117,7 @@ namespace QQMusicClient
                 statusStrip1.BeginInvoke(new ShowInStatusBar(ShowTaskInfo4), text);
             }
             else toolStripStatusLabel3.Text = text;
+            GetNotSendHeartCount(text);
         }
 
         private void ShowTaskInfo4(string text)
@@ -167,7 +193,23 @@ namespace QQMusicClient
             button1.Enabled = true;
             button2.Enabled = false;
         }
+        private void ReStartWork()
+        {
+            notSendHeartCount = 0;
+            //
+            button2_Click(null,null);
+            btnStartTimer = new Timer {Interval = 30*1000};
+            btnStartTimer.Tick += btnStartTimer_Tick;
+            btnStartTimer.Start();            
+        }
 
+        void btnStartTimer_Tick(object sender, EventArgs e)
+        {
+            button1_Click(null,null);
+            btnStartTimer.Stop();
+        }
+
+        private System.Windows.Forms.Timer btnStartTimer;
         private void button5_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(textBox1.Text.Trim()))

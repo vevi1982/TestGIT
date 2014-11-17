@@ -25,6 +25,7 @@ namespace QQMusicHelper
         /// <returns></returns>
         public static bool StartQQMusic(string filepath,string argument)
         {
+            Vevisoft.Utility.ProcessUtility.KillProcess("QQMusic", filepath);
             if (!File.Exists(filepath))
             {
                 //OnShowInStatusBarEvent("软件路径错误，找不到软件！");
@@ -63,7 +64,7 @@ namespace QQMusicHelper
 
         public static bool IsQQMusicStart()
         {
-            return GetProcessCount("QQMusicExternal") == 2;
+            return GetProcessCount("QQMusic") == 1;
         }
         #endregion
 

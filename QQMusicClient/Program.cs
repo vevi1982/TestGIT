@@ -16,9 +16,7 @@ namespace QQMusicClient
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             AppConfig.ReadValue();
-            if (Args.Length == 0)
-                Application.Run(new FrmMainNew());
-            else Application.Run(new FrmMainNew(true));
+            Application.Run(Args.Length == 0 ? new FrmMainNew() : new FrmMainNew(true));
         }
     }
 }

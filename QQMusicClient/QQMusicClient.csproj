@@ -151,6 +151,9 @@
     <Content Include="vs48X48.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>E:\Procedure\GitProject\BaiduMusic\WindowsFormsApplication1\bin\Debug\VersionDebugIncrease.exe $(ProjectDir)</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
