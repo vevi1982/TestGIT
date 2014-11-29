@@ -26,6 +26,7 @@ namespace QQMusicClient
 
         public static int ChangeIPInterval = 3;
         //
+
         #region 操作间隔时间
 
         public static int TimeMainFormStart = 2;
@@ -37,9 +38,10 @@ namespace QQMusicClient
         public static int TimeIdCodeLoad = 5;
         public static int SongListCount = 800;
         //
-       public static Point MainTryListenButtonPt=new Point(50,310);
-        public static Point MainTryListenPanelFirstSongPt=new Point(170,240);
-        public static Point MainTryListenPanelDownLoadButtonPt=new Point(300,170);
+        public static Point MainTryListenButtonPt = new Point(50, 310);
+        public static Point MainTryListenPanelFirstSongPt = new Point(170, 240);
+        public static Point MainTryListenPanelDownLoadButtonPt = new Point(300, 170);
+
         #endregion
 
         public static void ReadValue()
@@ -101,19 +103,20 @@ namespace QQMusicClient
         private static Point GetPointFromString(string str)
         {
             var values = str.Split(',');
-            if(values.Length!=2)
+            if (values.Length != 2)
                 return new Point();
             try
             {
                 var x = Convert.ToInt32(values[0]);
                 var y = Convert.ToInt32(values[1]);
-                return new Point(x,y);
+                return new Point(x, y);
             }
             catch (Exception)
             {
                 return new Point();
             }
         }
+
         private static int GetIntValue(string configName)
         {
             var value = ConfigurationManager.AppSettings[configName];
@@ -126,6 +129,7 @@ namespace QQMusicClient
                 return -1;
             }
         }
+
         public static void SaveValue()
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -133,12 +137,13 @@ namespace QQMusicClient
             app.Settings["PCName"].Value = PCName;
             app.Settings["AppPath"].Value = AppPath;
             app.Settings["DownLoadPath"].Value = DownLoadPath;
-            
+            app.Settings["AppCachePath"].Value = AppCachePath;
             app.Settings["ChangeIP"].Value = ChangeIP ? "1" : "0";
             app.Settings["ADSLName"].Value = ADSLName;
             app.Settings["ADSLUserName"].Value = ADSLUserName;
             app.Settings["ADSLPass"].Value = ADSLPass;
             config.Save(ConfigurationSaveMode.Modified);
+            ReadValue();
         }
     }
 }

@@ -317,6 +317,7 @@ namespace Vevisoft.WebOperate
             {
                 request.Headers.Add("Cookie:" + cookieStr);
             }
+            
             return (request.GetResponse() as HttpWebResponse);
         }
 

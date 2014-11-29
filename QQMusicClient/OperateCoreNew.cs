@@ -139,6 +139,8 @@ namespace QQMusicClient
                                         Server.UpdateDownLoadOrder(qqModel);
                                         OnShowHeartEvent("上传下载歌单数" + qqModel.CurrentDownloadCount);
                                     }
+                                    //发送下载信息
+                                    QQMusicOperateHelper.GetSongInfoAndSendToServer(AppConfig.DownLoadPath, qqModel.CurrentSongOrderName);
                                     //关闭并清理下载信息
                                     QQMusicOperateHelper.CloseAndCLearAll(AppConfig.AppPath, AppConfig.DownLoadPath, AppConfig.AppCachePath);
                                     update = true;
@@ -160,6 +162,9 @@ namespace QQMusicClient
                                 {
                                     GetQQInfo();
                                 }
+                                //发送下载信息
+                                QQMusicOperateHelper.GetSongInfoAndSendToServer(AppConfig.DownLoadPath, qqModel.CurrentSongOrderName);
+                                   
                                 //关闭并清理下载信息
                                 QQMusicOperateHelper.CloseAndCLearAll(AppConfig.AppPath, AppConfig.DownLoadPath, AppConfig.AppCachePath);
                                 OnShowStepEvent("讲下载数提交到服务器中。" + (qqModel.OriRemain - qqModel.RemainNum));
@@ -186,6 +191,7 @@ namespace QQMusicClient
         /// </summary>
         public void DoOnQQMusicDownload()
         {
+            passWrongTimes = 0;
             OnShowStepEvent("获取QQ");
             if(qqModel!=null)
             lock (qqModel)
@@ -255,6 +261,8 @@ namespace QQMusicClient
                             //如果超过11:30分，那么抛出异常。退出
                             if (DateTime.Now.Hour == 23 && DateTime.Now.Minute >= 55)
                             {
+                                //如果QQ音乐打开，那么关闭
+                                Vevisoft.Utility.ProcessUtility.KillProcess("QQMusic", AppConfig.AppPath);
                                 throw new Exception("已经半夜了，该休息了。老板");
                             }
                             //if (IsDownLoadOver)
@@ -270,6 +278,8 @@ namespace QQMusicClient
                             Server.UpdateDownLoadOrder(qqModel);
                             OnShowHeartEvent("上传下载歌单数" + qqModel.CurrentDownloadCount);
                         }
+                        //发送下载信息
+                        QQMusicOperateHelper.GetSongInfoAndSendToServer(AppConfig.DownLoadPath,qqModel.CurrentSongOrderName);
                         //关闭并清理下载信息
                         QQMusicOperateHelper.CloseAndCLearAll(AppConfig.AppPath,AppConfig.DownLoadPath,AppConfig.AppCachePath);
                     }
@@ -313,6 +323,7 @@ namespace QQMusicClient
             Server.UpdateDownLoadResult(qqModel);
         }
 
+        private int passWrongTimes = 0;
         /// <summary>
         /// 下载一次歌单
         /// </summary>
@@ -326,23 +337,35 @@ namespace QQMusicClient
             OnShowStepEvent("启动QQMusic");
             QQMusicOperateHelper.StartQQMusic(AppConfig.AppPath, "");
             //2.退出登录
-            OnShowStepEvent("退出登录");
-            QQMusicOperateHelper.LogOutQQMusic();
+            //OnShowStepEvent("退出登录");
+            //QQMusicOperateHelper.LogOutQQMusic();
             //2.登录
             OnShowStepEvent("登录");
             try
             {
-                QQMusicOperateHelper.LoginQQ(qqinfo.QQNo, qqinfo.QQPass);
+                OnShowHeartEvent(qqinfo.QQNo+";"+qqinfo.QQPass);
+                QQMusicOperateHelper.LoginSmart(qqinfo.QQNo, qqinfo.QQPass, passWrongTimes);
             }
             catch (Exception e1)
             {
                 if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg)
                 {
                     Server.UpdatePassWrongQQ(qqinfo.QQNo);
-                    OnShowStepEvent("密码错误");
+                    if (passWrongTimes < 3)
+                    {
+                        passWrongTimes++;
+                        throw new Exception("可能密码错误"+passWrongTimes);
+                    }
+                    else
+                    {
+                        OnShowStepEvent("密码错误");
+                        throw;
+                    }
                 }
                 throw;
             }
+            //登陆成功
+            passWrongTimes = 0;
             //3.清理下载列表等
             OnShowStepEvent("清理下载列表等");
             QQMusicOperateHelper.ClearAllQQMusicList();
@@ -353,13 +376,15 @@ namespace QQMusicClient
             //5.选择歌曲列表
             QQMusicUserInfo.FindFormAndCLickBtn(songlistName);
             Thread.Sleep(2000);
+            if(QQMusicUserInfo.LoginUserNo!=qqinfo.QQNo)
+                throw new Exception("登陆账号与现有账号不符合！" + qqinfo.QQNo + ":" + QQMusicUserInfo.LoginUserNo);
             //6.点击下载按钮
             OnShowStepEvent("点击下载按钮");
             QQMusicOperateHelper.DownLoadTryListSongs();
             //7.设置下载内容。如果下载数少的话，那么少下载一些
             OnShowStepEvent("等待下载窗体出现。");
             var hwnd = DownLoadSetHelper.GetDownLoadForm();
-            var count = 5;
+            var count = 7;
             while (hwnd == IntPtr.Zero && count > 0)
             {
                 OnShowStepEvent("等待下载窗体出现。" + (5 - count));
@@ -401,10 +426,10 @@ namespace QQMusicClient
             {
                 if (qqModel != null && qqModel.CurrentSongOrderName != null)
                     OnShowDownLoadInfo(
-                        string.Format("QQ:{0}.\r\n歌单:{1},\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},",
+                        string.Format("QQ:{0}\r\n歌单:{1},\r\bQQ密码:{7}\r\n歌单数量:{2},\r\n当前下载:{3},\r\n已记录:{4},\r\n已下载:{5},\r\n剩余:{6},",
                                       qqModel.QQNo, qqModel.CurrentSongOrderName,
                                       qqModel.SongOrderList[qqModel.CurrentSongOrderName], qqModel.CurrentDownloadCount,
-                                      qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum));
+                                      qqModel.DayCounter, qqModel.DownLoadNum, qqModel.RemainNum,qqModel.QQPass));
                 OnShowErrorEvent("显示下载信息。");
             }
         }

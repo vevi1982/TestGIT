@@ -165,7 +165,9 @@ namespace Vevisoft.WindowsAPI
         public const int GW_HWNDNEXT = 2; // The next window is below the specified window
         public const int GW_HWNDPREV = 3; // The previous window is ab
         public const int WM_SETTEXT = 0x000C;
-
+        public const int EM_SETPASSWORDCHAR = 0x00CC;
+        public const int EM_GETPASSWORDCHAR = 0x00D2;
+        public const int WM_COPYDATA = 0x004A;
         /// <summary>
         /// Searches for the topmost visible form of your app in all the forms opened in the current Windows session.
         /// </summary>
@@ -245,9 +247,32 @@ namespace Vevisoft.WindowsAPI
         /// <returns></returns>
         public static int SetControlValue(IntPtr controlHandle, string text)
         {
+            
             return SendMessage(controlHandle, WM_SETTEXT, IntPtr.Zero, text);
         }
-
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam);
+       
+        public static int SetPassWordEditValue(IntPtr controlHandle, string password)
+        {
+            //获取密码字符
+            //var charpass = SendMessage(controlHandle, EM_GETPASSWORDCHAR, 0, IntPtr.Zero);
+            //string aa = "";
+            //if (charpass != 0)
+            //{
+            //    aa= Marshal.PtrToStringAuto((IntPtr) charpass);
+            //    aa = Marshal.PtrToStringAnsi((IntPtr) charpass);
+            //    aa = Marshal.PtrToStringUni((IntPtr) charpass);
+            //    //aa = Marshal.PtrToStringBSTR((IntPtr)charpass, 1);
+            //    aa = Encoding.Default.GetString(new byte[] { Marshal.ReadByte((IntPtr)charpass) });
+            //}
+            
+            ////取消密码字符
+            //PostMessage(controlHandle, EM_SETPASSWORDCHAR, 0, IntPtr.Zero);
+            //SendMessage(controlHandle, EM_SETPASSWORDCHAR, charpass, IntPtr.Zero);
+            //发送文本
+            return SendMessage(controlHandle, WM_SETTEXT|WM_COPYDATA, IntPtr.Zero, password);
+        }
         #endregion
 
         #region 获取IE控件内的Html

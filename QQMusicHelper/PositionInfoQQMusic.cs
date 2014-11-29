@@ -47,7 +47,7 @@ namespace QQMusicHelper
         public static Point ChangeUserAlertClosePt = new Point(460, 355);
 
 
-        #region QQ登陆框
+        #region QQ登陆框对应主窗体位置
         /// <summary>
         /// 登陆框QQ号 输入
         /// </summary>
@@ -65,7 +65,11 @@ namespace QQMusicHelper
         /// </summary>
         public static Point LoginFormClosePt = new Point(598, 204);
         #endregion
-
+        #region QQ登陆框 本身位置
+        public static Point LoginFormSelfUserPt=new Point(249,104);
+        public static Point LoginFormSelfPassPt=new Point(249,140);
+        public static Point LoginFormSelfOkBtnPt=new Point(110,213);
+        #endregion
         #region 下载对话框
         /// <summary>
         /// 【下载对话框】的 【下载到电脑】按钮位置

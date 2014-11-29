@@ -13,3 +13,5 @@ E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\VSCM.dll
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\VSCM.pdb
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\MySql.Data.dll
 E:\Procedure\GitProject\BaiduMusic\AutoStartApp\obj\Debug\AutoStartApp.FrmMusicMonitor.resources
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\QQMusicHelper.dll
+E:\Procedure\GitProject\BaiduMusic\AutoStartApp\bin\Debug\QQMusicHelper.pdb

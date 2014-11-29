@@ -17,6 +17,8 @@ namespace QQMusicHelper
         private static IntPtr IEHandler = IntPtr.Zero;
         private static string htmlFlag = "您下载歌曲的次数过于频繁";
 
+        public static string LoginUserNo = "";
+
         /// <summary>
         /// 查找Form并且点击歌单
         /// </summary>
@@ -35,6 +37,7 @@ namespace QQMusicHelper
         /// <returns></returns>
         public static IntPtr GetUserInfoForm()
         {
+            LoginUserNo = "";
             isExistDiag = false;
             IEHandler = IntPtr.Zero;
             //需要遍历所有窗体
@@ -73,6 +76,11 @@ namespace QQMusicHelper
                 var id = IEAPI.GetHtmlDocumentObject(didcIeHandler1);
                 if (id == null)
                     return true;
+                //
+                LoginUserNo = GetQQno(id.cookie);
+                //
+                Vevisoft.Log.VeviLog2.WriteLogInfo("LoginQQNO:"+LoginUserNo);
+                //
                 var str = id.body.innerHTML;
                 if (str == null) return true;
                 //string cookies = id.cookie;
@@ -85,6 +93,14 @@ namespace QQMusicHelper
                 }
             }
             return true;
+        }
+
+        private static string GetQQno(string p)
+        {
+            var tmp = "qqmusic_uin=";
+            int idx = p.IndexOf(tmp);
+            int idx2 = p.IndexOf(";", idx);
+            return p.Substring(idx + tmp.Length, idx2 - idx-tmp.Length).Trim();
         }
 
 

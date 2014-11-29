@@ -43,3 +43,5 @@ E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\Debug\QQMusicClient.exenot 
 QQMusic not res====2014-09-29 20:54:43
 E:\Procedure\GitProject\BaiduMusic\QQMusicClient\bin\Debug\QQMusicClient.exenot res====2014-09-29 20:54:43
 11111====2014-09-29 20:54:46
+Form has Changed 0====2014-11-24 16:59:26
+Main Form has Changed 1839090====2014-11-24 17:39:08

@@ -17,6 +17,10 @@ namespace QQMusicClient.Dlls
             "http://i.singmusic.cn:8180/portals/setDayCounter?qqNo={0}&cpName={1}&orderName={2}&orderCounter={3}";
 
         private const string WrongUrl = "http://i.singmusic.cn:8180/portals/setAccountStatus?qqNo={0}&status=0";
+        //
+
+        private const string PostSongUrl = "http://i.singmusic.cn:8180/portals/setMusicCounter";
+        //
         public Models.QQInfo GetQQFromServer()
         {
             //http://i.singmusic.cn:8180/portals/setDayCounter?qqNo=1065496319&cpName=cp01&orderName=1409200101&orderCounter=800
@@ -194,5 +198,7 @@ namespace QQMusicClient.Dlls
             }
             return true;
         }
+
+        //public bool SendSongDataToServer(Models.QQInfo model,)
     }
 }

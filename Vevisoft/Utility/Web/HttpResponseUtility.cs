@@ -8,6 +8,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Vevisoft.Utility.Web
 {
@@ -30,6 +31,7 @@ namespace Vevisoft.Utility.Web
             {
                 throw new ArgumentNullException("request Create Failed!");
             }
+            
             request.Method = "GET";
             return (PrepareParams(request, httpparam).GetResponse() as HttpWebResponse);
         }
@@ -59,6 +61,54 @@ namespace Vevisoft.Utility.Web
                 throw new ArgumentNullException("Request Create Failed!");
             }
             request.Method = "POST";
+            
+            return (PrepareParams(request, httpParam).GetResponse() as HttpWebResponse);
+        }
+        /// <summary>
+        /// PostJson数据到服务器
+        /// </summary>
+        /// <param name="httpParam"></param>
+        /// <param name="postStr"></param>
+        /// <returns></returns>
+        public static HttpWebResponse CreatePostjsonResponse(HttpParam httpParam,string postStr)
+        {
+            if (string.IsNullOrEmpty(httpParam.Url))
+            {
+                throw new ArgumentNullException("url");
+            }
+            HttpWebRequest request = null;
+            if (httpParam.Url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+            {
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(HttpResponseUtility.CheckValidationResult);
+                request = WebRequest.Create(httpParam.Url) as HttpWebRequest;
+                if (request != null)
+                {
+                    request.ProtocolVersion = HttpVersion.Version11;
+                }
+            }
+            else
+            {
+                request = WebRequest.Create(httpParam.Url) as HttpWebRequest;
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException("Request Create Failed!");
+            }
+            request.Method = "POST";
+            //request.ContentType = "application/x-www-form-urlencoded";
+            //request.Accept = "application/json, text/javascript, */*";
+            request.ServicePoint.Expect100Continue = false;
+            //request.Headers.Add("X-Auth-Token", HttpUtility.UrlEncode("openstack"));
+            //request.ContentType = "application/json";
+            //request.Accept = "application/xml";  
+            //
+            byte[] bytes = Encoding.UTF8.GetBytes(postStr);
+            using (Stream stream = request.GetRequestStream())
+            {
+                stream.Write(bytes, 0, bytes.Length);
+            }
+            //request.ContentLength = bytes.Length;
+            
             return (PrepareParams(request, httpParam).GetResponse() as HttpWebResponse);
         }
 

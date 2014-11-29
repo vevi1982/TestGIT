@@ -39,6 +39,9 @@ namespace Vevisoft.WindowsAPI
         #endregion
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern int SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam);
         #region 鼠标API
 
         /// <summary>
@@ -93,10 +96,20 @@ namespace Vevisoft.WindowsAPI
         /// </summary>
         /// <param name="fromHwnd"></param>
         /// <param name="mousePt"></param>
-        public static void MouseRightClickSendMsg(IntPtr fromHwnd, int x, int y)
+        public static void MouseRightClickPostMsg(IntPtr fromHwnd, int x, int y)
         {
-            SendMessage(fromHwnd, WM_RBUTTONDOWN, 0, MakeLParam(x, y));
-            SendMessage(fromHwnd, WM_RBUTTONUP, 0, MakeLParam(x, y));
+            PostMessage(fromHwnd, WM_RBUTTONDOWN, 0, MakeLParam(x, y));
+            PostMessage(fromHwnd, WM_RBUTTONUP, 0, MakeLParam(x, y));
+        }
+        /// <summary>
+        /// 发送消息的鼠标右键点击操作
+        /// </summary>
+        /// <param name="fromHwnd"></param>
+        /// <param name="mousePt"></param>
+        public static void MouseLeftClickPostMsg(IntPtr fromHwnd, int x, int y)
+        {
+            PostMessage(fromHwnd, WM_LBUTTONDOWN, 0, MakeLParam(x, y));
+            PostMessage(fromHwnd, WM_LBUTTONUP, 0, MakeLParam(x, y));
         }
         public static IntPtr MakeLParam(int LoWord, int HiWord)
         {
@@ -122,8 +135,11 @@ namespace Vevisoft.WindowsAPI
         public static void KeyInputStringAndNumber(string valuestr, int spliteTime)
         {
             byte[] src_bytes = Encoding.ASCII.GetBytes(valuestr.ToUpper());
+            //
+            Vevisoft.Log.VeviLog2.WriteLogInfo("Input Value:"+valuestr);
             for (int i = 0; i < src_bytes.Length; i++)
             {
+                Vevisoft.Log.VeviLog2.WriteLogInfo("Input Value:" + src_bytes[i]);
                 keybd_event(src_bytes[i], 0, 0, 0);
                 keybd_event(src_bytes[i], 0, 2, 0);
                 //

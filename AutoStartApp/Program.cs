@@ -15,6 +15,7 @@ namespace AutoStartApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            APPConfig.ReadFile();
             Application.Run(new FrmMusicMonitor());
         }
     }

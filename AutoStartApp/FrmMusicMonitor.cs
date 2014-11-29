@@ -15,6 +15,7 @@ namespace AutoStartApp
         public FrmMusicMonitor()
         {
             InitializeComponent();
+            button1_Click(null,null);
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -45,6 +46,22 @@ namespace AutoStartApp
                 else respons = bol1;
             }
             else respons = bol1;
+            //
+            if (!GetQQMusicClientExist())
+            {
+                //重新启动下载程序
+                System.Diagnostics.Process.Start(APPConfig.App1Path, "auto");
+            }
+            //
+            QQMusicHelper.QQMusicWindowUtility.GetQQMusicForm();
+            if (QQMusicHelper.QQMusicWindowUtility.LoginHandleChange )
+            {
+                Vevisoft.Log.VeviLog2.WriteLogInfo("Login Form has Changed "+QQMusicHelper.QQMusicWindowUtility.LoginFormHandle);
+            }
+            if (QQMusicHelper.QQMusicWindowUtility.MainHandleChange)
+            {
+                Vevisoft.Log.VeviLog2.WriteLogInfo("Main Form has Changed " + QQMusicHelper.QQMusicWindowUtility.MainFormHandle);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -53,7 +70,18 @@ namespace AutoStartApp
             button1.Enabled = true;
             button2.Enabled = false;
         }
-
+        private bool GetQQMusicClientExist()
+        {
+            var title = "QQMusicClient";
+            foreach (var process in System.Diagnostics.Process.GetProcesses())
+            {
+                if (process.ProcessName == title)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         private bool GetProcessIsResponsing()
         {
             foreach (var process in System.Diagnostics.Process.GetProcesses())
@@ -78,6 +106,14 @@ namespace AutoStartApp
                     process.Close();
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var diag = MessageBox.Show("是否重新启动计算机？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (diag != DialogResult.Yes)
+                return;
+            Vevisoft.WindowsAPI.ComputerShutDown.Reboot();
         }
     }
 }
