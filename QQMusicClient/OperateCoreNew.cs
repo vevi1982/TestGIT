@@ -185,6 +185,10 @@ namespace QQMusicClient
         public void AbortMainThread()
         {
             workThread.Abort();
+            while (workThread.IsAlive)
+            {
+                Thread.Sleep(1000);
+            }
         }
         /// <summary>
         /// 下载一个QQ 800首歌
@@ -205,6 +209,9 @@ namespace QQMusicClient
                 throw new Exception("无法获取QQ");
             }
             OnShowStepEvent("获取到QQ："+qqModel.QQNo);
+
+            //qqModel.QQPass += "1";
+
             var qqdlinfo = DownLoadInfoHelper.GetDownLoadInfo(qqModel.QQNo);
             lock (qqModel)
             {
@@ -309,10 +316,10 @@ namespace QQMusicClient
                         //提交错误QQ
                         Server.UpdatePassWrongQQ(qqModel.QQNo);
                         Vevisoft.Log.VeviLog2.WriteLogInfo("QQ歌单未分享" + qqModel.QQNo);
-                        throw new Exception("QQ歌单未分享" + qqModel.QQNo);
-                    }    
+                        //throw new Exception("QQ歌单未分享" + qqModel.QQNo);
+                    }
                 }
-                
+
             }
             //提交到服务器中
             lock (qqModel)
@@ -348,21 +355,20 @@ namespace QQMusicClient
             }
             catch (Exception e1)
             {
-                if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg)
+                if (passWrongTimes < 3)
                 {
-                    Server.UpdatePassWrongQQ(qqinfo.QQNo);
-                    if (passWrongTimes < 3)
+                    if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg)
                     {
                         passWrongTimes++;
-                        throw new Exception("可能密码错误"+passWrongTimes);
-                    }
-                    else
-                    {
-                        OnShowStepEvent("密码错误");
-                        throw;
+                        throw new Exception("可能密码错误" + passWrongTimes);
                     }
                 }
-                throw;
+                else
+                {
+                    Server.UpdatePassWrongQQ(qqinfo.QQNo);
+                    OnShowStepEvent("密码错误");
+                    throw new Exception(QQMusicOperateHelper.QQPassErrorMsg);
+                }
             }
             //登陆成功
             passWrongTimes = 0;

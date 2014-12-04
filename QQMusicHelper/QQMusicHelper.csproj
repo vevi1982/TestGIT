@@ -50,6 +50,7 @@
     <Compile Include="PositionInfoQQMusic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QQMusicOperateHelper.cs" />
+    <Compile Include="QQMusicPlaySongControl.cs" />
     <Compile Include="QQMusicUserInfo.cs" />
     <Compile Include="QQMusicWindowUtility.cs" />
   </ItemGroup>

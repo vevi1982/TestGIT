@@ -58,5 +58,10 @@ namespace VevisoftDLLTest
         {
             new FrmInputDLIDCode().Show();
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            new PCControl.FrmSetSysTime().Show();
+        }
     }
 }

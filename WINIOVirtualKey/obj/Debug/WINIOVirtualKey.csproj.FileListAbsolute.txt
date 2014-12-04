@@ -1,0 +1,5 @@
+E:\Procedure\GitProject\BaiduMusic\WINIOVirtualKey\bin\Debug\WINIOVirtualKey.dll
+E:\Procedure\GitProject\BaiduMusic\WINIOVirtualKey\bin\Debug\WINIOVirtualKey.pdb
+E:\Procedure\GitProject\BaiduMusic\WINIOVirtualKey\obj\Debug\WINIOVirtualKey.dll
+E:\Procedure\GitProject\BaiduMusic\WINIOVirtualKey\obj\Debug\WINIOVirtualKey.pdb
+E:\Procedure\GitProject\BaiduMusic\WINIOVirtualKey\obj\Debug\WINIOVirtualKey.csprojResolveAssemblyReference.cache

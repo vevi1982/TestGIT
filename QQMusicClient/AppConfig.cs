@@ -143,6 +143,7 @@ namespace QQMusicClient
             app.Settings["ADSLUserName"].Value = ADSLUserName;
             app.Settings["ADSLPass"].Value = ADSLPass;
             config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");//重新加载新的配置文件
             ReadValue();
         }
     }

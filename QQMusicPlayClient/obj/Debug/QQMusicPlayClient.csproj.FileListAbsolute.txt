@@ -1,0 +1,15 @@
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\QQMusicPlayClient.exe.config
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\QQMusicPlayClient.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\QQMusicPlayClient.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\QQMusicHelper.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\Vevisoft.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\MySql.Data.dll
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\QQMusicHelper.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\bin\Debug\Vevisoft.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.csprojResolveAssemblyReference.cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.Form1.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.FrmSetting.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.Properties.Resources.resources
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.csproj.GenerateResource.Cache
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.exe
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.pdb

@@ -83,13 +83,17 @@
     <Compile Include="WebOperate\HttpWebResponseUtility.cs" />
     <Compile Include="WindowsAPI\ComputerShutDown.cs" />
     <Compile Include="WindowsAPI\DeskTopUtility.cs" />
+    <Compile Include="WindowsAPI\Hook\DebugHook.cs" />
+    <Compile Include="WindowsAPI\Hook\HookUtility.cs" />
+    <Compile Include="WindowsAPI\Hook\KeyBordHook.cs" />
     <Compile Include="WindowsAPI\IEAPI.cs" />
     <Compile Include="WindowsAPI\ImageOperate.cs" />
-    <Compile Include="WindowsAPI\MouseHookUtility.cs" />
+    <Compile Include="WindowsAPI\Hook\MouseHookUtility.cs" />
     <Compile Include="WindowsAPI\MouseKeyBoradUtility.cs" />
+    <Compile Include="WindowsAPI\PCTimeUtility.cs" />
     <Compile Include="WindowsAPI\Shell32Utility.cs" />
+    <Compile Include="WindowsAPI\SNTPTime.cs" />
     <Compile Include="WindowsAPI\SystemWindowsAPI.cs" />
-    <Compile Include="WindowsAPI\WindowsHook.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DataBase\" />

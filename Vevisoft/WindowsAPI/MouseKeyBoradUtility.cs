@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Vevisoft.WindowsAPI.Hook;
 
 namespace Vevisoft.WindowsAPI
 {
@@ -126,7 +127,23 @@ namespace Vevisoft.WindowsAPI
 
         #endregion
 
+        public static void InputStringSendMessage(IntPtr hwnd,string value)
+        {
+            foreach (char c in value)
+            {
+                PostMessage(hwnd, 0x0102, c, IntPtr.Zero);
+            }
+            
+        }
 
+        public static void InputSendKeyMessage(IntPtr hwnd, string value)
+        {
+            foreach (char c in value.ToUpper())
+            {
+                PostMessage(hwnd, (int)HookUtility.MsgType.WM_KEYDOWN, (int)c, IntPtr.Zero);
+                //PostMessage(hwnd, (int)HookUtility.MsgType.WM_KEYUP, (int)c, IntPtr.Zero);
+            }
+        }
         /// <summary>
         /// 键盘输入，只能输入小写字母与数字
         /// </summary>

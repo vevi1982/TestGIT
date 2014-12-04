@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Vevisoft.WindowsAPI.Hook;
 using mshtml;
 
 namespace Vevisoft.WindowsAPI
@@ -255,23 +256,28 @@ namespace Vevisoft.WindowsAPI
        
         public static int SetPassWordEditValue(IntPtr controlHandle, string password)
         {
+            //启动键盘钩子
+            var hook = new DebugHook();
+            hook.StartHook();
             //获取密码字符
-            //var charpass = SendMessage(controlHandle, EM_GETPASSWORDCHAR, 0, IntPtr.Zero);
+            var charpass = SendMessage(controlHandle, EM_GETPASSWORDCHAR, 0, IntPtr.Zero);
             //string aa = "";
             //if (charpass != 0)
             //{
-            //    aa= Marshal.PtrToStringAuto((IntPtr) charpass);
-            //    aa = Marshal.PtrToStringAnsi((IntPtr) charpass);
-            //    aa = Marshal.PtrToStringUni((IntPtr) charpass);
+            //    aa = Marshal.PtrToStringAuto((IntPtr)charpass);
+            //    aa = Marshal.PtrToStringAnsi((IntPtr)charpass);
+            //    aa = Marshal.PtrToStringUni((IntPtr)charpass);
             //    //aa = Marshal.PtrToStringBSTR((IntPtr)charpass, 1);
             //    aa = Encoding.Default.GetString(new byte[] { Marshal.ReadByte((IntPtr)charpass) });
-            //}
-            
-            ////取消密码字符
-            //PostMessage(controlHandle, EM_SETPASSWORDCHAR, 0, IntPtr.Zero);
+            //}            
+            //取消密码字符
+            PostMessage(controlHandle, EM_SETPASSWORDCHAR, 0, IntPtr.Zero);
             //SendMessage(controlHandle, EM_SETPASSWORDCHAR, charpass, IntPtr.Zero);
+
             //发送文本
-            return SendMessage(controlHandle, WM_SETTEXT|WM_COPYDATA, IntPtr.Zero, password);
+            SendMessage(controlHandle, WM_SETTEXT, IntPtr.Zero, password);
+            hook.UnHook();
+            return 1;
         }
         #endregion
 

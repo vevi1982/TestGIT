@@ -127,5 +127,28 @@ namespace QQMusicHelper
         /// 主界面【下载的歌曲】
         /// </summary>
         public static Point MainDownLoadBtnPt = new Point(50, 227);
+
+        /// <summary>
+        /// 开始播放按钮位置
+        /// </summary>
+        public static Point MainStartPlayBtnPt = new Point(85, 590);
+        /// <summary>
+        /// 上一首
+        /// </summary>
+        public static Point MainPlayPreBtnPt = new Point(85 - 48, 590);
+        /// <summary>
+        /// 下一首
+        /// </summary>
+        public static Point MainPlayNextBtnPt = new Point(85 + 48, 590);
+        /// <summary>
+        /// 差2S播放完的滚动条位置
+        /// </summary>
+        public static Point MainPlayScrollEnd2S=new Point(559,606);
+        /// <summary>
+        /// 试听界面 播放全部按钮
+        /// </summary>
+        public static Point MainTryListenPanelPlayAllBtnPt=new Point(223,125);
+
+        
     }
 }

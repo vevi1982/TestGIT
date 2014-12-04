@@ -90,7 +90,13 @@ namespace QQMusicHelper
             //OnShowInStatusBarEvent("有【更改用户提示框】,那么 鼠标移动 左键单击 【关闭】!");
             //有【更改用户提示框】,那么 鼠标移动 左键单击 【关闭】
             // 关闭【更改用户提示框】
-            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.ChangeUserAlertClosePt);
+            //MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.ChangeUserAlertClosePt);
+            //sendkey tab sendkey enter
+            MouseKeyBoradUtility.KeySendTab();
+            Thread.Sleep(1*1000);
+            MouseKeyBoradUtility.KeySendEnter();
+
+
         }
         /// <summary>
         /// 退出登录，如果没有登录，那么返回操作
@@ -359,22 +365,27 @@ namespace QQMusicHelper
             MouseSetPositonAndLeftClick(loginHandle, PositionInfoQQMusic.LoginFormSelfPassPt);
             //MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.LoginFormPassPt);
             //如果有原来的密码，需要删除。所以先按一堆的backspace
-            for (int i = 0; i < 18; i++)
+            for (int i = 0; i < 16; i++)
             {
                 MouseKeyBoradUtility.KeySendBackSpace();
                 Thread.Sleep(interval);
             }
             Vevisoft.Log.VeviLog2.WriteLogInfo(qqno + ";" + pass);
+            //查找密码框的句柄，发送消息输入密码
             
             //单击登录按钮
-            //var aa = pass.ToCharArray();
-            //foreach (char c in aa)
-            //{
-            //    Vevisoft.Log.VeviLog2.WriteLogInfo(logText: "Pass:"+c.ToString());
-            //    MouseSetPositonAndLeftClick(loginHandle, PositionInfoQQMusic.LoginFormSelfPassPt);
-                 
-            //}
-            MouseKeyBoradUtility.KeyInputStringAndNumber(pass, interval);   
+            if (count > 1)
+            {
+                var aa = pass.ToCharArray();
+                foreach (char c in aa)
+                {
+                    Vevisoft.Log.VeviLog2.WriteLogInfo(logText: "Pass:" + c.ToString());
+                    MouseSetPositonAndLeftClick(loginHandle, PositionInfoQQMusic.LoginFormSelfPassPt);
+                    MouseKeyBoradUtility.KeyInputStringAndNumber(c + "", interval);
+                }
+            }
+            else
+                MouseKeyBoradUtility.KeyInputStringAndNumber(pass, interval);
             MouseSetPositonAndLeftClick(loginHandle, PositionInfoQQMusic.LoginFormSelfOkBtnPt);    
        
         }
@@ -556,6 +567,11 @@ namespace QQMusicHelper
             //if (handle == IntPtr.Zero)
             //    throw new Exception("QQ音乐没有启动!");
             return handle;
+        }
+
+        public static IntPtr FindQQLoginPassEditHandle(IntPtr loginFormHandle)
+        {
+           return SystemWindowsAPI.FindWindowEx(loginFormHandle, IntPtr.Zero, "Edit", null);
         }
         #endregion
         #endregion

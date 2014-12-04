@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Vevisoft.WindowsAPI.Hook;
 
 namespace Vevisoft.WindowsAPI
 {
@@ -22,10 +23,10 @@ namespace Vevisoft.WindowsAPI
         private const int WM_MBUTTONDBLCLK = 0x209;
         //全局的事件 
         public event MouseEventHandler OnMouseActivity;
-        static int hMouseHook = 0;   //鼠标钩子句柄 
+        static IntPtr hMouseHook = IntPtr.Zero;   //鼠标钩子句柄 
         //鼠标常量 
         public const int WH_MOUSE_LL = 14;   //mouse   hook   constant 
-        HookProc MouseHookProcedure;   //声明鼠标钩子事件类型. 
+        HookUtility.HookProc MouseHookProcedure;   //声明鼠标钩子事件类型. 
         //声明一个Point的封送类型 
         [StructLayout(LayoutKind.Sequential)]
         public class POINT
@@ -43,17 +44,16 @@ namespace Vevisoft.WindowsAPI
             public int dwExtraInfo;
         }
         //装置钩子的函数 
-        [DllImport("user32.dll ", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
-        //卸下钩子的函数 
-        [DllImport("user32.dll ", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern bool UnhookWindowsHookEx(int idHook);
+        //[DllImport("user32.dll ", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        //public static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
+        ////卸下钩子的函数 
+        //[DllImport("user32.dll ", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        //public static extern bool UnhookWindowsHookEx(int idHook);
 
-
-        //下一个钩挂的函数 
-        [DllImport("user32.dll ", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern int CallNextHookEx(int idHook, int nCode, Int32 wParam, IntPtr lParam);
-        public delegate int HookProc(int nCode, Int32 wParam, IntPtr lParam);
+        ////下一个钩挂的函数 
+        //[DllImport("user32.dll ", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        //public static extern int CallNextHookEx(int idHook, int nCode, Int32 wParam, IntPtr lParam);
+        //public delegate int HookProc(int nCode, Int32 wParam, IntPtr lParam);
 
 
         public MouseHookUtility()
@@ -67,13 +67,13 @@ namespace Vevisoft.WindowsAPI
          public void Start()
         {
             //安装鼠标钩子 
-            if (hMouseHook == 0)
+            if (hMouseHook == IntPtr.Zero)
             {
                 //生成一个HookProc的实例. 
-                MouseHookProcedure = new HookProc(MouseHookProc);
-                hMouseHook = SetWindowsHookEx(WH_MOUSE_LL, MouseHookProcedure, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
+                MouseHookProcedure = new HookUtility.HookProc(MouseHookProc);
+                hMouseHook = (IntPtr) HookUtility.SetWindowsHookEx(WH_MOUSE_LL, MouseHookProcedure, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
                 //如果装置失败停止钩子 
-                if (hMouseHook == 0)
+                if (hMouseHook == IntPtr.Zero)
                 {
                     Stop();
                     throw new Exception("SetWindowsHookEx failed. ");
@@ -83,17 +83,17 @@ namespace Vevisoft.WindowsAPI
         public void Stop()
         {
             bool retMouse = true;
-            if (hMouseHook != 0)
+            if (hMouseHook != IntPtr.Zero)
             {
-                retMouse = UnhookWindowsHookEx(hMouseHook);
-                hMouseHook = 0;
+                retMouse = HookUtility.UnhookWindowsHookEx(hMouseHook);
+                hMouseHook = IntPtr.Zero;
             }
 
 
             //如果卸下钩子失败 
             if (!(retMouse)) throw new Exception("UnhookWindowsHookEx   failed. ");
         }
-        private int MouseHookProc(int nCode, Int32 wParam, IntPtr lParam)
+        private IntPtr MouseHookProc(int nCode, int wParam, IntPtr lParam)
         {
             //如果正常运行并且用户要监听鼠标的消息 
             if ((nCode >= 0) && (OnMouseActivity != null))
@@ -132,7 +132,7 @@ namespace Vevisoft.WindowsAPI
                 var e = new MouseEventArgs(button, clickCount, MyMouseHookStruct.pt.x, MyMouseHookStruct.pt.y, 0);
                 OnMouseActivity(this, e);
             }
-            return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
+            return HookUtility.CallNextHookEx(hMouseHook, nCode, wParam, lParam);
         }
     }
 }

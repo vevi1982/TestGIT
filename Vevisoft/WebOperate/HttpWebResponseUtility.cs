@@ -910,6 +910,16 @@ namespace Vevisoft.WebOperate
             TimeSpan toNow = new TimeSpan(lTime);
             return dtStart.Add(toNow);
         }  
+
+        public static DateTime GetJavaTime(string timeStamp)
+        {
+            //var value = Vevisoft.Utility.Web.HttpResponseUtility.GetJsonStringFromUrlByGet(GetTimeUrl, "");
+            //毫秒数
+            var dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            long lTime = long.Parse(timeStamp + "0000");
+            var toNow = new TimeSpan(lTime);
+            return dtStart.Add(toNow); ;
+        }
     }
 
 

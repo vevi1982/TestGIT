@@ -139,16 +139,16 @@ namespace Vevisoft.WindowsAPI
         }
 
         #region 所需API
-         [DllImport("kernel32.dll")]
-        static extern int GetCurrentThreadId(); //取得当前线程编号的API
-        [DllImport("User32.dll")]
-        internal extern static void UnhookWindowsHookEx(IntPtr handle); //取消Hook的API
+        // [DllImport("kernel32.dll")]
+        //static extern int GetCurrentThreadId(); //取得当前线程编号的API
+        //[DllImport("User32.dll")]
+        //internal extern static void UnhookWindowsHookEx(IntPtr handle); //取消Hook的API
 
-        [DllImport("User32.dll")]
-        internal extern static IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hinstance, int threadID);  //设置Hook的API
+        //[DllImport("User32.dll")]
+        //internal extern static IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hinstance, int threadID);  //设置Hook的API
 
-        [DllImport("User32.dll")]
-        internal extern static IntPtr CallNextHookEx(IntPtr handle, int code, uint wparam, IntPtr lparam); //取得下一个Hook的API
+        //[DllImport("User32.dll")]
+        //internal extern static IntPtr CallNextHookEx(IntPtr handle, int code, uint wparam, IntPtr lparam); //取得下一个Hook的API
        
         #endregion
         //委托
@@ -157,7 +157,7 @@ namespace Vevisoft.WindowsAPI
         IntPtr _nextHookPtr; //记录Hook编号
         IntPtr MyHookProc(int code, uint wparam, IntPtr lparam)
         {
-            if (code < 0) return CallNextHookEx(_nextHookPtr, code, wparam, lparam); //返回，让后面的程序处理该消息           
+            if (code < 0) return Hook.HookUtility.CallNextHookEx(_nextHookPtr, code, wparam, lparam); //返回，让后面的程序处理该消息           
 
             if (wparam ==(decimal) MsgType.WM_CREATE)
             {

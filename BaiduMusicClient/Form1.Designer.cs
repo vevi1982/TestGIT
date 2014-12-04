@@ -84,7 +84,7 @@ namespace BaiduMusicClient
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new EventHandler(this.button6_Click);
             base.AutoScaleDimensions = new SizeF(6f, 12f);
-            base.AutoScaleMode = AutoScaleMode.Font;
+            //base.AutoScaleMode = AutoScaleMode.Font;
             base.ClientSize = new Size(0x200, 0x112);
             base.Controls.Add(this.button5);
             base.Controls.Add(this.button6);
