@@ -46,12 +46,12 @@ namespace QQMusicPlayClient
             {
                 this.BeginInvoke(new ShowInStatusBar(ShowTaskInfo2), text);
             }
-            else toolStripStatusLabel4.Text = text;
+            else toolStripStatusLabel3.Text = text;
         }
 
         private void ShowTaskInfo2(string text)
         {
-            toolStripStatusLabel4.Text = text;
+            toolStripStatusLabel3.Text = text;
             statusStrip1.Refresh();
         }
 
@@ -109,6 +109,21 @@ namespace QQMusicPlayClient
         {
             Vevisoft.WindowsAPI.PCTimeUtility.SetSysTime(AppConfig.StartTime);
 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(WebUtility.GetMd5Encrypt("cp01qqmusic"));
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(AppConfig.AppPath);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(AppConfig.AppPath,"");
         }
 
     }

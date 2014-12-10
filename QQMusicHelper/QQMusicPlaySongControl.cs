@@ -47,7 +47,7 @@ namespace QQMusicHelper
             while (!SystemWindowsAPI.IsExeNotResponse(hwnd) || !QQMusicOperateHelper.GetMainResponseByProcess())
             {
                 Thread.Sleep(1000);
-            }
+            } Thread.Sleep(1000);
             //点击下一首歌曲
             SystemWindowsAPI.SetForegroundWindow(hwnd);
             QQMusicOperateHelper.MouseSetPositonAndLeftClick(hwnd, PositionInfoQQMusic.MainTryListenPanelPlayAllBtnPt);

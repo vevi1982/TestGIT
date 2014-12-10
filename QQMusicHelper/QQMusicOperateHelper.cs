@@ -186,6 +186,9 @@ namespace QQMusicHelper
             if(msgHandle==IntPtr.Zero)
                 throw new Exception("登陆框没有出现!!");
             //
+            var safehwd = GetQQSafeCenterForm();//占用2S
+            if (safehwd != IntPtr.Zero)
+                DealWithQQSafeForm(safehwd, qqno);
             Thread.Sleep(1000);
             //输入用户名密码
             InputPassByDiag(msgHandle, qqno, qqpass, passwrongtimes);
@@ -221,6 +224,21 @@ namespace QQMusicHelper
             return true;
         }
 
+        public static bool JudgeLoginCorrect(string qqno)
+        {
+            var mainHandle = GetQQMusicHandle();
+            if (mainHandle == IntPtr.Zero)
+                return false;
+            //点击左上登录，查看是否有登录窗体
+            SystemWindowsAPI.SetForegroundWindow(mainHandle);
+            MouseSetPositonAndLeftClick(mainHandle, PositionInfoQQMusic.MainCaptionLoginButtonPt);
+            MouseSetPositonAndLeftClick(mainHandle, new Point(1, 1));
+            //窗体没有出现，是否已登录？？
+            QQMusicUserInfo.GetUserInfoForm();
+            //已登录，查看登录账号                
+            //是当前账号，返回
+            return QQMusicUserInfo.LoginUserNo == qqno;
+        }
         /// <summary>
         /// 登录QQ音乐
         /// </summary>
@@ -246,6 +264,8 @@ namespace QQMusicHelper
                 //OnShowInStatusBarEvent("等待超时，登录,【QQ登录框】没有出现！");
                 throw new Exception("等待超时，登录,【QQ登录框】没有出现。");
             }
+            //如果有安全中心窗体，先处理此窗体
+          
             //
             Thread.Sleep(1000);
             //输入用户名密码
@@ -305,7 +325,7 @@ namespace QQMusicHelper
                 Console.WriteLine("登录需要验证码");
                 //SendNeedVeryCodeQQToServer(CurrentQQNo);
                 //输入验证码
-                SystemWindowsAPI.SetActiveWindow(safeHandle);
+                //SystemWindowsAPI.SetActiveWindow(safeHandle);
                 InputVeryCodeOnLogin(safeHandle);
             }
         }
@@ -528,7 +548,7 @@ namespace QQMusicHelper
         /// <returns></returns>
         public static IntPtr GetQQSafeCenterForm()
         {
-            return GetQQSafeCenterForm(5);
+            return GetQQSafeCenterForm(2);
         }
 
         /// <summary>
@@ -718,7 +738,11 @@ namespace QQMusicHelper
                 SendSongDataToServer(postdata);
         }
 
-       
+       public static void CloseQQMusicExe(string appPath)
+       {
+           //如果QQ音乐打开，那么关闭
+           Vevisoft.Utility.ProcessUtility.KillProcess("QQMusic", appPath);
+       }
 
         /// <summary>
         /// 删除歌曲下载文件夹内所有文件，关闭QQMusic

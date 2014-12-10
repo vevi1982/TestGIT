@@ -111,12 +111,15 @@ namespace QQMusicPlayClient
                                     passWrongTimes = 0;
                                     //throw;
                                 }
+                                OnShowStepEvent(e1.Message);
+                                Vevisoft.Log.VeviLog2.WriteLogInfo(e1.Message);
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e2)
                     {
-                        
+                        OnShowStepEvent(e2.Message);
+                        Vevisoft.Log.VeviLog2.WriteLogInfo(e2.Message);
                         //throw;
                     }
                     
@@ -167,7 +170,7 @@ namespace QQMusicPlayClient
             //
             var wordTime = WebUtility.GetWordDateTime();
             //11.30后停止
-            if(AppConfig.CLickPt.X==300)
+            if (AppConfig.CLickPt.X == 300)
                 if (wordTime.Hour > 22 && wordTime.Minute > 30)
                 {
                     Thread.Sleep(200*1000);
@@ -175,7 +178,7 @@ namespace QQMusicPlayClient
                 }
             //同步当前的开始时间
             Vevisoft.WindowsAPI.PCTimeUtility.SetSysTime(wordTime);
-            AppConfig.ReadValue();//更新appconifg
+            AppConfig.ReadValue(); //更新appconifg
             //AppConfig.StartTime = AppConfig.StartTime.AddDays(1);
             //设置开始时间
             Thread.Sleep(1000);
@@ -185,17 +188,19 @@ namespace QQMusicPlayClient
             Thread.Sleep(1000);
             //获取QQ号码,临时使用固定号码
             Step_StartExeAndLogin(AppConfig.QQNO, AppConfig.QQPass);
-           
+
             OnShowStepEvent("开始播放歌曲!");
             var playSongsCount = 0;
             Step_StartPlay();
             while (playSongsCount < AppConfig.PlaySongNo)
             {
                 Step_PlayOneSong();
-                OnShowStepEvent("播放歌曲" + playSongsCount + 1);
+                OnShowStepEvent("播放歌曲" + (playSongsCount + 1));
                 playSongsCount++;
             }
             OnShowStepEvent("播放结束!");
+            //关闭QQ音乐
+            QQMusicOperateHelper.CloseQQMusicExe(AppConfig.AppPath);
             //
             //todo  提交数据到服务器
 
@@ -207,7 +212,10 @@ namespace QQMusicPlayClient
         {
             //1.启动QQMusic
             OnShowStepEvent("启动QQMusic");
-            QQMusicOperateHelper.StartQQMusic(AppConfig.AppPath, "");
+            var bol1= QQMusicOperateHelper.StartQQMusic(AppConfig.AppPath, "");
+            if(bol1)
+            OnShowStepEvent("启动QQMusic完成");
+            else OnShowStepEvent("启动QQMusic没有完成！！！");
             //2.退出登录
             //OnShowStepEvent("退出登录");
             //QQMusicOperateHelper.LogOutQQMusic();
@@ -216,10 +224,15 @@ namespace QQMusicPlayClient
             try
             {
                 OnShowHeartEvent(QQNo + ";" + QQPass);
+
                 QQMusicOperateHelper.LoginSmart(QQNo, QQPass, passWrongTimes);
+                //Thread.Sleep(1000);
+                //if (!QQMusicOperateHelper.JudgeLoginCorrect(QQNo))
+                //    throw new Exception("登录失败!");
             }
             catch (Exception e1)
             {
+                Vevisoft.Log.VeviLog2.WriteLogInfo(e1.Message);
                 if (passWrongTimes < 3)
                 {
                     if (e1.Message == QQMusicOperateHelper.QQPassErrorMsg)
@@ -227,6 +240,7 @@ namespace QQMusicPlayClient
                         passWrongTimes++;
                         throw new Exception("可能密码错误" + passWrongTimes);
                     }
+                    throw;
                 }
                 else
                 {

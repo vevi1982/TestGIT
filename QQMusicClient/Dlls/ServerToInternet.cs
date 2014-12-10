@@ -100,7 +100,7 @@ namespace QQMusicClient.Dlls
             var updateNo = 0;
             //
             updateNo = model.OriRemain  - model.RemainNum;
-
+            updateNo = Math.Max(0, updateNo);//隔天提交的时候有可能是负数
             string endstamp = Vevisoft.WebOperate.HttpWebResponseUtility.GetTimeStamp(DateTime.Now);
             string url = string.Format(UpdateQQAcount, model.QQNo, model.PcName,
                                         model.CurrentSongOrderName,updateNo);

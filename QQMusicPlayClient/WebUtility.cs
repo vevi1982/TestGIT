@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 /************************************************************************************
@@ -46,6 +47,17 @@ namespace QQMusicPlayClient
             long lTime = long.Parse(value.Trim()+"0000");
             var toNow = new TimeSpan(lTime);
             return dtStart.Add(toNow); ;
+        }
+
+        public static string GetMd5Encrypt(string value)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            md5 = MD5.Create();
+            byte[] result = md5.ComputeHash(Encoding.UTF8.GetBytes(value));
+            var md5value = "";
+            foreach (byte b in result)
+                md5value += b.ToString("x2");
+            return md5value;
         }
     }
 }
