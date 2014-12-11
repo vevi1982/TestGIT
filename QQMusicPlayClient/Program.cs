@@ -11,12 +11,15 @@ namespace QQMusicPlayClient
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             AppConfig.ReadValue();
-            Application.Run(new Form1());
+            if (new FrmLogin().ShowDialog() == DialogResult.OK)
+            {
+                Application.Run(new Form1());
+            }
         }
     }
 }

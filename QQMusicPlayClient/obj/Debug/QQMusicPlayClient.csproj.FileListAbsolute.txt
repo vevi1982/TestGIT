@@ -13,3 +13,4 @@ E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient
 E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.csproj.GenerateResource.Cache
 E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.exe
 E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.pdb
+E:\Procedure\GitProject\BaiduMusic\QQMusicPlayClient\obj\Debug\QQMusicPlayClient.FrmLogin.resources

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace QQMusicPlayClient
@@ -123,8 +124,32 @@ namespace QQMusicPlayClient
 
         private void button6_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(AppConfig.AppPath,"");
-        }
+           var process= System.Diagnostics.Process.Start(AppConfig.AppPath,"");
+            if (process == null)
+                core_ShowInStatusMonitor("线程为空！");
+           while (!process.Responding)
+           {
+               Thread.Sleep(1000);
+               core_ShowInStatusMonitor("线程没反应！");
+           }
+           core_ShowInStatusMonitor("线程有了反应！");
+            //
+           var count = 10;
 
+           while (GetProcessCount("QQMusicExternal") < 2 && count > 0)
+           {
+               count--;
+               Thread.Sleep(1000);
+               core_ShowInStatusMonitor("启动没有完成！");
+           }
+          
+           if (count <= 0)
+               core_ShowInStatusMonitor("启动没有完成！");
+           else core_ShowInStatusMonitor("启动完成！");
+        }
+        private static int GetProcessCount(string processName)
+        {
+            return System.Diagnostics.Process.GetProcesses().Count(process => process.ProcessName == processName);
+        }
     }
 }

@@ -1,10 +1,10 @@
+登录接口 ，校验cp是否存在
+http://q.singmusic.cn:8180/portals/login?cpName=cp01
+返回 true false
 
-请求：http://q.singmusic.cn:8080/portals/login?cpName=cp01
-返回： MD5(cpName+"qqmusic") 的加密码 客户端拿到校验码后在本机进行校验加密码是否正确，不正确则弹出窗提示软件异常，
-        (cp01+ "qqmusic") 的md5 字符串为 5147a093b3600b52fcffecf5fe3670f7
+判断ip是否重复
+http://q.singmusic.cn:8180/portals/isRepeatIP
+返回 true false
 
-
-
-请求：http://q.singmusic.cn:8080/portals/isRepeatIP?cpName=cp01&clientCode=5147a093b3600b52fcffecf5fe3670f7
-返回： -1：校验码校验失败(提示失败，软件关闭)   0：ip重复   1：ip不重复，可正常执行         
-      服务端会校验校验码是否正确。请根据不同的状态为做相应的操作
+心跳接口
+http://q.singmusic.cn:8180/portals/heartbeat?cpName=cp01

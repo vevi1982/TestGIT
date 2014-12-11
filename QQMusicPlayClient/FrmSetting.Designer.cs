@@ -402,6 +402,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox3);
+            this.DoubleBuffered = true;
             this.Name = "FrmSetting";
             this.Text = "参数设置";
             this.groupBox2.ResumeLayout(false);

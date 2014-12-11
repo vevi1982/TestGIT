@@ -194,6 +194,7 @@
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.btnSet);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.Text = "QQ音乐播放客户端";
             this.statusStrip1.ResumeLayout(false);

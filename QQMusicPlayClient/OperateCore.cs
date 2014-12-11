@@ -36,7 +36,7 @@ namespace QQMusicPlayClient
     public class OperateCore
     {
         private object _threadLockObj=new object();
-
+        private const string idError = "Authentication Failed";
         private bool mainThreadRun = true;
 
         private Thread _workThread;
@@ -113,6 +113,8 @@ namespace QQMusicPlayClient
                                 }
                                 OnShowStepEvent(e1.Message);
                                 Vevisoft.Log.VeviLog2.WriteLogInfo(e1.Message);
+                                if (e1.Message == idError)
+                                    throw e1;
                             }
                         }
                     }
@@ -121,6 +123,8 @@ namespace QQMusicPlayClient
                         OnShowStepEvent(e2.Message);
                         Vevisoft.Log.VeviLog2.WriteLogInfo(e2.Message);
                         //throw;
+                        if (e2.Message == idError)
+                            throw e2;
                     }
                     
 
@@ -154,8 +158,21 @@ namespace QQMusicPlayClient
                 ADSLHelper.LinkAdsl(AppConfig.ADSLName);
             }
             //this.Count = 0;
+           
         }
-
+        public void Authentication()
+        {
+            var count = 3;
+            var issuccess = false;
+            while (count>0&&!issuccess)
+            {
+                issuccess = WebUtility.IsPcExist();
+                count--;
+                Thread.Sleep(1*1000);
+            }
+            if(count<=0&&!issuccess)
+                throw new Exception(idError);
+        }
         /// <summary>
         /// 播放一个QQ
         /// </summary>
@@ -167,6 +184,12 @@ namespace QQMusicPlayClient
                 //todo...
                 ChangeIp();
             }
+            //验证
+            OnShowStepEvent("验证身份");
+            Authentication();
+            //发送心跳
+            OnShowStepEvent("发送心跳");
+            WebUtility.SendHeart();
             //
             var wordTime = WebUtility.GetWordDateTime();
             //11.30后停止
@@ -271,7 +294,7 @@ namespace QQMusicPlayClient
             Vevisoft.WindowsAPI.PCTimeUtility.SetSysTime(currentTime);
             //扯动滚动条
             QQMusicPlaySongControl.PlayEndUserSet();
-            Thread.Sleep(AppConfig.AfterClk*1000);
+            Thread.Sleep(AppConfig.AfterClk);
             //播放下一条
         }
     }

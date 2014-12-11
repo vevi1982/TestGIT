@@ -31,8 +31,8 @@ namespace QQMusicPlayClient
 {
     public class WebUtility
     {
-        static string IPUrl="http://i.singmusic.cn:8180/portals/isRepeatIP";
-        private static string GetTimeUrl = "http://i.singmusic.cn:8180/getTime.jsp";
+        static string IPUrl="http://q.singmusic.cn:8180/portals/isRepeatIP";
+        private static string GetTimeUrl = "http://q.singmusic.cn:8180/getTime.jsp";
         public static bool IsIPRepeat()
         {
             string value = Vevisoft.Utility.Web.HttpResponseUtility.GetJsonStringFromUrlByGet(IPUrl, "");
@@ -58,6 +58,25 @@ namespace QQMusicPlayClient
             foreach (byte b in result)
                 md5value += b.ToString("x2");
             return md5value;
+        }
+
+        public static void SendHeart()
+        {
+            try
+            {
+                var url = "http://q.singmusic.cn:8180/portals/heartbeat?cpName=" + AppConfig.PCName;
+                Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public static bool IsPcExist()
+        {
+            var url = "http://q.singmusic.cn:8180/portals/login?cpName=" + AppConfig.PCName;
+            var result = Vevisoft.Utility.Web.HttpResponseUtility.GetHtmlStringFromUrlByGet(url, "");
+            return Convert.ToBoolean(result);
         }
     }
 }
